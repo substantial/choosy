@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */ = {isa = PBXBuildFile; fileRef = D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */; };
+		D9A80372189C5719002F642A /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80371189C5719002F642A /* MainViewController.m */; };
+		D9A80375189C576B002F642A /* SBChoosyAppPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80374189C576B002F642A /* SBChoosyAppPickerViewController.m */; };
+		D9A80378189C5980002F642A /* SBTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80377189C5980002F642A /* SBTestViewController.m */; };
+		D9A80382189E0836002F642A /* SBChoosy.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80381189E0836002F642A /* SBChoosy.m */; };
+		D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80384189E0844002F642A /* SBChoosyActionContext.m */; };
 		D9C02B81189C162C004175A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B80189C162C004175A8 /* Foundation.framework */; };
 		D9C02B83189C162C004175A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B82189C162C004175A8 /* CoreGraphics.framework */; };
 		D9C02B85189C162C004175A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B84189C162C004175A8 /* UIKit.framework */; };
@@ -14,7 +20,6 @@
 		D9C02B8D189C162C004175A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02B8C189C162C004175A8 /* main.m */; };
 		D9C02B91189C162C004175A8 /* SBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02B90189C162C004175A8 /* SBAppDelegate.m */; };
 		D9C02B94189C162C004175A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9C02B92189C162C004175A8 /* Main.storyboard */; };
-		D9C02B9A189C162C004175A8 /* SBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02B99189C162C004175A8 /* SBViewController.m */; };
 		D9C02B9C189C162C004175A8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9C02B9B189C162C004175A8 /* Images.xcassets */; };
 		D9C02BA3189C162C004175A8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02BA2189C162C004175A8 /* XCTest.framework */; };
 		D9C02BA4189C162C004175A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B80189C162C004175A8 /* Foundation.framework */; };
@@ -24,7 +29,6 @@
 		D9C02BBD189C1A62004175A8 /* SBChoosyAppType.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BBC189C1A62004175A8 /* SBChoosyAppType.m */; };
 		D9C02BC0189C1F9C004175A8 /* SBChoosyAppAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */; };
 		D9C02BC3189C2257004175A8 /* SBChoosyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC2189C2257004175A8 /* SBChoosyApp.m */; };
-		D9C02BC6189C25F9004175A8 /* SBChoosyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC5189C25F9004175A8 /* SBChoosyViewController.m */; };
 		D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */; };
 		D9FB0923189C4CEC0018E507 /* SBChoosyActionParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FB0922189C4CEC0018E507 /* SBChoosyActionParameter.m */; };
 /* End PBXBuildFile section */
@@ -40,6 +44,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D904193A18A0498700A1EFF8 /* SBChoosyBrainz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyBrainz.h; sourceTree = "<group>"; };
+		D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyBrainz.m; sourceTree = "<group>"; };
+		D9A80370189C5719002F642A /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		D9A80371189C5719002F642A /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		D9A80373189C576B002F642A /* SBChoosyAppPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppPickerViewController.h; sourceTree = "<group>"; };
+		D9A80374189C576B002F642A /* SBChoosyAppPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppPickerViewController.m; sourceTree = "<group>"; };
+		D9A80376189C5980002F642A /* SBTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTestViewController.h; sourceTree = "<group>"; };
+		D9A80377189C5980002F642A /* SBTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBTestViewController.m; sourceTree = "<group>"; };
+		D9A80380189E0836002F642A /* SBChoosy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosy.h; sourceTree = "<group>"; };
+		D9A80381189E0836002F642A /* SBChoosy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosy.m; sourceTree = "<group>"; };
+		D9A80383189E0844002F642A /* SBChoosyActionContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyActionContext.h; sourceTree = "<group>"; };
+		D9A80384189E0844002F642A /* SBChoosyActionContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyActionContext.m; sourceTree = "<group>"; };
 		D9C02B7D189C162C004175A8 /* ChoosyDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChoosyDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C02B80189C162C004175A8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D9C02B82189C162C004175A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -51,8 +67,6 @@
 		D9C02B8F189C162C004175A8 /* SBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBAppDelegate.h; sourceTree = "<group>"; };
 		D9C02B90189C162C004175A8 /* SBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBAppDelegate.m; sourceTree = "<group>"; };
 		D9C02B93189C162C004175A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		D9C02B98189C162C004175A8 /* SBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBViewController.h; sourceTree = "<group>"; };
-		D9C02B99189C162C004175A8 /* SBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBViewController.m; sourceTree = "<group>"; };
 		D9C02B9B189C162C004175A8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D9C02BA1189C162C004175A8 /* ChoosyDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChoosyDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C02BA2189C162C004175A8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -65,8 +79,6 @@
 		D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppAction.m; sourceTree = "<group>"; };
 		D9C02BC1189C2257004175A8 /* SBChoosyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyApp.h; sourceTree = "<group>"; };
 		D9C02BC2189C2257004175A8 /* SBChoosyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyApp.m; sourceTree = "<group>"; };
-		D9C02BC4189C25F9004175A8 /* SBChoosyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyViewController.h; sourceTree = "<group>"; };
-		D9C02BC5189C25F9004175A8 /* SBChoosyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyViewController.m; sourceTree = "<group>"; };
 		D9C02BC7189C279D004175A8 /* SBChoosyAppTypeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppTypeAction.h; sourceTree = "<group>"; };
 		D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppTypeAction.m; sourceTree = "<group>"; };
 		D9FB0921189C4CEC0018E507 /* SBChoosyActionParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyActionParameter.h; sourceTree = "<group>"; };
@@ -97,6 +109,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D904193918A0497B00A1EFF8 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				D904193A18A0498700A1EFF8 /* SBChoosyBrainz.h */,
+				D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
+		D9A8037F189E07F2002F642A /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				D9A80380189E0836002F642A /* SBChoosy.h */,
+				D9A80381189E0836002F642A /* SBChoosy.m */,
+				D9A80383189E0844002F642A /* SBChoosyActionContext.h */,
+				D9A80384189E0844002F642A /* SBChoosyActionContext.m */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
 		D9C02B74189C162C004175A8 = {
 			isa = PBXGroup;
 			children = (
@@ -134,10 +166,12 @@
 				D9C02B8F189C162C004175A8 /* SBAppDelegate.h */,
 				D9C02B90189C162C004175A8 /* SBAppDelegate.m */,
 				D9C02B92189C162C004175A8 /* Main.storyboard */,
-				D9C02B98189C162C004175A8 /* SBViewController.h */,
-				D9C02B99189C162C004175A8 /* SBViewController.m */,
 				D9C02B9B189C162C004175A8 /* Images.xcassets */,
 				D9C02B87189C162C004175A8 /* Supporting Files */,
+				D9A80370189C5719002F642A /* MainViewController.h */,
+				D9A80371189C5719002F642A /* MainViewController.m */,
+				D9A80376189C5980002F642A /* SBTestViewController.h */,
+				D9A80377189C5980002F642A /* SBTestViewController.m */,
 			);
 			path = ChoosyDemo;
 			sourceTree = "<group>";
@@ -174,10 +208,12 @@
 		D9C02BB8189C16D6004175A8 /* Choosy */ = {
 			isa = PBXGroup;
 			children = (
+				D904193918A0497B00A1EFF8 /* Logic */,
+				D9A8037F189E07F2002F642A /* Api */,
 				D9C02BB9189C1810004175A8 /* Model */,
 				D9C02BBA189C1810004175A8 /* Views */,
-				D9C02BC4189C25F9004175A8 /* SBChoosyViewController.h */,
-				D9C02BC5189C25F9004175A8 /* SBChoosyViewController.m */,
+				D9A80373189C576B002F642A /* SBChoosyAppPickerViewController.h */,
+				D9A80374189C576B002F642A /* SBChoosyAppPickerViewController.m */,
 			);
 			path = Choosy;
 			sourceTree = "<group>";
@@ -304,14 +340,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C02BC6189C25F9004175A8 /* SBChoosyViewController.m in Sources */,
+				D9A80382189E0836002F642A /* SBChoosy.m in Sources */,
+				D9A80375189C576B002F642A /* SBChoosyAppPickerViewController.m in Sources */,
 				D9C02B8D189C162C004175A8 /* main.m in Sources */,
+				D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */,
+				D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */,
 				D9C02BC0189C1F9C004175A8 /* SBChoosyAppAction.m in Sources */,
 				D9FB0923189C4CEC0018E507 /* SBChoosyActionParameter.m in Sources */,
+				D9A80372189C5719002F642A /* MainViewController.m in Sources */,
 				D9C02BBD189C1A62004175A8 /* SBChoosyAppType.m in Sources */,
 				D9C02BC3189C2257004175A8 /* SBChoosyApp.m in Sources */,
+				D9A80378189C5980002F642A /* SBTestViewController.m in Sources */,
 				D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */,
-				D9C02B9A189C162C004175A8 /* SBViewController.m in Sources */,
 				D9C02B91189C162C004175A8 /* SBAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

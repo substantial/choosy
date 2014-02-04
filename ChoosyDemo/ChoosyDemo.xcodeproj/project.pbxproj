@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */ = {isa = PBXBuildFile; fileRef = D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */; };
+		D93A46D218A0AFF600742099 /* SBChoosyLocalStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D93A46D118A0AFF600742099 /* SBChoosyLocalStore.m */; };
+		D93A46D518A0BCD000742099 /* SBChoosyAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D93A46D418A0BCD000742099 /* SBChoosyAppInfo.m */; };
+		D93A46D818A0C34B00742099 /* SBChoosyNetworkStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */; };
 		D9A80372189C5719002F642A /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80371189C5719002F642A /* MainViewController.m */; };
 		D9A80375189C576B002F642A /* SBChoosyAppPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80374189C576B002F642A /* SBChoosyAppPickerViewController.m */; };
 		D9A80378189C5980002F642A /* SBTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80377189C5980002F642A /* SBTestViewController.m */; };
@@ -28,7 +31,6 @@
 		D9C02BAF189C162C004175A8 /* ChoosyDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BAE189C162C004175A8 /* ChoosyDemoTests.m */; };
 		D9C02BBD189C1A62004175A8 /* SBChoosyAppType.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BBC189C1A62004175A8 /* SBChoosyAppType.m */; };
 		D9C02BC0189C1F9C004175A8 /* SBChoosyAppAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */; };
-		D9C02BC3189C2257004175A8 /* SBChoosyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC2189C2257004175A8 /* SBChoosyApp.m */; };
 		D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */; };
 		D9FB0923189C4CEC0018E507 /* SBChoosyActionParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FB0922189C4CEC0018E507 /* SBChoosyActionParameter.m */; };
 /* End PBXBuildFile section */
@@ -46,6 +48,12 @@
 /* Begin PBXFileReference section */
 		D904193A18A0498700A1EFF8 /* SBChoosyBrainz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyBrainz.h; sourceTree = "<group>"; };
 		D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyBrainz.m; sourceTree = "<group>"; };
+		D93A46D018A0AFF600742099 /* SBChoosyLocalStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyLocalStore.h; sourceTree = "<group>"; };
+		D93A46D118A0AFF600742099 /* SBChoosyLocalStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyLocalStore.m; sourceTree = "<group>"; };
+		D93A46D318A0BCD000742099 /* SBChoosyAppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppInfo.h; sourceTree = "<group>"; };
+		D93A46D418A0BCD000742099 /* SBChoosyAppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppInfo.m; sourceTree = "<group>"; };
+		D93A46D618A0C34B00742099 /* SBChoosyNetworkStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyNetworkStore.h; sourceTree = "<group>"; };
+		D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyNetworkStore.m; sourceTree = "<group>"; };
 		D9A80370189C5719002F642A /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		D9A80371189C5719002F642A /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		D9A80373189C576B002F642A /* SBChoosyAppPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppPickerViewController.h; sourceTree = "<group>"; };
@@ -77,8 +85,6 @@
 		D9C02BBC189C1A62004175A8 /* SBChoosyAppType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppType.m; sourceTree = "<group>"; };
 		D9C02BBE189C1F9C004175A8 /* SBChoosyAppAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppAction.h; sourceTree = "<group>"; };
 		D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppAction.m; sourceTree = "<group>"; };
-		D9C02BC1189C2257004175A8 /* SBChoosyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyApp.h; sourceTree = "<group>"; };
-		D9C02BC2189C2257004175A8 /* SBChoosyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyApp.m; sourceTree = "<group>"; };
 		D9C02BC7189C279D004175A8 /* SBChoosyAppTypeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppTypeAction.h; sourceTree = "<group>"; };
 		D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppTypeAction.m; sourceTree = "<group>"; };
 		D9FB0921189C4CEC0018E507 /* SBChoosyActionParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyActionParameter.h; sourceTree = "<group>"; };
@@ -114,6 +120,10 @@
 			children = (
 				D904193A18A0498700A1EFF8 /* SBChoosyBrainz.h */,
 				D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */,
+				D93A46D018A0AFF600742099 /* SBChoosyLocalStore.h */,
+				D93A46D118A0AFF600742099 /* SBChoosyLocalStore.m */,
+				D93A46D618A0C34B00742099 /* SBChoosyNetworkStore.h */,
+				D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -229,8 +239,8 @@
 				D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */,
 				D9C02BBE189C1F9C004175A8 /* SBChoosyAppAction.h */,
 				D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */,
-				D9C02BC1189C2257004175A8 /* SBChoosyApp.h */,
-				D9C02BC2189C2257004175A8 /* SBChoosyApp.m */,
+				D93A46D318A0BCD000742099 /* SBChoosyAppInfo.h */,
+				D93A46D418A0BCD000742099 /* SBChoosyAppInfo.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -341,7 +351,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9A80382189E0836002F642A /* SBChoosy.m in Sources */,
+				D93A46D218A0AFF600742099 /* SBChoosyLocalStore.m in Sources */,
 				D9A80375189C576B002F642A /* SBChoosyAppPickerViewController.m in Sources */,
+				D93A46D818A0C34B00742099 /* SBChoosyNetworkStore.m in Sources */,
+				D93A46D518A0BCD000742099 /* SBChoosyAppInfo.m in Sources */,
 				D9C02B8D189C162C004175A8 /* main.m in Sources */,
 				D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */,
 				D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */,
@@ -349,7 +362,6 @@
 				D9FB0923189C4CEC0018E507 /* SBChoosyActionParameter.m in Sources */,
 				D9A80372189C5719002F642A /* MainViewController.m in Sources */,
 				D9C02BBD189C1A62004175A8 /* SBChoosyAppType.m in Sources */,
-				D9C02BC3189C2257004175A8 /* SBChoosyApp.m in Sources */,
 				D9A80378189C5980002F642A /* SBTestViewController.m in Sources */,
 				D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */,
 				D9C02B91189C162C004175A8 /* SBAppDelegate.m in Sources */,

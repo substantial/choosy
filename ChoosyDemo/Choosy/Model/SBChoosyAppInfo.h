@@ -1,9 +1,16 @@
+//
+//  SBChoosyAppInfo.h
+//  ChoosyDemo
+//
+//  Created by Sasha Novosad on 2/3/14.
+//  Copyright (c) 2014 Substantial. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 
 @class SBChoosyAppType;
 
-@interface SBChoosyApp : NSObject
+@interface SBChoosyAppInfo : NSObject
 
 @property (nonatomic, readonly) NSString *displayName;
 @property (nonatomic, readonly) NSString *uniqueName;

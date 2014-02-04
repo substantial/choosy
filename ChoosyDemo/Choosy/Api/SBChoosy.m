@@ -48,10 +48,22 @@
      
 - (void)handleSelectAppEvent:(UITapGestureRecognizer *)gesture
 {
-    
+    SBChoosyAppPickerViewController *picker = [SBChoosyAppPickerViewController new];
+    picker.delegate = self;
 }
 
 - (void)handleResetAppSelectionEvent:(UILongPressGestureRecognizer *)gesture
+{
+    
+}
+
+
+- (void)didCancelAppSelection
+{
+    
+}
+
+- (void)didSelectApp:(NSString *)appKey
 {
     
 }

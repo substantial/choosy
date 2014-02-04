@@ -1,5 +1,6 @@
 
 #import <Foundation/Foundation.h>
+#import "SBChoosyAppPickerViewController.h"
 
 @class SBChoosyActionContext;
 
@@ -11,12 +12,14 @@
 
 @end
 
-@interface SBChoosy : NSObject
+@interface SBChoosy : NSObject <SBChoosyPickerDelegate>
 
 @property (nonatomic, weak) id<SBChoosyDelegate> delegate;
 
 // register UIElement
 - (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext;
+
+- (void)prepareForAppTypes:(NSArray *)appTypes;
 
 // direct actions
 // open app selection interface

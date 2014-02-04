@@ -5,7 +5,6 @@
 @protocol SBChoosyBrainzDelegate <NSObject>
 
 @required
-- (void)didDownloadAppList;
 - (void)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
 
 @optional
@@ -16,7 +15,33 @@
 
 @property (nonatomic, weak) id<SBChoosyBrainzDelegate> delegate;
 
-- (void)detectAppsForAppTypes:(NSArray *)appTypes; // array of strings, each string is app type name
-- (UIImage *)appIconForAppKey:(NSString *)appKey; // app key is a string that uniquely identified an app
+/**
+ *  This is where the most important logic lives. 
+ *  For each app type, checks the cache for
+ *  list of apps for given app type, and if cache doesn't exist yet or has expired,
+ *  pulls list of top apps for given app type from the server. 
+ *
+ *  It then checks which of the apps in the list are installed,
+ *  and if the previously-selected favorite app (if any) has been deleted.
+ *  If new apps for app type have been installed, or the favorite app is no longer installed, 
+ *  it sets a flag to force app selection interface.
+ *
+ *  Next, it checks cache for app icon for each of the detected apps. 
+ *  If no icon is present or cache expired, it downloads new icon in the background.
+ *
+ *  @param appTypes Array of strings where each string is the name of App Type.
+ */
+- (void)detectAppsForAppTypes:(NSArray *)appTypes;
+
+/**
+ *  Retrieves app icon for a given app. If the icon is not in cache and the cache isn't expired, 
+ *  it downloads the icon; otherwise, cached version is used.
+ *
+ *  @param appKey       A string that uniquely identifies the app
+ *  @param completionBlock Block to execute once app icon is retrieved
+ *
+ *  @return App icon
+ */
+- (UIImage *)appIconForAppKey:(NSString *)appKey completion:(void (^)())completionBlock;
 
 @end

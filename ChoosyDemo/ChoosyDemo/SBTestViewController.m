@@ -7,6 +7,8 @@
 //
 
 #import "SBTestViewController.h"
+#import "SBChoosy.h"
+#import "SBChoosyActionContext.h"
 
 @interface SBTestViewController ()
 
@@ -21,11 +23,11 @@
 {
     [super viewDidLoad];
     
-    // register button with Choosy
-    
-    
     // register label with Choosy
+    [SBChoosy registerUIElement:self.twitterLinkLabel forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
     
+    [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
+                                                                                              action:@"Compose" parameters:@{ @"from:" : @"your_mom@substantial.com" }]];
 }
 
 - (void)didReceiveMemoryWarning

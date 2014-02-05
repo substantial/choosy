@@ -14,3 +14,6 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#define MIN_TAP_AREA_WIDTH 44
+#define MIN_TAP_AREA_HEIGHT 44

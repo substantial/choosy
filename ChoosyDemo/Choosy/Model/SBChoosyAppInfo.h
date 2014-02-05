@@ -12,9 +12,9 @@
 
 @interface SBChoosyAppInfo : NSObject
 
-@property (nonatomic, readonly) NSString *displayName;
-@property (nonatomic, readonly) NSString *uniqueName;
-@property (nonatomic, readonly) SBChoosyAppType *type;
-@property (nonatomic, readonly) NSArray *supportedActions; // of SBChoosyAppAction
+@property (nonatomic, readonly) NSString *appName;
+@property (nonatomic, readonly) NSString *appKey;
+@property (nonatomic, readonly) SBChoosyAppType *appType;
+@property (nonatomic, readonly) NSArray *appActions; // of SBChoosyAppAction
 
 @end

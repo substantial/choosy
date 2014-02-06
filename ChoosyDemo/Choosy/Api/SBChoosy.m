@@ -1,6 +1,9 @@
 
 #import "SBChoosy.h"
+#import "SBChoosyBrainz.h"
 #import "SBChoosyActionContext.h"
+#import "SBChoosyUrlBuilder.h"
+#import "UIView+Helpers.h"
 
 @interface SBChoosyElementRegistration : NSObject
 
@@ -15,14 +18,17 @@
 
 @end
 
-@interface SBChoosy ()
+@interface SBChoosy () <SBChoosyPickerDelegate>
 
 @property (nonatomic) NSMutableArray *registeredUIElements; // of type UIElementRegistration
+@property (nonatomic) SBChoosyAppPickerViewController *appPicker;
+@property (nonatomic) SBChoosyBrainz *brainz;
 
+@property (nonatomic) SBChoosyUrlBuilder *urlBuilder;
 
 @end
 
-@implementation SBChoosy
+@implementation SBChoosy 
 
 #pragma mark Singleton
 
@@ -93,11 +99,67 @@ static dispatch_once_t once_token;
 {
     SBChoosyElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:elementRegistration.actionContext.appType message:@"Tapped" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert show];
+    SBChoosyAppPickerAppInfo *safariInfo = [[SBChoosyAppPickerAppInfo alloc] initWithName:@"Safari" key:@"safari" type:@"Twitter" actions:nil];
+    SBChoosyAppPickerAppInfo *twitterInfo = [[SBChoosyAppPickerAppInfo alloc] initWithName:@"Twitter" key:@"twitter" type:@"Twitter" actions:nil];
+    SBChoosyAppPickerAppInfo *tweetbotInfo = [[SBChoosyAppPickerAppInfo alloc] initWithName:@"Tweetbot" key:@"tweetbot" type:@"Twitter" actions:nil];
     
-//    SBChoosyAppPickerViewController *picker = [SBChoosyAppPickerViewController new];
-//    picker.delegate = self;
+    self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:@[safariInfo, twitterInfo, tweetbotInfo]];
+    self.appPicker.delegate = self;
+    self.appPicker.pickerText = elementRegistration.actionContext.appPickerText;
+    self.appPicker.pickerTitle = elementRegistration.actionContext.appType;
+    UIViewController *parentVC = [self getParentViewControllerForPicker];
+    
+//    [parentVC presentViewController:self.appPicker animated:YES completion:nil];
+    
+    [self.appPicker willMoveToParentViewController:parentVC];
+	[self.appPicker.view willMoveToSuperview:parentVC.view];
+    
+	// TODO: add blurred background layer
+//	self.blurredLayer = [[UIImageView alloc] initWithImage:self.blurredAboutPage];
+//	self.blurredLayer.alpha = 0;
+//	[parentVC.view addSubview:self.blurredLayer];
+	
+	// animate
+	CGFloat midX = parentVC.view.width / 2.0f;
+	self.appPicker.view.center = CGPointMake(midX, parentVC.view.height + self.appPicker.visibleSize.height / 2.0f);
+	[parentVC.view addSubview:self.appPicker.view];
+	[UIView animateWithDuration:0.5f animations:^{
+//		self.blurredLayer.alpha = 1;
+		self.appPicker.view.center = CGPointMake(midX, parentVC.view.height / 2.0f);
+	} completion:^(BOOL finished) {
+		[self.appPicker didMoveToParentViewController:parentVC];
+	}];
+
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:elementRegistration.actionContext.appType message:@"Tapped" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//    [alert show];
+    
+}
+
+- (UIViewController *)getParentViewControllerForPicker
+{
+    if ([self.delegate respondsToSelector:@selector(parentViewController)]) {
+        UIViewController *parentVC = [self.delegate parentViewController];
+        if (parentVC) return parentVC;
+    }
+    
+    // otherwise see if the delegate itself inherits from UIViewController
+    if ([self.delegate isKindOfClass:[UIViewController class]]) {
+        return (UIViewController *)self.delegate;
+    }
+    
+    // still no parent VC found? Use the top VC in the key window
+    return [SBChoosy topMostController];
+}
+     
++ (UIViewController*) topMostController
+{
+    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    while (topController.presentedViewController) {
+        topController = topController.presentedViewController;
+    }
+    
+    return topController;
 }
 
 - (void)handleResetAppSelectionEvent:(UILongPressGestureRecognizer *)gesture
@@ -108,22 +170,61 @@ static dispatch_once_t once_token;
     [alert show];
     
     // TODO
-    // delete memory of detaul app for this app type
+    // delete memory of detault app for this app type
     // open App Picker UI
 }
 
-- (void)didCancelAppSelection
+- (void)didDismissAppPicker
 {
     // TODO
     // close the UI
+    NSLog(@"Dismissing app picker...");
+    [self dismissAppPicker];
 }
 
 - (void)didSelectApp:(NSString *)appKey
 {
     // TODO
     // close the UI
+    [self dismissAppPicker];
+    
+    
+    
     // construct URL for selected app
+//    NSString *finalURL = self.urlBuilder
+    
     // call the URL
+}
+
+- (void)dismissAppPicker
+{
+	[self.appPicker willMoveToParentViewController:nil];
+	
+	[UIView animateWithDuration:0.5f animations:^ {
+//		self.blurredLayer.alpha = 0;
+		self.appPicker.view.center = CGPointMake(self.appPicker.view.center.x, self.appPicker.view.center.y + self.appPicker.view.width);
+	}completion:^(BOOL finished) {
+		[self.appPicker.view removeFromSuperview];
+		[self.appPicker didMoveToParentViewController:nil];
+		self.appPicker = nil;
+        
+	}];
+}
+
+- (SBChoosyUrlBuilder *)urlBuilder
+{
+    if (!_urlBuilder) {
+        _urlBuilder = [SBChoosyUrlBuilder new];
+    }
+    return _urlBuilder;
+}
+
+- (SBChoosyBrainz *)brainz
+{
+    if (!_brainz) {
+        _brainz = [SBChoosyBrainz new];
+    }
+    return _brainz;
 }
 
 - (SBChoosyElementRegistration *)findRegistrationInfoForUIElement:(id)uiElement

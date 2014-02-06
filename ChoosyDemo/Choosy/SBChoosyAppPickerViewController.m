@@ -13,6 +13,7 @@
 @property (nonatomic) UIView *titleView;
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) UIButton *closeButton;
+@property (nonatomic) UIView *backgroundView;
 
 @end
 
@@ -39,8 +40,14 @@ static CGFloat _appsRowGapBetweenApps = 10;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // this be holding all the shit except blurred background
+    
+//    self.backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
+//    self.backgroundView.userInteractionEnabled = YES;
+//    self.backgroundView.backgroundColor = [UIColor colorWithRed:0.8 green:0.5 blue:0.5 alpha:1];
+//    [self.view addSubview:self.backgroundView];
+//    NSLog(@"background view size: %@", NSStringFromCGRect(self.backgroundView.frame));
+    
+    // this be holding all the content except blurred background
 	UIColor *backgroundColor = [UIColor colorWithRed:23/255.0f green:24/255.0f blue:25/255.0f alpha:1];
 	CGFloat appsRowTitleTextTopPadding = 17;
 	
@@ -54,7 +61,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	
 	CGFloat openWithXOffset = collectionViewContentInset.left / 2.0f + spacingBetweenApps / 2.0f;
 	UILabel *appListSectionTitle = [[UILabel alloc] initWithFrame:CGRectMake(openWithXOffset, appsRowTitleTextTopPadding, self.view.width - openWithXOffset, 20)];
-    NSString *pickerText = self.pickerText ? self.pickerText : NSLocalizedString(@"Pick favorite app...", @"'Pick favorite app...' activity sheet title");
+    NSString *pickerText = self.pickerText ? self.pickerText : NSLocalizedString(@"Pick default app...", @"'Pick default app...' app picker text");
 	appListSectionTitle.text = pickerText;
 	appListSectionTitle.font = [UIFont systemFontOfSize:13];
 	appListSectionTitle.textColor = [UIColor whiteColor];
@@ -66,7 +73,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	CGFloat titleHeight = 35;
 	CGFloat contentAreaHeight = titleHeight + appsRowHeight;
 	
-	self.contentArea = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, contentAreaHeight)]; // will size to fit at the end
+	self.contentArea = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, contentAreaHeight)]; // will size to fit/be positioned at the end
 	self.contentArea.backgroundColor = backgroundColor;
 	
 	self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentArea.width, titleHeight)];
@@ -74,7 +81,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	self.titleLabel = [[UILabel alloc] initWithFrame:self.titleView.bounds];
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	self.titleLabel.font = [UIFont systemFontOfSize:16];
-	self.titleLabel.text = self.pickerTitle;
+	self.titleLabel.text = self.pickerTitle ? self.pickerTitle : ((SBChoosyAppPickerAppInfo*)self.apps[0]).appType;
 	self.titleLabel.textColor = [UIColor colorWithRed:123/255.0f green:123/255.0f blue:123/255.0f alpha:1];
 	[self.titleView addSubview:self.titleLabel];
 	
@@ -110,19 +117,23 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	[self.appRow addSubview:self.collectionView];
 	
 	[self.view addSubview:self.contentArea];
+    NSLog(@"app picker view size: %@", NSStringFromCGRect(self.view.frame));
 	
 	[self.contentArea sizeToFit];
 	self.contentArea.center = CGPointMake(self.view.width / 2.0f, self.view.height - self.contentArea.height / 2.0f);
 	
+	//[self.backgroundView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)]];
 	[self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)]];
-	[self.view addGestureRecognizer:[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(viewSwiped:)]];
+    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(viewSwiped:)];
+    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+	[self.view addGestureRecognizer:swipeDown];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
 	
-	NSLog( @"Collection view fram: %@", NSStringFromCGRect(self.collectionView.frame) );
+	//NSLog( @"Collection view fram: %@", NSStringFromCGRect(self.collectionView.frame) );
 }
 
 - (void)setTitleToDisplay:(NSString *)titleToDisplay
@@ -149,7 +160,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 
 - (void)viewSwiped:(UISwipeGestureRecognizer *)gesture
 {
-	if (gesture.state == UIGestureRecognizerStateBegan && gesture.direction == UISwipeGestureRecognizerDirectionDown) {
+	if ((gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateRecognized) && gesture.direction == UISwipeGestureRecognizerDirectionDown) {
 		// interpret swipe down as dismiss
 		[self.delegate didDismissAppPicker];
 	}
@@ -233,7 +244,7 @@ static CGFloat _paddingBetweenTextAndImage = 5;
 	self.backgroundColor = [UIColor clearColor];
 }
 
-- (void)setAppInfo:(SBChoosyAppPickerAppInfo *)appInfo
+- (void)setApp:(SBChoosyAppPickerAppInfo *)appInfo
 {
 	if (!appInfo) return;
 	

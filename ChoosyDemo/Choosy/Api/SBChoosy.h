@@ -19,7 +19,7 @@
 
 @end
 
-@interface SBChoosy : NSObject <SBChoosyPickerDelegate>
+@interface SBChoosy : NSObject
 
 @property (nonatomic, weak) id<SBChoosyDelegate> delegate;
 

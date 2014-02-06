@@ -10,4 +10,15 @@
 
 @implementation SBChoosyAppInfo
 
+- (instancetype)initWithName:(NSString *)name key:(NSString *)key type:(NSString *)type actions:(NSArray *)actions
+{
+    if (self = [super init]) {
+        _appName = name;
+        _appKey = key;
+        _appType = type;
+        _appActions = actions;
+    }
+    return self;
+}
+
 @end

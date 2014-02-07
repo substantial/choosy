@@ -13,6 +13,8 @@
 		D93A46D818A0C34B00742099 /* SBChoosyNetworkStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */; };
 		D960C86D18A1A71C004CFABF /* UIView+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C86C18A1A71C004CFABF /* UIView+Helpers.m */; };
 		D960C87018A305D6004CFABF /* SBChoosyUrlBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C86F18A305D6004CFABF /* SBChoosyUrlBuilder.m */; };
+		D960C87418A43E30004CFABF /* SBChoosyPickerAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C87318A43E30004CFABF /* SBChoosyPickerAppInfo.m */; };
+		D960C87718A4663F004CFABF /* SBChoosyRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C87618A4663F004CFABF /* SBChoosyRegister.m */; };
 		D9A80372189C5719002F642A /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80371189C5719002F642A /* MainViewController.m */; };
 		D9A80375189C576B002F642A /* SBChoosyAppPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80374189C576B002F642A /* SBChoosyAppPickerViewController.m */; };
 		D9A80378189C5980002F642A /* SBTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80377189C5980002F642A /* SBTestViewController.m */; };
@@ -60,6 +62,10 @@
 		D960C86C18A1A71C004CFABF /* UIView+Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Helpers.m"; sourceTree = "<group>"; };
 		D960C86E18A305D6004CFABF /* SBChoosyUrlBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyUrlBuilder.h; sourceTree = "<group>"; };
 		D960C86F18A305D6004CFABF /* SBChoosyUrlBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyUrlBuilder.m; sourceTree = "<group>"; };
+		D960C87218A43E30004CFABF /* SBChoosyPickerAppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyPickerAppInfo.h; sourceTree = "<group>"; };
+		D960C87318A43E30004CFABF /* SBChoosyPickerAppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyPickerAppInfo.m; sourceTree = "<group>"; };
+		D960C87518A4663F004CFABF /* SBChoosyRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyRegister.h; sourceTree = "<group>"; };
+		D960C87618A4663F004CFABF /* SBChoosyRegister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyRegister.m; sourceTree = "<group>"; };
 		D9A80370189C5719002F642A /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		D9A80371189C5719002F642A /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		D9A80373189C576B002F642A /* SBChoosyAppPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppPickerViewController.h; sourceTree = "<group>"; };
@@ -145,6 +151,15 @@
 			path = Categories;
 			sourceTree = "<group>";
 		};
+		D960C87118A43DF4004CFABF /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D960C87218A43E30004CFABF /* SBChoosyPickerAppInfo.h */,
+				D960C87318A43E30004CFABF /* SBChoosyPickerAppInfo.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		D9A8037F189E07F2002F642A /* Api */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +167,8 @@
 				D9A80381189E0836002F642A /* SBChoosy.m */,
 				D9A80383189E0844002F642A /* SBChoosyActionContext.h */,
 				D9A80384189E0844002F642A /* SBChoosyActionContext.m */,
+				D960C87518A4663F004CFABF /* SBChoosyRegister.h */,
+				D960C87618A4663F004CFABF /* SBChoosyRegister.m */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -235,6 +252,7 @@
 		D9C02BB8189C16D6004175A8 /* Choosy */ = {
 			isa = PBXGroup;
 			children = (
+				D960C87118A43DF4004CFABF /* ViewModel */,
 				D960C86A18A1A715004CFABF /* Categories */,
 				D904193918A0497B00A1EFF8 /* Logic */,
 				D9A8037F189E07F2002F642A /* Api */,
@@ -379,10 +397,12 @@
 				D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */,
 				D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */,
 				D9C02BC0189C1F9C004175A8 /* SBChoosyAppAction.m in Sources */,
+				D960C87418A43E30004CFABF /* SBChoosyPickerAppInfo.m in Sources */,
 				D9FB0923189C4CEC0018E507 /* SBChoosyActionParameter.m in Sources */,
 				D9A80372189C5719002F642A /* MainViewController.m in Sources */,
 				D9C02BBD189C1A62004175A8 /* SBChoosyAppType.m in Sources */,
 				D9A80378189C5980002F642A /* SBTestViewController.m in Sources */,
+				D960C87718A4663F004CFABF /* SBChoosyRegister.m in Sources */,
 				D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */,
 				D9C02B91189C162C004175A8 /* SBAppDelegate.m in Sources */,
 			);

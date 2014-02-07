@@ -3,10 +3,18 @@
 #import "SBChoosyAppPickerViewController.h"
 #import "UIView+Helpers.h"
 #import "SBChoosyAppInfo.h"
+#import "SBChoosyActionContext.h"
+#import "SBChoosyPickerAppInfo.h"
+
+@interface SBChoosyAppCell : UICollectionViewCell
+
+@property (nonatomic) SBChoosyPickerAppInfo *appInfo;
+
+@end
+
 
 @interface SBChoosyAppPickerViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (nonatomic) NSArray *apps;
 @property (nonatomic) UIView *contentArea; // this is the whole visible part
 @property (nonatomic) UIView *appRow; // this is just the row showing app icons
 @property (nonatomic) UICollectionView *collectionView;
@@ -24,10 +32,11 @@ static CGFloat _appIconWidth = 60;
 static CGFloat _appsRowLeftPadding = 5;
 static CGFloat _appsRowGapBetweenApps = 10;
 
-- (instancetype)initWithApps:(NSArray *)apps
+- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext
 {
     if (self = [super init]) {
 		_apps = apps;
+        _actionContext = actionContext;
 		[self initialize];
 	}
 	return self;
@@ -81,7 +90,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	self.titleLabel = [[UILabel alloc] initWithFrame:self.titleView.bounds];
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	self.titleLabel.font = [UIFont systemFontOfSize:16];
-	self.titleLabel.text = self.pickerTitle ? self.pickerTitle : ((SBChoosyAppPickerAppInfo*)self.apps[0]).appType;
+	self.titleLabel.text = self.pickerTitle ? self.pickerTitle : ((SBChoosyPickerAppInfo *)self.apps[0]).appType;
 	self.titleLabel.textColor = [UIColor colorWithRed:123/255.0f green:123/255.0f blue:123/255.0f alpha:1];
 	[self.titleView addSubview:self.titleLabel];
 	
@@ -170,9 +179,11 @@ static CGFloat _appsRowGapBetweenApps = 10;
 {
 	SBChoosyAppCell *cell = (SBChoosyAppCell *)gesture.view;
 	
-	NSString *appKey = cell.app.appKey;
-	NSLog( @"Tapped app: %@", appKey);
-	[self.delegate didSelectApp:appKey];
+	NSString *appKey = cell.appInfo.appKey;
+    
+    NSLog(@"Picked app %@", cell.appInfo.appName);
+	
+	[self.delegate didSelectApp:appKey forAction:self.actionContext];
 }
 
 #pragma mark Collection View
@@ -186,7 +197,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 {
 	SBChoosyAppCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
 	
-	cell.app = self.apps[(NSUInteger)indexPath.row];
+	cell.appInfo = self.apps[(NSUInteger)indexPath.row];
 	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
 		return [evaluatedObject isKindOfClass:[UITapGestureRecognizer class]];
 	}]];
@@ -244,15 +255,15 @@ static CGFloat _paddingBetweenTextAndImage = 5;
 	self.backgroundColor = [UIColor clearColor];
 }
 
-- (void)setApp:(SBChoosyAppPickerAppInfo *)appInfo
+- (void)setAppInfo:(SBChoosyPickerAppInfo *)appInfo
 {
 	if (!appInfo) return;
 	
-	_app = appInfo;
+	_appInfo = appInfo;
 	self.backgroundColor = [UIColor clearColor];
-	self.imageView.image = _app.appIcon;
+	self.imageView.image = _appInfo.appIcon;
 	self.imageView.backgroundColor = [UIColor clearColor];
-	self.labelTitle.text = _app.appName;
+	self.labelTitle.text = _appInfo.appName;
 	[self.labelTitle sizeToFit];
 	self.labelTitle.backgroundColor = [UIColor clearColor];
 	self.labelTitle.textColor = [UIColor whiteColor];
@@ -288,10 +299,5 @@ static CGFloat _paddingBetweenTextAndImage = 5;
 	}
 	return _labelTitle;
 }
-
-@end
-
-@implementation SBChoosyAppPickerAppInfo
-
 
 @end

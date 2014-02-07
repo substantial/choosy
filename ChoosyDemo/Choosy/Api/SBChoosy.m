@@ -4,27 +4,16 @@
 #import "SBChoosyActionContext.h"
 #import "SBChoosyUrlBuilder.h"
 #import "UIView+Helpers.h"
-
-@interface SBChoosyElementRegistration : NSObject
-
-@property (nonatomic) id uiElement;
-@property (nonatomic) UITapGestureRecognizer *selectAppRecognizer;
-@property (nonatomic) UILongPressGestureRecognizer *resetAppSelectionRecognizer;
-@property (nonatomic) SBChoosyActionContext *actionContext;
-
-@end
-
-@implementation SBChoosyElementRegistration
-
-@end
+#import "SBChoosyPickerAppInfo.h"
 
 @interface SBChoosy () <SBChoosyPickerDelegate>
 
-@property (nonatomic) NSMutableArray *registeredUIElements; // of type UIElementRegistration
 @property (nonatomic) SBChoosyAppPickerViewController *appPicker;
 @property (nonatomic) SBChoosyBrainz *brainz;
 
 @property (nonatomic) SBChoosyUrlBuilder *urlBuilder;
+
+@property (nonatomic) NSMutableArray *registeredAppTypes;
 
 @end
 
@@ -40,7 +29,6 @@ static dispatch_once_t once_token;
  *
  *  @return Instantiates (if needed) and returns the one instance of this class
  */
-
 + (instancetype)sharedInstance
 {
     if (_sharedInstance == nil) {
@@ -52,65 +40,68 @@ static dispatch_once_t once_token;
     return _sharedInstance;
 }
 
-+ (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext
++ (void)registerAppType:(NSString *)appType
 {
-    [[SBChoosy sharedInstance] registerUIElement:uiElement forAction:actionContext];
+    [[SBChoosy sharedInstance] registerAppType:appType];
 }
 
-+ (void)prepareForAppTypes:(NSArray *)appTypes
++ (void)registerAppTypes:(NSArray *)appTypes
 {
-    [[SBChoosy sharedInstance] prepareForAppTypes:appTypes];
+    [[SBChoosy sharedInstance] registerAppTypes:appTypes];
 }
 
-// Registering means:
-// Adding tap (activate) and long-press (reset default) gesture recognizers to ui element
-// Adding app type to the list of registered app types, if not already there
-- (void)registerUIElement:(__weak id)uiElement forAction:(SBChoosyActionContext *)actionContext
++ (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext
 {
-    if (![uiElement isKindOfClass:[UIControl class]]) {
-        NSLog(@"Only objects inheriting from UIControl can be registered. You passed ui element: %@", [uiElement description]);
-    };
-    
-    // check if the ui element is already registered
-    for (SBChoosyElementRegistration *elementRegistration in self.registeredUIElements) {
-        if (elementRegistration.uiElement == uiElement) return;
-    }
-    
-    // create a new registration for the ui element
-    SBChoosyElementRegistration *elementRegistration = [SBChoosyElementRegistration new];
-    elementRegistration.selectAppRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelectAppEvent:)];
-    elementRegistration.resetAppSelectionRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleResetAppSelectionEvent:)];
-    elementRegistration.actionContext = actionContext;
-    elementRegistration.uiElement = uiElement;
-    
-    UIControl *element = (UIControl *)uiElement;
-    [element addGestureRecognizer:elementRegistration.selectAppRecognizer];
-    [element addGestureRecognizer:elementRegistration.resetAppSelectionRecognizer];
-    
-    [self.registeredUIElements addObject:elementRegistration];
+    [[SBChoosy sharedInstance] showAppPickerForAction:actionContext];
 }
 
-- (void)prepareForAppTypes:(NSArray *)appTypes
++ (void)prepare
+{
+    [[SBChoosy sharedInstance] prepare];
+}
+
+- (void)registerAppType:(NSString *)appType
 {
     // TODO
+    
+    
+}
+
+- (void)registerAppTypes:(NSArray *)appTypes
+{
+    if (!appTypes) return;
+    
+    for (NSString *appType in appTypes) {
+        [self registerAppType:appType];
+    }
+}
+
+- (void)prepare
+{
+    // TODO
+    
 }
      
-- (void)handleSelectAppEvent:(UITapGestureRecognizer *)gesture
+- (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext
 {
-    SBChoosyElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
+    if (!actionContext) {
+        NSLog(@"Canont show app picker b/c actionContext parameter is nil.");
+    }
     
-    SBChoosyAppPickerAppInfo *safariInfo = [[SBChoosyAppPickerAppInfo alloc] initWithName:@"Safari" key:@"safari" type:@"Twitter" actions:nil];
-    SBChoosyAppPickerAppInfo *twitterInfo = [[SBChoosyAppPickerAppInfo alloc] initWithName:@"Twitter" key:@"twitter" type:@"Twitter" actions:nil];
-    SBChoosyAppPickerAppInfo *tweetbotInfo = [[SBChoosyAppPickerAppInfo alloc] initWithName:@"Tweetbot" key:@"tweetbot" type:@"Twitter" actions:nil];
+    // TODO: construct list of apps available on device
+    SBChoosyPickerAppInfo *safariInfo = [[SBChoosyPickerAppInfo alloc] initWithName:@"Safari" key:@"safari" type:actionContext.appType icon:nil];
+    SBChoosyPickerAppInfo *twitterInfo = [[SBChoosyPickerAppInfo alloc] initWithName:@"Twitter" key:@"twitter" type:actionContext.appType icon:nil];
+    SBChoosyPickerAppInfo *tweetbotInfo = [[SBChoosyPickerAppInfo alloc] initWithName:@"Tweetbot" key:@"tweetbot" type:actionContext.appType icon:nil];
     
-    self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:@[safariInfo, twitterInfo, tweetbotInfo]];
+    // show app picker
+    self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:@[safariInfo, twitterInfo, tweetbotInfo] actionContext:actionContext];
     self.appPicker.delegate = self;
-    self.appPicker.pickerText = elementRegistration.actionContext.appPickerText;
-    self.appPicker.pickerTitle = elementRegistration.actionContext.appType;
+    self.appPicker.pickerText = actionContext.appPickerText;
+    self.appPicker.pickerTitle = actionContext.appType;
     UIViewController *parentVC = [self getParentViewControllerForPicker];
     
-//    [parentVC presentViewController:self.appPicker animated:YES completion:nil];
-    
+    // went with this instead of [parentVC presentViewController] because a) tapping outside of the app picker works better (thanks, iOS! /s)
+    // and b) iOS doesn't unload parentVC so you can see when the controller's view updates/changes.
     [self.appPicker willMoveToParentViewController:parentVC];
 	[self.appPicker.view willMoveToSuperview:parentVC.view];
     
@@ -129,10 +120,20 @@ static dispatch_once_t once_token;
 	} completion:^(BOOL finished) {
 		[self.appPicker didMoveToParentViewController:parentVC];
 	}];
+}
 
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:elementRegistration.actionContext.appType message:@"Tapped" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//    [alert show];
++ (void)resetAppSelectionAndShowAppPickerForAction:(SBChoosyActionContext *)actionContext
+{
+    [[SBChoosy sharedInstance] resetAppSelectionAndShowAppPickerForAction:actionContext];
+}
+
+- (void)resetAppSelectionAndShowAppPickerForAction:(SBChoosyActionContext *)actionContext
+{
+    // TODO: erase previously remembered default app for this app type
     
+    
+    // re-display the picker
+    [[SBChoosy sharedInstance] showAppPickerForAction:actionContext];
 }
 
 - (UIViewController *)getParentViewControllerForPicker
@@ -162,17 +163,7 @@ static dispatch_once_t once_token;
     return topController;
 }
 
-- (void)handleResetAppSelectionEvent:(UILongPressGestureRecognizer *)gesture
-{
-    NSLog(@"Long-pressed");
-    SBChoosyElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:elementRegistration.actionContext.appType message:@"Long-pressed" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alert show];
-    
-    // TODO
-    // delete memory of detault app for this app type
-    // open App Picker UI
-}
+#pragma mark SBChoosyAppPickerDelegate
 
 - (void)didDismissAppPicker
 {
@@ -182,7 +173,7 @@ static dispatch_once_t once_token;
     [self dismissAppPicker];
 }
 
-- (void)didSelectApp:(NSString *)appKey
+- (void)didSelectApp:(NSString *)appKey forAction:(SBChoosyActionContext *)actionContext
 {
     // TODO
     // close the UI
@@ -211,13 +202,7 @@ static dispatch_once_t once_token;
 	}];
 }
 
-- (SBChoosyUrlBuilder *)urlBuilder
-{
-    if (!_urlBuilder) {
-        _urlBuilder = [SBChoosyUrlBuilder new];
-    }
-    return _urlBuilder;
-}
+#pragma Lazy Properties
 
 - (SBChoosyBrainz *)brainz
 {
@@ -227,20 +212,12 @@ static dispatch_once_t once_token;
     return _brainz;
 }
 
-- (SBChoosyElementRegistration *)findRegistrationInfoForUIElement:(id)uiElement
+- (SBChoosyUrlBuilder *)urlBuilder
 {
-    for (SBChoosyElementRegistration *elementRegistration in self.registeredUIElements) {
-        if (elementRegistration.uiElement == uiElement) return elementRegistration;
+    if (!_urlBuilder) {
+        _urlBuilder = [SBChoosyUrlBuilder new];
     }
-    return nil;
-}
-
-- (NSMutableArray *)registeredUIElements
-{
-    if (!_registeredUIElements) {
-        _registeredUIElements = [NSMutableArray new];
-    }
-    return _registeredUIElements;
+    return _urlBuilder;
 }
 
 @end

@@ -8,12 +8,19 @@
  */
 @interface SBChoosyLocalStore : NSObject
 
++ (NSArray *)lastDetectedAppsForAppType:(NSString *)appType;
++ (void)setLastDetectedApps:(NSArray *)appKeys forAppType:(NSString *)appType;
+
++ (NSString *)defaultAppForAppType:(NSString *)appType;
++ (void)setDefaultApp:(NSString *)appKey forAppType:(NSString *)appType;
+
+// READ
 /**
  *  Returns list of app types found in local cache.
  *
  *  @return Array of SBChoosyCachedAppType objects.
  */
-- (NSArray *)cachedAppTypes;
++ (NSArray *)cachedAppTypes;
 
 /**
  *  Returns list of apps found in local cache.
@@ -22,8 +29,11 @@
  *
  *  @return Array of SBChoosyAppInfo objects.
  */
-- (NSArray *)cachedAppInfosForAppType:(NSString *)appType;
++ (SBChoosyAppType *)cachedAppType:(NSString *)appTypeKey;
 
++ (SBChoosyAppType *)getBuiltInAppType:(NSString *)appTypeKey;
+
++ (void)cacheAppTypes:(NSArray *)jsonAppTypes;
 @end
 
 

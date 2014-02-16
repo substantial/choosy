@@ -1,0 +1,34 @@
+[{
+    "name" : "Twitter",
+    "key" : "twitter",
+    "parameters" :
+        [{
+        "name" : "Text",
+        "description" : "Text to insert into the new tweet textbox",
+        "key" : "text"
+        }],
+    "actions" :
+        [{
+        "name" : "Tweet",
+        "key" : "tweet"
+        }],
+    "apps" :
+        [{
+        "name" : "Safari",
+        "key" : "safari",
+        "actions" :
+        [{
+            "key" : "tweet",
+            "url_format" : "http://www.twitter.com"
+        }]
+        },
+        {
+        "name" : "Twitter",
+        "key" : "twitter",
+        "actions" :
+            [{
+            "key" : "tweet",
+            "url_format" : "twitter://"
+            }]
+        }]
+ }]

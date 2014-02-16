@@ -1,13 +1,44 @@
 
 #import "SBChoosyAppType.h"
+#import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
+#import "SBChoosyAppTypeParameter.h"
+#import "SBChoosyAppTypeAction.h"
+#import "SBChoosyAppInfo.h"
 
 @implementation SBChoosyAppType
 
-- (instancetype)initWithName:(NSString *)name parameters:(NSArray *)parameters actions:(NSArray *)actions
++ (SBChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey
 {
-    if (self = [super init]) {
-        
+    if (!appTypes || !appTypeKey) return nil;
+    
+    for (SBChoosyAppType *appType in appTypes) {
+        if ([appType.key isEqualToString:appTypeKey]) {
+            return appType;
+        }
     }
-    return self;
+    
+    return nil;
 }
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+    // no special mapping
+    return @{};
+}
+
++ (NSValueTransformer *)parametersJSONTransformer
+{
+    return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[SBChoosyAppTypeParameter class]];
+}
+
++ (NSValueTransformer *)actionsJSONTransformer
+{
+    return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[SBChoosyAppTypeAction class]];
+}
+
++ (NSValueTransformer *)appsJSONTransformer
+{
+    return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[SBChoosyAppInfo class]];
+}
+
 @end

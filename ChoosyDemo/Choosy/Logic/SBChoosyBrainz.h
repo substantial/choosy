@@ -1,11 +1,16 @@
 // This object manages app lists and app icons (downloads, cache)
 
 #import <Foundation/Foundation.h>
+#import "SBChoosyActionContext.h"
+#import "SBChoosyAppType.h"
+
+#define SBCHOOSY_DEVELOPMENT_MODE NO
+#define SBCHOOSY_UPDATE_INTERVAL SBCHOOSY_DEVELOPMENT_MODE ? 0 : 12 * 3600
 
 @protocol SBChoosyBrainzDelegate <NSObject>
 
 @required
-- (void)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
+- (NSArray *)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
 
 @optional
 
@@ -14,6 +19,9 @@
 @interface SBChoosyBrainz : NSObject
 
 @property (nonatomic, weak) id<SBChoosyBrainzDelegate> delegate;
+
+- (NSArray *)appsForType:(NSString *)appTypeKey;
+- (SBChoosyAppType *)appTypeWithKey:(NSString *)appTypeKey;
 
 /**
  *  This is where the most important logic lives. 
@@ -30,8 +38,9 @@
  *  If no icon is present or cache expired, it downloads new icon in the background.
  *
  *  @param appTypes Array of strings where each string is the name of App Type.
+ *  @return A list of app types that couldn't be found on the server (invalid types).
  */
-- (void)detectAppsForAppTypes:(NSArray *)appTypes;
+- (NSArray *)prepareDataForAppTypes:(NSArray *)appTypes;
 
 /**
  *  Retrieves app icon for a given app. If the icon is not in cache and the cache isn't expired, 

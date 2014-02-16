@@ -1,22 +1,16 @@
-//
-//  SBChoosyAppInfo.h
-//  ChoosyDemo
-//
-//  Created by Sasha Novosad on 2/3/14.
-//  Copyright (c) 2014 Substantial. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
+#import "MTLModel.h"
+#import "MTLJSONAdapter.h"
 
 @class SBChoosyAppType;
 
-@interface SBChoosyAppInfo : NSObject
+@interface SBChoosyAppInfo : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic, readonly) NSString *appName;
-@property (nonatomic, readonly) NSString *appKey;
-@property (nonatomic, readonly) NSString *appType;
-@property (nonatomic, readonly) NSArray *appActions; // of SBChoosyAppAction
+@property (nonatomic) NSString *appName;
+@property (nonatomic) NSString *appKey;
+@property (nonatomic) NSArray *appActions; // of SBChoosyAppAction
 
-- (instancetype)initWithName:(NSString *)name key:(NSString *)key type:(NSString *)type actions:(NSArray *)actions;
+//- (instancetype)initWithName:(NSString *)name key:(NSString *)key type:(NSString *)type actions:(NSArray *)actions;
 
 @end

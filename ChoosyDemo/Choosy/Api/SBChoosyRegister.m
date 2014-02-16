@@ -2,6 +2,7 @@
 #import "SBChoosyRegister.h"
 #import "SBChoosyActionContext.h"
 #import "SBChoosy.h"
+#import "SBChoosyLocalStore.h"
 
 @interface SBChoosyUIElementRegistration : NSObject
 
@@ -52,23 +53,22 @@
     [self.registeredUIElements addObject:elementRegistration];
 }
 
-
 - (void)handleSelectAppEvent:(UITapGestureRecognizer *)gesture
 {
-    SBChoosyUIElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
+    if (gesture.state == UIGestureRecognizerStateRecognized) {
+        SBChoosyUIElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
         
-    [SBChoosy showAppPickerForAction:elementRegistration.actionContext];
+        [SBChoosy handleAction:elementRegistration.actionContext];
+    }
 }
 
 - (void)handleResetAppSelectionEvent:(UILongPressGestureRecognizer *)gesture
 {
-    NSLog(@"Long-pressed");
-    SBChoosyUIElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
-    
-    [SBChoosy resetAppSelectionAndShowAppPickerForAction:elementRegistration.actionContext];
-    // TODO
-    // delete memory of detault app for this app type
-    // open App Picker UI
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        SBChoosyUIElementRegistration *elementRegistration = [self findRegistrationInfoForUIElement:gesture.view];
+        
+        [SBChoosy resetAppSelectionAndHandleAction:elementRegistration.actionContext];
+    }
 }
 
 

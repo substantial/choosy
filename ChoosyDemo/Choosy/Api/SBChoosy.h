@@ -1,8 +1,6 @@
-
 #import <Foundation/Foundation.h>
 #import "SBChoosyAppPickerViewController.h"
-
-@class SBChoosyActionContext;
+#import "SBChoosyActionContext.h"
 
 @protocol SBChoosyDelegate <NSObject>
 
@@ -22,6 +20,15 @@
 @interface SBChoosy : NSObject
 
 @property (nonatomic, weak) id<SBChoosyDelegate> delegate;
+
+/**
+ *  Adds gesture recognizers to the ui element and calls Choosy with the given action context when they are triggered.
+ *
+ *  @param uiElement     Any object that inherits from UIControl
+ *  @param actionContext Action context describing the category of app to be opened, 
+ *                       and optionally Action name and its Parameters.
+ */
++ (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext;
 
 /**
  *  Use this to register app types on application launch. 
@@ -54,11 +61,11 @@
 + (void)prepare;
 
 /**
- *  Manually force the display of app picker.
+ *  Manually cause the display of app picker.
  *
  *  @param actionContext An object describing what type of app action the picker is for.
  */
-+ (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext;
++ (void)handleAction:(SBChoosyActionContext *)actionContext;
 
 
 /**
@@ -67,13 +74,6 @@
  *
  *  @param actionContext An object describing what type of app action the picker is for.
  */
-+ (void)resetAppSelectionAndShowAppPickerForAction:(SBChoosyActionContext *)actionContext;
-
-// direct actions (for manual control by the devs)
-// open app selection interface
-
-// reset app selection, then open app selection interface
-
-
++ (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext;
 
 @end

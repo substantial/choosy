@@ -1,5 +1,3 @@
-
-
 #import "SBChoosyAppPickerViewController.h"
 #import "UIView+Helpers.h"
 #import "SBChoosyAppInfo.h"
@@ -11,7 +9,6 @@
 @property (nonatomic) SBChoosyPickerAppInfo *appInfo;
 
 @end
-
 
 @interface SBChoosyAppPickerViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
@@ -32,11 +29,12 @@ static CGFloat _appIconWidth = 60;
 static CGFloat _appsRowLeftPadding = 5;
 static CGFloat _appsRowGapBetweenApps = 10;
 
-- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext
+- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext appTypeName:(NSString *)appTypeName
 {
     if (self = [super init]) {
 		_apps = apps;
         _actionContext = actionContext;
+        _appTypeName = appTypeName;
 		[self initialize];
 	}
 	return self;
@@ -70,7 +68,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	
 	CGFloat openWithXOffset = collectionViewContentInset.left / 2.0f + spacingBetweenApps / 2.0f;
 	UILabel *appListSectionTitle = [[UILabel alloc] initWithFrame:CGRectMake(openWithXOffset, appsRowTitleTextTopPadding, self.view.width - openWithXOffset, 20)];
-    NSString *pickerText = self.pickerText ? self.pickerText : NSLocalizedString(@"Pick default app...", @"'Pick default app...' app picker text");
+    NSString *pickerText = self.pickerText ? self.pickerText : NSLocalizedString(@"Pick your favorite app...", @"'Pick your favorite app...' app picker text");
 	appListSectionTitle.text = pickerText;
 	appListSectionTitle.font = [UIFont systemFontOfSize:13];
 	appListSectionTitle.textColor = [UIColor whiteColor];
@@ -90,7 +88,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	self.titleLabel = [[UILabel alloc] initWithFrame:self.titleView.bounds];
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	self.titleLabel.font = [UIFont systemFontOfSize:16];
-	self.titleLabel.text = self.pickerTitle ? self.pickerTitle : ((SBChoosyPickerAppInfo *)self.apps[0]).appType;
+	self.titleLabel.text = self.pickerTitle ? self.pickerTitle : self.appTypeName;
 	self.titleLabel.textColor = [UIColor colorWithRed:123/255.0f green:123/255.0f blue:123/255.0f alpha:1];
 	[self.titleView addSubview:self.titleLabel];
 	

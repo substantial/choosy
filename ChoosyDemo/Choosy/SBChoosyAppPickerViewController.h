@@ -17,13 +17,14 @@
 @interface SBChoosyAppPickerViewController : UIViewController
 
 // designated
-- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext;
+- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext appTypeName:(NSString *)appTypeName;
 
 @property (nonatomic, weak) id<SBChoosyPickerDelegate> delegate;
 @property (nonatomic) NSString *pickerTitle;
 @property (nonatomic) NSString *pickerText;
 
 @property (nonatomic, readonly) NSArray *apps;
+@property (nonatomic, readonly) NSString *appTypeName;
 @property (nonatomic, readonly) SBChoosyActionContext *actionContext;
 
 // The size of the view that doesn't include the background

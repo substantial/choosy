@@ -1,10 +1,11 @@
 
 #import "SBChoosy.h"
 #import "SBChoosyBrainz.h"
-#import "SBChoosyActionContext.h"
 #import "SBChoosyUrlBuilder.h"
 #import "UIView+Helpers.h"
 #import "SBChoosyPickerAppInfo.h"
+#import "SBChoosyLocalStore.h"
+#import "SBChoosyRegister.h"
 
 @interface SBChoosy () <SBChoosyPickerDelegate>
 
@@ -14,6 +15,7 @@
 @property (nonatomic) SBChoosyUrlBuilder *urlBuilder;
 
 @property (nonatomic) NSMutableArray *registeredAppTypes;
+@property (nonatomic) SBChoosyRegister *elementsRegister;
 
 @end
 
@@ -40,31 +42,30 @@ static dispatch_once_t once_token;
     return _sharedInstance;
 }
 
++ (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext
+{
+    if (!actionContext || !uiElement) return;
+    
+    [[SBChoosy sharedInstance] registerAppType:actionContext.appTypeKey];
+    [[SBChoosy sharedInstance].elementsRegister registerUIElement:uiElement forAction:actionContext];
+}
+
 + (void)registerAppType:(NSString *)appType
 {
     [[SBChoosy sharedInstance] registerAppType:appType];
 }
 
-+ (void)registerAppTypes:(NSArray *)appTypes
-{
-    [[SBChoosy sharedInstance] registerAppTypes:appTypes];
-}
-
-+ (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext
-{
-    [[SBChoosy sharedInstance] showAppPickerForAction:actionContext];
-}
-
-+ (void)prepare
-{
-    [[SBChoosy sharedInstance] prepare];
-}
 
 - (void)registerAppType:(NSString *)appType
 {
-    // TODO
-    
-    
+    if (![self.registeredAppTypes containsObject:appType]) {
+        [self.registeredAppTypes addObject:appType];
+    }
+}
+
++ (void)registerAppTypes:(NSArray *)appTypes
+{
+    [[SBChoosy sharedInstance] registerAppTypes:appTypes];
 }
 
 - (void)registerAppTypes:(NSArray *)appTypes
@@ -76,28 +77,77 @@ static dispatch_once_t once_token;
     }
 }
 
++ (void)prepare
+{
+    [[SBChoosy sharedInstance] prepare];
+}
+
 - (void)prepare
 {
     // TODO
+    NSArray *badAppTypes = [self.brainz prepareDataForAppTypes:[self.registeredAppTypes copy]];
     
+    for (NSString *badAppType in badAppTypes) {
+        NSLog(@"'%@' is not a valid app type. Make sure you spelt it correctly!", badAppType);
+        [self.registeredAppTypes removeObject:badAppType];
+    }
+}
+
++ (void)handleAction:(SBChoosyActionContext *)actionContext
+{
+    [[SBChoosy sharedInstance] handleAction:actionContext];
 }
      
-- (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext
+- (void)handleAction:(SBChoosyActionContext *)actionContext
 {
+    if ([self isAppPickerShown]) return;
+    
     if (!actionContext) {
-        NSLog(@"Canont show app picker b/c actionContext parameter is nil.");
+        NSLog(@"Cannot show app picker b/c actionContext parameter is nil.");
     }
     
+    // check if default app is already stored
+    NSString *defaultAppKey = [SBChoosyLocalStore defaultAppForAppType:actionContext.appTypeKey];
+    
+    if (defaultAppKey) {
+        // TODO
+        // perform the action on the default app
+        NSLog(@"Default app already selected: %@", defaultAppKey);
+    } else {
+        // ask user to pick an app
+        [self showAppPickerForAction:actionContext];
+    }
+}
+
+- (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext
+{
     // TODO: construct list of apps available on device
-    SBChoosyPickerAppInfo *safariInfo = [[SBChoosyPickerAppInfo alloc] initWithName:@"Safari" key:@"safari" type:actionContext.appType icon:nil];
-    SBChoosyPickerAppInfo *twitterInfo = [[SBChoosyPickerAppInfo alloc] initWithName:@"Twitter" key:@"twitter" type:actionContext.appType icon:nil];
-    SBChoosyPickerAppInfo *tweetbotInfo = [[SBChoosyPickerAppInfo alloc] initWithName:@"Tweetbot" key:@"tweetbot" type:actionContext.appType icon:nil];
+    //NSMutableArray *apps = [NSMutableArray new];
+    NSArray *appInfos = [self.brainz appsForType:actionContext.appTypeKey];
+    SBChoosyAppType *appType = [self.brainz appTypeWithKey:actionContext.appTypeKey];
+    
+    // now we have an array of SBChoosyAppInfo objects. Use them to create the view model objects
+    NSMutableArray *apps = [NSMutableArray new];
+    for (SBChoosyAppInfo *appInfo in appInfos) {
+        SBChoosyPickerAppInfo *appViewModel = [[SBChoosyPickerAppInfo alloc] initWithName:appInfo.appName key:appInfo.appKey icon:nil];
+        [apps addObject:appViewModel];
+    }
+
+//    if ([[actionContext.appType lowercaseString] isEqualToString: @"twitter"]) {
+//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Safari" key:@"safari" type:actionContext.appType icon:nil]];
+//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Twitter" key:@"twitter" type:actionContext.appType icon:nil]];
+//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Tweetbot" key:@"tweetbot" type:actionContext.appType icon:nil] ];
+//    } else {
+//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Mail" key:@"mail" type:actionContext.appType icon:nil]];
+//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Gmail" key:@"googlemail" type:actionContext.appType icon:nil]];
+//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Mailbox" key:@"mailbox" type:actionContext.appType icon:nil]];
+//    }
     
     // show app picker
-    self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:@[safariInfo, twitterInfo, tweetbotInfo] actionContext:actionContext];
+    self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:[apps copy] actionContext:actionContext appTypeName:appType.name];
     self.appPicker.delegate = self;
     self.appPicker.pickerText = actionContext.appPickerText;
-    self.appPicker.pickerTitle = actionContext.appType;
+    self.appPicker.pickerTitle = actionContext.appTypeKey;
     UIViewController *parentVC = [self getParentViewControllerForPicker];
     
     // went with this instead of [parentVC presentViewController] because a) tapping outside of the app picker works better (thanks, iOS! /s)
@@ -122,18 +172,34 @@ static dispatch_once_t once_token;
 	}];
 }
 
-+ (void)resetAppSelectionAndShowAppPickerForAction:(SBChoosyActionContext *)actionContext
++ (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext
 {
     [[SBChoosy sharedInstance] resetAppSelectionAndShowAppPickerForAction:actionContext];
 }
 
 - (void)resetAppSelectionAndShowAppPickerForAction:(SBChoosyActionContext *)actionContext
 {
-    // TODO: erase previously remembered default app for this app type
+    if ([self isAppPickerShown]) return;
     
+    if (!actionContext) {
+        NSLog(@"Cannot show app picker b/c actionContext parameter is nil.");
+    }
     
-    // re-display the picker
-    [[SBChoosy sharedInstance] showAppPickerForAction:actionContext];
+    // erase previously remembered default app for this app type
+    [SBChoosyLocalStore setDefaultApp:nil forAppType:actionContext.appTypeKey];
+    
+    [self handleAction:actionContext];
+}
+
+#pragma Private
+
+- (BOOL)isAppPickerShown
+{
+    if (self.appPicker && self.appPicker.parentViewController) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (UIViewController *)getParentViewControllerForPicker
@@ -176,6 +242,10 @@ static dispatch_once_t once_token;
 - (void)didSelectApp:(NSString *)appKey forAction:(SBChoosyActionContext *)actionContext
 {
     // TODO
+    
+    // remember the selection
+    [SBChoosyLocalStore setDefaultApp:appKey forAppType:actionContext.appTypeKey];
+    
     // close the UI
     [self dismissAppPicker];
     
@@ -198,7 +268,6 @@ static dispatch_once_t once_token;
 		[self.appPicker.view removeFromSuperview];
 		[self.appPicker didMoveToParentViewController:nil];
 		self.appPicker = nil;
-        
 	}];
 }
 
@@ -218,6 +287,22 @@ static dispatch_once_t once_token;
         _urlBuilder = [SBChoosyUrlBuilder new];
     }
     return _urlBuilder;
+}
+
+- (NSMutableArray *)registeredAppTypes
+{
+    if (!_registeredAppTypes) {
+        _registeredAppTypes = [NSMutableArray new];
+    }
+    return _registeredAppTypes;
+}
+
+- (SBChoosyRegister *)elementsRegister
+{
+    if (!_elementsRegister) {
+        _elementsRegister = [SBChoosyRegister new];
+    }
+    return _elementsRegister;
 }
 
 @end

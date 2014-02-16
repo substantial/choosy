@@ -1,14 +1,19 @@
 
 #import "SBChoosyAppAction.h"
+#import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
 
 @implementation SBChoosyAppAction
 
-- (instancetype)initWithAppTypeAction:(SBChoosyAppTypeAction *)appTypeAction urlFormat:(NSArray *)urlFormat
++ (NSDictionary *)JSONKeyPathsByPropertyKey
 {
-    if (self = [super init]) {
-        
-    }
-    return self;
+    return @{
+             @"actionKey" : @"key",
+             @"urlFormat" : @"url_format"
+             };
+}
+
++ (NSValueTransformer *)urlFormatJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLURLValueTransformerName];
 }
 
 @end

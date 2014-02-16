@@ -1,12 +1,21 @@
 
 #import <Foundation/Foundation.h>
+#import "MTLModel.h"
+#import "MTLJSONAdapter.h"
 
-@interface SBChoosyAppType : NSObject
+@interface SBChoosyAppType : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSArray *parameters;
-@property (nonatomic, readonly) NSArray *actions;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *key;
+@property (nonatomic) NSArray *parameters;
+@property (nonatomic) NSArray *actions;
+@property (nonatomic) NSArray *apps;
 
-- (instancetype)initWithName:(NSString *)name parameters:(NSArray *)parameters actions:(NSArray *)actions;
+// Date the in-memory object was created. If more than X hours old,
+// the object is considered invalid and only used if data cannot be retrieved from server
+//@property (nonatomic) NSDate *createDate;
+
+
++ (SBChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey;
 
 @end

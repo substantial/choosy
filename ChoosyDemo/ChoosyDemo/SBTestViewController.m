@@ -7,15 +7,14 @@
 //
 
 #import "SBTestViewController.h"
-#import "SBChoosyRegister.h"
+#import "SBChoosy.h"
 #import "SBChoosyActionContext.h"
+#import "SBChoosyRegister.h"
 
 @interface SBTestViewController ()
 
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
 @property (weak, nonatomic) IBOutlet UILabel *twitterLinkLabel;
-
-@property (nonatomic) SBChoosyRegister *choosyRegister;
 
 @end
 
@@ -25,12 +24,11 @@
 {
     [super viewDidLoad];
     
-    // register label with Choosy
-    self.choosyRegister = [SBChoosyRegister new];
-    [self.choosyRegister registerUIElement:self.twitterLinkLabel forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
+    [SBChoosy registerUIElement:self.twitterLinkLabel forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
     
-    [self.choosyRegister registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
-                                                                                              action:@"Compose" parameters:@{ @"from:" : @"your_mom@substantial.com" }]];
+    [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
+                                                                                              action:@"Compose" parameters:@{ @"from" : @"choosy@substantial.com" }]];
+    [SBChoosy prepare];
 }
 
 - (void)didReceiveMemoryWarning

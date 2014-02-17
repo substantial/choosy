@@ -4,8 +4,8 @@
 #import "SBChoosyActionContext.h"
 #import "SBChoosyAppType.h"
 
-#define SBCHOOSY_DEVELOPMENT_MODE NO
-#define SBCHOOSY_UPDATE_INTERVAL SBCHOOSY_DEVELOPMENT_MODE ? 0 : 12 * 3600
+#define SBCHOOSY_DEVELOPMENT_MODE 0
+#define SBCHOOSY_UPDATE_INTERVAL 24 * 3600
 
 @protocol SBChoosyBrainzDelegate <NSObject>
 

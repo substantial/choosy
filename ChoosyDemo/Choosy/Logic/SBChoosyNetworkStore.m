@@ -31,6 +31,7 @@
     {
         NSArray *appTypes = [SBChoosySerialization deserializeAppTypesFromJSON:responseObject];
         SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:appTypes byKey:appTypeKey];
+        appType.dateUpdated = [NSDate date];
         
         if (successBlock) {
             successBlock(operation, appType);

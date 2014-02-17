@@ -70,7 +70,8 @@
 {
     SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:self.appTypes byKey:appTypeKey];
     
-    BOOL timeToRefresh = YES;//[appType.createDate hoursBeforeDate:[NSDate date]] > SBCHOOSY_UPDATE_INTERVAL;
+    NSInteger cacheAgeInHours = [appType.dateUpdated hoursBeforeDate:[NSDate date]];
+    BOOL timeToRefresh = SBCHOOSY_DEVELOPMENT_MODE == 1 || cacheAgeInHours > SBCHOOSY_UPDATE_INTERVAL || !appType.dateUpdated;
     if (!appType || timeToRefresh) {
         // see if there's fresh/more data on the server
         [SBChoosyNetworkStore downloadAppType:appTypeKey success:^(AFHTTPRequestOperation *operation, SBChoosyAppType *downloadedAppType) {

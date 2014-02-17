@@ -10,6 +10,8 @@
 @protocol SBChoosyBrainzDelegate <NSObject>
 
 @required
+- (void)didAddAppType:(SBChoosyAppType *)newAppType;
+- (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType;
 - (NSArray *)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
 
 @optional
@@ -40,7 +42,7 @@
  *  @param appTypes Array of strings where each string is the name of App Type.
  *  @return A list of app types that couldn't be found on the server (invalid types).
  */
-- (NSArray *)prepareDataForAppTypes:(NSArray *)appTypes;
+- (void)prepareDataForAppTypes:(NSArray *)appTypes;
 
 /**
  *  Retrieves app icon for a given app. If the icon is not in cache and the cache isn't expired, 

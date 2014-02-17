@@ -5,7 +5,8 @@
 @protocol SBChoosyDelegate <NSObject>
 
 @optional
-- (void)didDownloadAppList;
+- (void)didAddAppType:(SBChoosyAppType *)newAppType;
+- (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType;
 - (void)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
 
 /**

@@ -7,7 +7,7 @@
 #import "SBChoosyLocalStore.h"
 #import "SBChoosyRegister.h"
 
-@interface SBChoosy () <SBChoosyPickerDelegate>
+@interface SBChoosy () <SBChoosyPickerDelegate, SBChoosyBrainzDelegate>
 
 @property (nonatomic) SBChoosyAppPickerViewController *appPicker;
 @property (nonatomic) SBChoosyBrainz *brainz;
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation SBChoosy 
+@implementation SBChoosy
 
 #pragma mark Singleton
 
@@ -85,12 +85,7 @@ static dispatch_once_t once_token;
 - (void)prepare
 {
     // TODO
-    NSArray *badAppTypes = [self.brainz prepareDataForAppTypes:[self.registeredAppTypes copy]];
-    
-    for (NSString *badAppType in badAppTypes) {
-        NSLog(@"'%@' is not a valid app type. Make sure you spelt it correctly!", badAppType);
-        [self.registeredAppTypes removeObject:badAppType];
-    }
+    [self.brainz prepareDataForAppTypes:[self.registeredAppTypes copy]];
 }
 
 + (void)handleAction:(SBChoosyActionContext *)actionContext
@@ -229,6 +224,24 @@ static dispatch_once_t once_token;
     return topController;
 }
 
+#pragma mark SBChoosyBrainzDelegate
+
+- (void)didAddAppType:(SBChoosyAppType *)newAppType
+{
+    // TODO: update app picker UI
+    
+    
+    [self.delegate didAddAppType:newAppType];
+}
+
+- (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType
+{
+    // TODO: update app picker UI
+    
+    
+    [self.delegate didUpdateAppType:existingAppType withNewAppType:updatedAppType];
+}
+
 #pragma mark SBChoosyAppPickerDelegate
 
 - (void)didDismissAppPicker
@@ -277,6 +290,7 @@ static dispatch_once_t once_token;
 {
     if (!_brainz) {
         _brainz = [SBChoosyBrainz new];
+        _brainz.delegate = self;
     }
     return _brainz;
 }

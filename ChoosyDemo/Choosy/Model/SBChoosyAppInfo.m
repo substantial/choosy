@@ -5,22 +5,12 @@
 
 @implementation SBChoosyAppInfo
 
-//- (instancetype)initWithName:(NSString *)name key:(NSString *)key type:(NSString *)type actions:(NSArray *)actions
-//{
-//    if (self = [super init]) {
-//        _appName = name;
-//        _appKey = key;
-//        _appType = type;
-//        _appActions = actions;
-//    }
-//    return self;
-//}
-
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
     return @{
              @"appName" : @"name",
              @"appKey" : @"key",
+             @"appURLScheme" : @"app_url_scheme",
              @"appActions" : @"actions"
              };
 }
@@ -28,6 +18,10 @@
 + (NSValueTransformer *)appActionsJSONTransformer
 {
     return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:[SBChoosyAppAction class]];
+}
+
++ (NSValueTransformer *)appURLSchemeJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLURLValueTransformerName];
 }
 
 @end

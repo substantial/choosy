@@ -4,8 +4,12 @@
 #import "SBChoosyActionContext.h"
 #import "SBChoosyAppType.h"
 
-#define SBCHOOSY_DEVELOPMENT_MODE 0
+@class SBChoosyAppInfo;
+
+#define SBCHOOSY_DEVELOPMENT_MODE 1
 #define SBCHOOSY_UPDATE_INTERVAL 24 * 3600
+
+// TODO: this is really an AppTypeStore, rename for clarity?
 
 @protocol SBChoosyBrainzDelegate <NSObject>
 
@@ -22,8 +26,9 @@
 
 @property (nonatomic, weak) id<SBChoosyBrainzDelegate> delegate;
 
-- (NSArray *)appsForType:(NSString *)appTypeKey;
 - (SBChoosyAppType *)appTypeWithKey:(NSString *)appTypeKey;
+
+- (NSArray *)installedAppsForAppType:(SBChoosyAppType *)appType;
 
 /**
  *  This is where the most important logic lives. 
@@ -54,5 +59,11 @@
  *  @return App icon
  */
 - (UIImage *)appIconForAppKey:(NSString *)appKey completion:(void (^)())completionBlock;
+
+- (void)takeStockOfApps;
+
+- (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey;
+- (BOOL)isAppInstalled:(SBChoosyAppInfo *)app;
+- (NSArray *)newAppsForAppType:(NSString *)appTypeKey;
 
 @end

@@ -37,24 +37,24 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 #pragma mark Last Detected Apps
 
-+ (NSArray *)lastDetectedAppsForAppType:(NSString *)appType
++ (NSArray *)lastDetectedAppsForAppType:(NSString *)appTypeKey
 {
 	NSDictionary *detectedApps = (NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:LAST_DETECTED_APPS_KEY];
     
     if (detectedApps) {
-        return detectedApps[appType];
+        return detectedApps[appTypeKey];
     }
     
     return nil;
 }
 
-+ (void)setLastDetectedApps:(NSArray *)appKeys forAppType:(NSString *)appType
++ (void)setLastDetectedApps:(NSArray *)appKeys forAppType:(NSString *)appTypeKey
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *detectedApps = (NSDictionary *)[defaults objectForKey:LAST_DETECTED_APPS_KEY];
     
     NSMutableDictionary *newDetectedApps = detectedApps ? [detectedApps mutableCopy] : [NSMutableDictionary new];
-    newDetectedApps[appType] = appKeys;
+    newDetectedApps[appTypeKey] = appKeys;
     
 	[defaults setObject:[newDetectedApps copy] forKey:LAST_DETECTED_APPS_KEY];
 	[defaults synchronize];

@@ -9,8 +9,7 @@
 
 @property (nonatomic) NSString *appName;
 @property (nonatomic) NSString *appKey;
+@property (nonatomic) NSURL *appURLScheme;
 @property (nonatomic) NSArray *appActions; // of SBChoosyAppAction
-
-//- (instancetype)initWithName:(NSString *)name key:(NSString *)key type:(NSString *)type actions:(NSArray *)actions;
 
 @end

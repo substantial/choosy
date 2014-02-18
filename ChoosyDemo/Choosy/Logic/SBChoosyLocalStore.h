@@ -35,23 +35,3 @@
 
 + (void)cacheAppTypes:(NSArray *)jsonAppTypes;
 @end
-
-
-@interface SBChoosyCachedAppType : SBChoosyAppType
-
-// designated
-- (instancetype)initWithAppType:(SBChoosyAppType *)appType dateCached:(NSDate *)dateCached;
-
-@property (nonatomic, readonly) NSDate *dateCached;
-
-@end
-
-
-@interface SBChoosyCachedAppInfos : SBChoosyAppInfo
-
-// designated
-- (instancetype)initWithAppInfo:(SBChoosyAppInfo *)appInfo dateCached:(NSDate *)dateCached;
-
-@property (nonatomic, readonly) NSDate *dateCached;
-
-@end

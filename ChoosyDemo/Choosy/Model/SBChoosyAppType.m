@@ -21,6 +21,19 @@
     return nil;
 }
 
+- (SBChoosyAppInfo *)findAppInfoWithAppKey:(NSString *)appKey
+{
+    if (!self.apps) return nil;
+    
+    for (SBChoosyAppInfo *appInfo in self.apps) {
+        if ([appInfo.appKey isEqualToString:appKey]) {
+            return appInfo;
+        }
+    }
+    
+    return nil;
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
     // no special mapping

@@ -42,6 +42,8 @@ static dispatch_once_t once_token;
     return _sharedInstance;
 }
 
+#pragma mark - Public
+
 + (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext
 {
     if (!actionContext || !uiElement) return;
@@ -50,23 +52,28 @@ static dispatch_once_t once_token;
     [[SBChoosy sharedInstance].elementsRegister registerUIElement:uiElement forAction:actionContext];
 }
 
-+ (void)registerAppType:(NSString *)appType
-{
-    [[SBChoosy sharedInstance] registerAppType:appType];
-}
-
-
-- (void)registerAppType:(NSString *)appType
-{
-    if (![self.registeredAppTypes containsObject:appType]) {
-        [self.registeredAppTypes addObject:appType];
-    }
-}
-
 + (void)registerAppTypes:(NSArray *)appTypes
 {
     [[SBChoosy sharedInstance] registerAppTypes:appTypes];
 }
+
++ (void)update
+{
+    [[SBChoosy sharedInstance] update];
+}
+
++ (void)handleAction:(SBChoosyActionContext *)actionContext
+{
+    [[SBChoosy sharedInstance] handleAction:actionContext];
+}
+
++ (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext
+{
+    [[SBChoosy sharedInstance] resetAppSelectionAndShowAppPickerForAction:actionContext];
+}
+
+#pragma mark - Private
+#pragma mark Picker
 
 - (void)registerAppTypes:(NSArray *)appTypes
 {
@@ -75,24 +82,26 @@ static dispatch_once_t once_token;
     for (NSString *appType in appTypes) {
         [self registerAppType:appType];
     }
+    
+    [self update];
 }
 
-+ (void)prepare
+- (void)registerAppType:(NSString *)appType
 {
-    [[SBChoosy sharedInstance] prepare];
+    if (![self.registeredAppTypes containsObject:appType]) {
+        [self.registeredAppTypes addObject:appType];
+    }
 }
 
-- (void)prepare
+- (void)update
 {
     // TODO
     [self.brainz prepareDataForAppTypes:[self.registeredAppTypes copy]];
+    
+    // take stock of apps
+    [self.brainz takeStockOfApps];
 }
 
-+ (void)handleAction:(SBChoosyActionContext *)actionContext
-{
-    [[SBChoosy sharedInstance] handleAction:actionContext];
-}
-     
 - (void)handleAction:(SBChoosyActionContext *)actionContext
 {
     if ([self isAppPickerShown]) return;
@@ -101,13 +110,12 @@ static dispatch_once_t once_token;
         NSLog(@"Cannot show app picker b/c actionContext parameter is nil.");
     }
     
-    // check if default app is already stored
-    NSString *defaultAppKey = [SBChoosyLocalStore defaultAppForAppType:actionContext.appTypeKey];
+    SBChoosyAppInfo *appForAction = [self appForAction:actionContext];
     
-    if (defaultAppKey) {
+    if (appForAction) {
         // TODO
-        // perform the action on the default app
-        NSLog(@"Default app already selected: %@", defaultAppKey);
+        // perform the action on the app
+        NSLog(@"Default app already selected: %@", appForAction.appName);
     } else {
         // ask user to pick an app
         [self showAppPickerForAction:actionContext];
@@ -118,25 +126,20 @@ static dispatch_once_t once_token;
 {
     // TODO: construct list of apps available on device
     //NSMutableArray *apps = [NSMutableArray new];
-    NSArray *appInfos = [self.brainz appsForType:actionContext.appTypeKey];
     SBChoosyAppType *appType = [self.brainz appTypeWithKey:actionContext.appTypeKey];
+    
+    if (!appType) {
+        return;
+    }
+    
+    NSArray *installedApps = [self.brainz installedAppsForAppType:appType];
     
     // now we have an array of SBChoosyAppInfo objects. Use them to create the view model objects
     NSMutableArray *apps = [NSMutableArray new];
-    for (SBChoosyAppInfo *appInfo in appInfos) {
-        SBChoosyPickerAppInfo *appViewModel = [[SBChoosyPickerAppInfo alloc] initWithName:appInfo.appName key:appInfo.appKey icon:nil];
+    for (SBChoosyAppInfo *appInfo in installedApps) {
+        SBChoosyPickerAppInfo *appViewModel = [[SBChoosyPickerAppInfo alloc] initWithName:appInfo.appName key:appInfo.appKey icon:[self.brainz appIconForAppKey:appInfo.appKey completion:nil]];
         [apps addObject:appViewModel];
     }
-
-//    if ([[actionContext.appType lowercaseString] isEqualToString: @"twitter"]) {
-//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Safari" key:@"safari" type:actionContext.appType icon:nil]];
-//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Twitter" key:@"twitter" type:actionContext.appType icon:nil]];
-//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Tweetbot" key:@"tweetbot" type:actionContext.appType icon:nil] ];
-//    } else {
-//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Mail" key:@"mail" type:actionContext.appType icon:nil]];
-//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Gmail" key:@"googlemail" type:actionContext.appType icon:nil]];
-//        [apps addObject: [[SBChoosyPickerAppInfo alloc] initWithName:@"Mailbox" key:@"mailbox" type:actionContext.appType icon:nil]];
-//    }
     
     // show app picker
     self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:[apps copy] actionContext:actionContext appTypeName:appType.name];
@@ -167,11 +170,6 @@ static dispatch_once_t once_token;
 	}];
 }
 
-+ (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext
-{
-    [[SBChoosy sharedInstance] resetAppSelectionAndShowAppPickerForAction:actionContext];
-}
-
 - (void)resetAppSelectionAndShowAppPickerForAction:(SBChoosyActionContext *)actionContext
 {
     if ([self isAppPickerShown]) return;
@@ -185,8 +183,6 @@ static dispatch_once_t once_token;
     
     [self handleAction:actionContext];
 }
-
-#pragma Private
 
 - (BOOL)isAppPickerShown
 {
@@ -222,6 +218,26 @@ static dispatch_once_t once_token;
     }
     
     return topController;
+}
+
+#pragma mark Default App and App Detection
+
+- (SBChoosyAppInfo *)appForAction:(SBChoosyActionContext *)actionContext
+{
+    // check if default app is already stored
+    SBChoosyAppInfo *defaultApp = [self.brainz defaultAppForAppType:actionContext.appTypeKey];
+    
+    // check if this app is still installed
+    BOOL isDefaultAppInstalled = [self.brainz isAppInstalled:defaultApp];
+    
+    // check if new apps were installed for app type since last time default app was selected
+    BOOL newAppsInstalled = [self.brainz newAppsForAppType:actionContext.appTypeKey];
+    
+    if (isDefaultAppInstalled || newAppsInstalled) {
+        return nil;
+    }
+    
+    return defaultApp; // will be nil if no default app is found for this app type
 }
 
 #pragma mark SBChoosyBrainzDelegate

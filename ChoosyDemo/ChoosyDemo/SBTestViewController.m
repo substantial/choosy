@@ -28,7 +28,7 @@
     
     [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
                                                                                               action:@"Compose" parameters:@{ @"from" : @"choosy@substantial.com" }]];
-    [SBChoosy prepare];
+    [SBChoosy update];
 }
 
 - (void)didReceiveMemoryWarning

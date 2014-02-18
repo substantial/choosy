@@ -3,6 +3,8 @@
 #import "MTLModel.h"
 #import "MTLJSONAdapter.h"
 
+@class SBChoosyAppInfo;
+
 @interface SBChoosyAppType : MTLModel <MTLJSONSerializing>
 
 @property (nonatomic) NSString *name;
@@ -16,5 +18,6 @@
 @property (nonatomic) NSDate *dateUpdated;
 
 + (SBChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey;
+- (SBChoosyAppInfo *)findAppInfoWithAppKey:(NSString *)appKey;
 
 @end

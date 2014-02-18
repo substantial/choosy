@@ -14,18 +14,20 @@
         }],
     "apps" :
         [{
-        "name" : "Safari",
-        "key" : "safari",
-        "actions" :
+         "name" : "Safari",
+         "key" : "safari",
+         "app_url_scheme" : "http://",
+         "actions" :
         [{
             "key" : "tweet",
             "url_format" : "http://www.twitter.com"
         }]
         },
         {
-        "name" : "Twitter",
-        "key" : "twitter",
-        "actions" :
+         "name" : "Twitter",
+         "key" : "twitter",
+         "app_url_scheme" : "twitter://",
+         "actions" :
             [{
             "key" : "tweet",
             "url_format" : "twitter://"

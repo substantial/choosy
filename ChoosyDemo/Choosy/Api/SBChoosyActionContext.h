@@ -12,11 +12,10 @@
 // optional
 @property (nonatomic) NSString *actionKey;
 @property (nonatomic) NSDictionary *parameters;
-@property (nonatomic) NSString *appPickerText; // overrides the default text in App Picker UI
+@property (nonatomic) NSString *appPickerTitle; // overrides the default title in App Picker UI
 
 + (instancetype)contextWithAppType:(NSString *)appTypeKey;
 + (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey;
 + (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey parameters:(NSDictionary *)parameters;
-+ (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey parameters:(NSDictionary *)parameters appPickerText:(NSString *)appPickerText;
-
++ (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey parameters:(NSDictionary *)parameters appPickerTitle:(NSString *)appPickerTitle;
 @end

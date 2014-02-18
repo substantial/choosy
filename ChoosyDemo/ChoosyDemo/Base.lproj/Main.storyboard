@@ -23,8 +23,14 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="@AlexDaUkrainian" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0c-3q-RoB">
-                                <rect key="frame" x="82" y="185" width="156" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="@Substantial" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0c-3q-RoB">
+                                <rect key="frame" x="82" y="232" width="156" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Twitter" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FS8-zl-2ED">
+                                <rect key="frame" x="82" y="173" width="156" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -34,7 +40,8 @@
                     </view>
                     <connections>
                         <outlet property="emailButton" destination="xlB-2Z-gwi" id="hhN-U7-mDF"/>
-                        <outlet property="twitterLinkLabel" destination="d0c-3q-RoB" id="FKR-qG-1P5"/>
+                        <outlet property="openTwitter" destination="FS8-zl-2ED" id="zfJ-ln-HCC"/>
+                        <outlet property="showSubstantialProfile" destination="d0c-3q-RoB" id="rSB-qu-D7e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xWp-lz-rDe" userLabel="First Responder" sceneMemberID="firstResponder"/>

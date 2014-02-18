@@ -6,36 +6,36 @@
 + (instancetype)createWithAppType:(NSString *)appTypeKey
                            action:(NSString *)actionKey
                        parameters:(NSDictionary *)parameters
-                    appPickerText:(NSString *)appPickerText
+                    appPickerTitle:(NSString *)appPickerTitle
 {
     SBChoosyActionContext *actionContext = [SBChoosyActionContext new];
     
     actionContext.appTypeKey = [appTypeKey lowercaseString];
     actionContext.actionKey = actionKey;
     actionContext.parameters = parameters;
-    actionContext.appPickerText = appPickerText;
+    actionContext.appPickerTitle = appPickerTitle;
     
     return actionContext;
 }
 
 + (instancetype)contextWithAppType:(NSString *)appTypeKey
 {
-    return [SBChoosyActionContext createWithAppType:appTypeKey action:nil parameters:nil appPickerText:nil];
+    return [SBChoosyActionContext createWithAppType:appTypeKey action:nil parameters:nil appPickerTitle:nil];
 }
 
 + (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey
 {
-    return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:nil appPickerText:nil];
+    return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:nil appPickerTitle:nil];
 }
 
 + (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey parameters:(NSDictionary *)parameters
 {
-    return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:parameters appPickerText:nil];
+    return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:parameters appPickerTitle:nil];
 }
 
-+ (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey parameters:(NSDictionary *)parameters appPickerText:(NSString *)appPickerText
++ (instancetype)contextWithAppType:(NSString *)appTypeKey action:(NSString *)actionKey parameters:(NSDictionary *)parameters appPickerTitle:(NSString *)appPickerTitle
 {
-    return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:parameters appPickerText:appPickerText];
+    return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:parameters appPickerTitle:appPickerTitle];
 }
 
 @end

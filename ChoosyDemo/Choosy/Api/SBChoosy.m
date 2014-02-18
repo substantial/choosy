@@ -1,7 +1,6 @@
 
 #import "SBChoosy.h"
 #import "SBChoosyBrainz.h"
-#import "SBChoosyUrlBuilder.h"
 #import "UIView+Helpers.h"
 #import "SBChoosyPickerAppInfo.h"
 #import "SBChoosyLocalStore.h"
@@ -11,8 +10,6 @@
 
 @property (nonatomic) SBChoosyAppPickerViewController *appPicker;
 @property (nonatomic) SBChoosyBrainz *brainz;
-
-@property (nonatomic) SBChoosyUrlBuilder *urlBuilder;
 
 @property (nonatomic) NSMutableArray *registeredAppTypes;
 @property (nonatomic) SBChoosyRegister *elementsRegister;
@@ -110,11 +107,13 @@ static dispatch_once_t once_token;
         NSLog(@"Cannot show app picker b/c actionContext parameter is nil.");
     }
     
+    [self.brainz takeStockOfApps];
+    
     SBChoosyAppInfo *appForAction = [self appForAction:actionContext];
     
     if (appForAction) {
-        // TODO
-        // perform the action on the app
+        [self executeAction:actionContext forAppWithKey:appForAction.appKey];
+        
         NSLog(@"Default app already selected: %@", appForAction.appName);
     } else {
         // ask user to pick an app
@@ -144,8 +143,10 @@ static dispatch_once_t once_token;
     // show app picker
     self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:[apps copy] actionContext:actionContext appTypeName:appType.name];
     self.appPicker.delegate = self;
-    self.appPicker.pickerText = actionContext.appPickerText;
-    self.appPicker.pickerTitle = actionContext.appTypeKey;
+    if ([self.delegate respondsToSelector:@selector(textForAppPickerGivenContext:)]) {
+        self.appPicker.pickerText = [self.delegate textForAppPickerGivenContext:actionContext];
+    }
+    self.appPicker.pickerTitle = actionContext.appPickerTitle ? actionContext.appPickerTitle : appType.name;
     UIViewController *parentVC = [self getParentViewControllerForPicker];
     
     // went with this instead of [parentVC presentViewController] because a) tapping outside of the app picker works better (thanks, iOS! /s)
@@ -233,11 +234,20 @@ static dispatch_once_t once_token;
     // check if new apps were installed for app type since last time default app was selected
     BOOL newAppsInstalled = [self.brainz newAppsForAppType:actionContext.appTypeKey];
     
-    if (isDefaultAppInstalled || newAppsInstalled) {
+    if (!isDefaultAppInstalled || newAppsInstalled) {
         return nil;
     }
     
     return defaultApp; // will be nil if no default app is found for this app type
+}
+
+- (void)executeAction:(SBChoosyActionContext *)actionContext forAppWithKey:(NSString *)appKey
+{
+    // create the URL to be called
+    NSURL *url = [self.brainz urlForAction:actionContext targetingApp:appKey];
+    
+    // call the URL
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 #pragma mark SBChoosyBrainzDelegate
@@ -270,20 +280,13 @@ static dispatch_once_t once_token;
 
 - (void)didSelectApp:(NSString *)appKey forAction:(SBChoosyActionContext *)actionContext
 {
-    // TODO
-    
     // remember the selection
-    [SBChoosyLocalStore setDefaultApp:appKey forAppType:actionContext.appTypeKey];
+    [self.brainz setDefaultAppForAppType:actionContext.appTypeKey withKey:appKey];
     
     // close the UI
     [self dismissAppPicker];
     
-    
-    
-    // construct URL for selected app
-//    NSString *finalURL = self.urlBuilder
-    
-    // call the URL
+    [self executeAction:actionContext forAppWithKey:appKey];
 }
 
 - (void)dismissAppPicker
@@ -309,14 +312,6 @@ static dispatch_once_t once_token;
         _brainz.delegate = self;
     }
     return _brainz;
-}
-
-- (SBChoosyUrlBuilder *)urlBuilder
-{
-    if (!_urlBuilder) {
-        _urlBuilder = [SBChoosyUrlBuilder new];
-    }
-    return _urlBuilder;
 }
 
 - (NSMutableArray *)registeredAppTypes

@@ -6,7 +6,6 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
     return @{
-             @"appType" : NSNull.null
              };
 }
 

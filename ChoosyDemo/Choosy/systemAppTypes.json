@@ -3,24 +3,29 @@
     "key" : "twitter",
     "parameters" :
         [{
-        "name" : "Text",
-        "description" : "Text to insert into the new tweet textbox",
-        "key" : "text"
-        }],
+         "name" : "Text",
+         "description" : "Text to insert into the new tweet textbox",
+         "key" : "text"
+         },
+         {
+         "name" : "Profile Username",
+         "description" : "Username of the profile to be shown",
+         "key" : "profile_screenname",
+         }],
     "actions" :
         [{
-        "name" : "Tweet",
-        "key" : "tweet"
+        "name" : "Show Profile",
+        "key" : "show_profile"
         }],
     "apps" :
         [{
          "name" : "Safari",
          "key" : "safari",
-         "app_url_scheme" : "http://",
+         "app_url_scheme" : "http://www.twitter.com",
          "actions" :
         [{
-            "key" : "tweet",
-            "url_format" : "http://www.twitter.com"
+            "key" : "show_profile",
+            "url_format" : "http://www.twitter.com/<profile_screenname>"
         }]
         },
         {

@@ -8,8 +8,8 @@
  */
 @interface SBChoosyLocalStore : NSObject
 
-+ (NSArray *)lastDetectedAppsForAppType:(NSString *)appType;
-+ (void)setLastDetectedApps:(NSArray *)appKeys forAppType:(NSString *)appType;
++ (NSArray *)lastDetectedAppKeysForAppTypeKey:(NSString *)appType;
++ (void)setLastDetectedAppKeys:(NSArray *)appKeys forAppTypeKey:(NSString *)appType;
 
 + (NSString *)defaultAppForAppType:(NSString *)appType;
 + (void)setDefaultApp:(NSString *)appKey forAppType:(NSString *)appType;

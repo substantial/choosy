@@ -12,8 +12,4 @@
              };
 }
 
-+ (NSValueTransformer *)urlFormatJSONTransformer {
-    return [NSValueTransformer valueTransformerForName:MTLURLValueTransformerName];
-}
-
 @end

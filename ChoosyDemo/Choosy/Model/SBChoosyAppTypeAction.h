@@ -10,6 +10,5 @@
 
 @property (nonatomic) NSString *name;
 @property (nonatomic) NSString *key;
-@property (nonatomic) NSString *appType;
            
 @end

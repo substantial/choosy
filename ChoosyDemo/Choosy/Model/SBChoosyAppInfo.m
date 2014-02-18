@@ -5,6 +5,19 @@
 
 @implementation SBChoosyAppInfo
 
+- (SBChoosyAppAction *)findActionWithKey:(NSString *)actionKey
+{
+    for (SBChoosyAppAction *action in self.appActions) {
+        if ([action.actionKey isEqualToString:actionKey]) {
+            return action;
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark MTLJSONSerializing
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
     return @{

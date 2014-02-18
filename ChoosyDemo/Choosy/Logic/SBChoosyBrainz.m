@@ -1,10 +1,13 @@
 
 #import "SBChoosyBrainz.h"
 #import "SBChoosyAppInfo.h"
+#import "SBChoosyAppAction.h"
+#import "SBChoosyAppTypeParameter.h"
 #import "SBChoosyLocalStore.h"
 #import "SBChoosyNetworkStore.h"
 #import "NSArray+ObjectiveSugar.h"
 #import "NSDate-Utilities.h"
+#import "NSString+Network.h"
 
 @interface SBChoosyBrainz ()
 
@@ -89,6 +92,11 @@
     return defaultApp;
 }
 
+- (void)setDefaultAppForAppType:(NSString *)appTypeKey withKey:(NSString *)appKey
+{
+    [SBChoosyLocalStore setDefaultApp:appKey forAppType:appTypeKey];
+}
+
 - (BOOL)isAppInstalled:(SBChoosyAppInfo *)app
 {
     return [[UIApplication sharedApplication] canOpenURL:app.appURLScheme];
@@ -101,6 +109,25 @@
     if ([newApps count] == 0) return nil;
         
     return newApps;
+}
+
+#pragma mark URL Scheme
+
+- (NSURL *)urlForAction:(SBChoosyActionContext *)actionContext targetingApp:(NSString *)appKey
+{
+    SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:self.appTypes byKey:actionContext.appTypeKey];
+    SBChoosyAppInfo *app = [appType findAppInfoWithAppKey:appKey];
+    
+    if (!app) {
+        NSLog(@"The app type '%@' does not list an app with key '%@'.", actionContext.appTypeKey, appKey);
+    }
+    
+    // does the app support this action?
+    SBChoosyAppAction *action = [app findActionWithKey:actionContext.actionKey];
+    
+    NSURL *url = [self urlForAction:action withActionParameters:actionContext.parameters appTypeParameters:appType.parameters];
+    
+    return url ? url : app.appURLScheme;
 }
 
 #pragma mark - Private
@@ -166,18 +193,18 @@
 - (void)detectNewApps
 {
     for (SBChoosyAppType *appType in self.appTypes) {
-        self.newlyAddedApps[appType.key] = [self newAppsForAppType:appType givenCurrentApps:[self currentAppsForType:appType] lastDetectedApps:[SBChoosyLocalStore lastDetectedAppsForAppType:appType.key]];
+        self.newlyAddedApps[appType.key] = [self newAppsForAppType:appType givenCurrentApps:[self currentAppsForType:appType] lastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeKey:appType.key]];
     }
 }
 
 - (void)detectRemovedApps
 {
     for (SBChoosyAppType *appType in self.appTypes) {
-        self.newlyRemovedApps[appType.key] = [self removedAppsForAppType:appType givenCurrentApps:[self currentAppsForType:appType] lastDetectedApps:[SBChoosyLocalStore lastDetectedAppsForAppType:appType.key]];
+        self.newlyRemovedApps[appType.key] = [self removedAppsForAppType:appType givenCurrentApps:[self currentAppsForType:appType] lastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeKey:appType.key]];
     }
 }
 
-- (NSArray *)removedAppsForAppType:(SBChoosyAppType *)appType givenCurrentApps:(NSArray *)currentApps lastDetectedApps:(NSArray *)lastDetectedAppKeys
+- (NSArray *)removedAppsForAppType:(SBChoosyAppType *)appType givenCurrentApps:(NSArray *)currentApps lastDetectedAppKeys:(NSArray *)lastDetectedAppKeys
 {
 	NSMutableArray *recentlyRemovedAppKeys = [NSMutableArray new];
 	for (NSString *appKey in lastDetectedAppKeys) {
@@ -187,32 +214,73 @@
 		
 		if (!appMatchingKey) {
 			// didn't find that app key among currently installed apps, so count the app as removed
-			[recentlyRemovedAppKeys addObject:[appType findAppInfoWithAppKey:appKey]];
+            SBChoosyAppInfo *removedApp = [appType findAppInfoWithAppKey:appKey];
+            if (removedApp) [recentlyRemovedAppKeys addObject:removedApp];
 		}
 	}
 	
 	return [recentlyRemovedAppKeys copy];
 }
 
-- (NSArray *)newAppsForAppType:(SBChoosyAppType *)appType givenCurrentApps:(NSArray *)currentApps lastDetectedApps:(NSArray *)lastDetectedAppKeys
+- (NSArray *)newAppsForAppType:(SBChoosyAppType *)appType givenCurrentApps:(NSArray *)currentApps lastDetectedAppKeys:(NSArray *)lastDetectedAppKeys
 {
-	NSArray *newApps = [currentApps filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+	NSArray *newAppKeys = [currentApps filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
 		return ![lastDetectedAppKeys containsObject:((SBChoosyAppInfo *)evaluatedObject).appKey];
 	}]];
 	
-	return newApps;
+	return [self appsFromAppKeys:newAppKeys forAppType:appType];
 }
 
 - (NSArray *)currentAppsForType:(SBChoosyAppType *)appType
 {
-	NSMutableArray *currentApps = [NSMutableArray new];
+	NSMutableArray *currentAppsMutable = [NSMutableArray new];
 	for (SBChoosyAppInfo *app in appType.apps) {
 		if ([self isAppInstalled:app]) {
-			[currentApps addObject:app];
+			[currentAppsMutable addObject:app];
 		}
 	}
+    
+    NSArray *currentApps = [currentAppsMutable copy];
+    
+    [SBChoosyLocalStore setLastDetectedAppKeys:[self appKeysOfApps:currentApps] forAppTypeKey:appType.key];
 	
-	return [currentApps copy];
+	return currentApps;
+}
+
+- (NSArray *)appsFromAppKeys:(NSArray *)appKeys forAppType:(SBChoosyAppType *)appType
+{
+    NSMutableArray *apps = [NSMutableArray new];
+    for (NSString *appKey in appKeys) {
+        [apps addObject:[appType findAppInfoWithAppKey:appKey]];
+    }
+    
+    return [apps copy];
+}
+
+- (NSArray *)appKeysOfApps:(NSArray *)apps
+{
+	NSMutableArray *appKeys = [NSMutableArray new];
+	for (SBChoosyAppInfo *app in apps) {
+		[appKeys addObject:app.appKey];
+	}
+	return [appKeys copy];
+}
+
+#pragma mark URL Schemes
+
+- (NSURL *)urlForAction:(SBChoosyAppAction *)action withActionParameters:(NSDictionary *)actionParameters appTypeParameters:(NSArray *)appTypeParameters
+{
+    NSMutableString *urlString = [action.urlFormat mutableCopy];
+    
+    for (SBChoosyAppTypeParameter *appTypeParameter in appTypeParameters) {
+        NSString *parameterValue = @"";
+        if ([actionParameters.allKeys containsObject:appTypeParameter.key]) parameterValue = actionParameters[appTypeParameter.key];
+        
+        NSString *parameterPlaceholder = [NSString stringWithFormat:@"(%@)", appTypeParameter.key];
+        [urlString replaceOccurrencesOfString:parameterPlaceholder withString:parameterValue options:NSCaseInsensitiveSearch range:NSMakeRange(0, [urlString length])];
+    }
+    
+    return [NSURL URLWithString:urlString];
 }
 
 #pragma mark Queues

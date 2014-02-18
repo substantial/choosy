@@ -63,7 +63,10 @@
 - (void)takeStockOfApps;
 
 - (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey;
+- (void)setDefaultAppForAppType:(NSString *)appTypeKey withKey:(NSString *)appKey;
 - (BOOL)isAppInstalled:(SBChoosyAppInfo *)app;
 - (NSArray *)newAppsForAppType:(NSString *)appTypeKey;
+
+- (NSURL *)urlForAction:(SBChoosyActionContext *)actionContext targetingApp:(NSString *)appKey;
 
 @end

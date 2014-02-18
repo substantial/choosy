@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "SBChoosyAppPickerViewController.h"
 #import "SBChoosyActionContext.h"
+#import "SBChoosyAppType.h"
 
 @protocol SBChoosyDelegate <NSObject>
 
@@ -8,6 +9,7 @@
 - (void)didAddAppType:(SBChoosyAppType *)newAppType;
 - (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType;
 - (void)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
+- (NSString *)textForAppPickerGivenContext:(SBChoosyActionContext *)actionContext;
 
 /**
  *  If your delegate is not the parent view controller, implement this method.

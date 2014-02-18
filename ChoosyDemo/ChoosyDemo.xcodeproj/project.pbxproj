@@ -39,7 +39,6 @@
 		D93A46D518A0BCD000742099 /* SBChoosyAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D93A46D418A0BCD000742099 /* SBChoosyAppInfo.m */; };
 		D93A46D818A0C34B00742099 /* SBChoosyNetworkStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */; };
 		D960C86D18A1A71C004CFABF /* UIView+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C86C18A1A71C004CFABF /* UIView+Helpers.m */; };
-		D960C87018A305D6004CFABF /* SBChoosyUrlBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C86F18A305D6004CFABF /* SBChoosyUrlBuilder.m */; };
 		D960C87418A43E30004CFABF /* SBChoosyPickerAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C87318A43E30004CFABF /* SBChoosyPickerAppInfo.m */; };
 		D960C87718A4663F004CFABF /* SBChoosyRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C87618A4663F004CFABF /* SBChoosyRegister.m */; };
 		D960C88518A99C0A004CFABF /* NSArray+ObjectiveSugar.m in Sources */ = {isa = PBXBuildFile; fileRef = D960C87918A99C0A004CFABF /* NSArray+ObjectiveSugar.m */; };
@@ -152,8 +151,6 @@
 		D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyNetworkStore.m; sourceTree = "<group>"; };
 		D960C86B18A1A71C004CFABF /* UIView+Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Helpers.h"; sourceTree = "<group>"; };
 		D960C86C18A1A71C004CFABF /* UIView+Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Helpers.m"; sourceTree = "<group>"; };
-		D960C86E18A305D6004CFABF /* SBChoosyUrlBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyUrlBuilder.h; sourceTree = "<group>"; };
-		D960C86F18A305D6004CFABF /* SBChoosyUrlBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyUrlBuilder.m; sourceTree = "<group>"; };
 		D960C87218A43E30004CFABF /* SBChoosyPickerAppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyPickerAppInfo.h; sourceTree = "<group>"; };
 		D960C87318A43E30004CFABF /* SBChoosyPickerAppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyPickerAppInfo.m; sourceTree = "<group>"; };
 		D960C87518A4663F004CFABF /* SBChoosyRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyRegister.h; sourceTree = "<group>"; };
@@ -242,8 +239,6 @@
 				D93A46D118A0AFF600742099 /* SBChoosyLocalStore.m */,
 				D93A46D618A0C34B00742099 /* SBChoosyNetworkStore.h */,
 				D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */,
-				D960C86E18A305D6004CFABF /* SBChoosyUrlBuilder.h */,
-				D960C86F18A305D6004CFABF /* SBChoosyUrlBuilder.m */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -623,7 +618,6 @@
 				D9313EB918AAC9FB0048385A /* AFHTTPRequestOperation.m in Sources */,
 				D9313EF218AD70600048385A /* EXTRuntimeExtensions.m in Sources */,
 				D9313EF918AD70600048385A /* MTLReflection.m in Sources */,
-				D960C87018A305D6004CFABF /* SBChoosyUrlBuilder.m in Sources */,
 				D9313EF618AD70600048385A /* MTLManagedObjectAdapter.m in Sources */,
 				D9A80382189E0836002F642A /* SBChoosy.m in Sources */,
 				D93A46D218A0AFF600742099 /* SBChoosyLocalStore.m in Sources */,

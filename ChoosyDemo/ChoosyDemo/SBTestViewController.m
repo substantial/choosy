@@ -14,7 +14,8 @@
 @interface SBTestViewController ()
 
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
-@property (weak, nonatomic) IBOutlet UILabel *twitterLinkLabel;
+@property (weak, nonatomic) IBOutlet UILabel *showSubstantialProfile;
+@property (weak, nonatomic) IBOutlet UILabel *openTwitter;
 
 @end
 
@@ -24,10 +25,15 @@
 {
     [super viewDidLoad];
     
-    [SBChoosy registerUIElement:self.twitterLinkLabel forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
+    [SBChoosy registerUIElement:self.openTwitter forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
+    
+    [SBChoosy registerUIElement:self.showSubstantialProfile forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
+                                                                                                   action:@"show_profile"
+                                                                                               parameters:@{ @"profile_screenname" : @"Substantial" }]];
     
     [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
-                                                                                              action:@"Compose" parameters:@{ @"from" : @"choosy@substantial.com" }]];
+                                                                                              action:@"Compose" parameters:@{ @"from" : @"choosy@substantial.com" }
+                                                                                      appPickerTitle:@"choosy@substantial.com"]];
     [SBChoosy update];
 }
 

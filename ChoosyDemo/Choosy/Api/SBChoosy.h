@@ -57,7 +57,6 @@
  */
 + (void)handleAction:(SBChoosyActionContext *)actionContext;
 
-
 /**
  *  Reset memory of favorite app for a given app type (specified in the action context), 
  *  and then force the display of app picker.

@@ -8,11 +8,11 @@
  */
 @interface SBChoosyLocalStore : NSObject
 
-+ (NSArray *)lastDetectedAppKeysForAppTypeKey:(NSString *)appType;
++ (NSArray *)lastDetectedAppKeysForAppTypeWithKey:(NSString *)appType;
 + (void)setLastDetectedAppKeys:(NSArray *)appKeys forAppTypeKey:(NSString *)appType;
 
-+ (NSString *)defaultAppForAppType:(NSString *)appType;
-+ (void)setDefaultApp:(NSString *)appKey forAppType:(NSString *)appType;
++ (NSString *)defaultAppForAppTypeKey:(NSString *)appType;
++ (void)setDefaultApp:(NSString *)appKey forAppTypeKey:(NSString *)appType;
 
 // READ
 /**
@@ -31,7 +31,12 @@
  */
 + (SBChoosyAppType *)cachedAppType:(NSString *)appTypeKey;
 
-+ (SBChoosyAppType *)getBuiltInAppType:(NSString *)appTypeKey;
++ (SBChoosyAppType *)builtInAppType:(NSString *)appTypeKey;
 
 + (void)cacheAppTypes:(NSArray *)jsonAppTypes;
+
++ (BOOL)appIconExistsForAppKey:(NSString *)appKey;
++ (UIImage *)appIconForAppKey:(NSString *)appKey;
++ (void)cacheAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appKey;
+
 @end

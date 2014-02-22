@@ -14,9 +14,10 @@
 @protocol SBChoosyBrainzDelegate <NSObject>
 
 @required
-- (void)didAddAppType:(SBChoosyAppType *)newAppType;
+- (void)didAddAppType:(SBChoosyAppType *)newAppType; // is this still needed?
 - (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType;
-- (NSArray *)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
+
+- (void)didDownloadAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appType;
 
 @optional
 
@@ -27,8 +28,6 @@
 @property (nonatomic, weak) id<SBChoosyBrainzDelegate> delegate;
 
 - (SBChoosyAppType *)appTypeWithKey:(NSString *)appTypeKey;
-
-- (NSArray *)installedAppsForAppType:(SBChoosyAppType *)appType;
 
 /**
  *  This is where the most important logic lives. 
@@ -61,12 +60,14 @@
 - (UIImage *)appIconForAppKey:(NSString *)appKey completion:(void (^)())completionBlock;
 
 - (void)takeStockOfApps;
+- (void)takeStockOfAppsForAppType:(SBChoosyAppType *)appType;
 
 - (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey;
 - (void)setDefaultAppForAppType:(NSString *)appTypeKey withKey:(NSString *)appKey;
-- (BOOL)isAppInstalled:(SBChoosyAppInfo *)app;
 - (NSArray *)newAppsForAppType:(NSString *)appTypeKey;
 
 - (NSURL *)urlForAction:(SBChoosyActionContext *)actionContext targetingApp:(NSString *)appKey;
+
+- (BOOL)isAppInstalled:(SBChoosyAppInfo *)app;
 
 @end

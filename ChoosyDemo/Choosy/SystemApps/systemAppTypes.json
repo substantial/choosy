@@ -25,7 +25,7 @@
          "actions" :
         [{
             "key" : "show_profile",
-            "url_format" : "http://www.twitter.com/<profile_screenname>"
+            "url_format" : "http://www.twitter.com/{{profile_screenname}}"
         }]
         },
         {

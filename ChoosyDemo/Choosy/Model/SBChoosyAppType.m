@@ -5,8 +5,27 @@
 #import "SBChoosyAppInfo.h"
 #import "MTLValueTransformer.h"
 #import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
+#import "NSArray+ObjectiveSugar.h"
+#import "SBChoosyLocalStore.h"
 
 @implementation SBChoosyAppType
+
+- (NSArray *)installedApps
+{
+    return [self.apps select:^BOOL(id object) {
+        return ((SBChoosyAppInfo *)object).isInstalled;
+    }];
+}
+
+- (SBChoosyAppInfo *)defaultApp
+{
+    NSString *defaultAppKey = [SBChoosyLocalStore defaultAppForAppTypeKey:self.key];
+    if (!defaultAppKey) return nil;
+    
+    return [self.apps detect:^BOOL(id object) {
+        return [((SBChoosyAppInfo *)object).appKey isEqualToString:defaultAppKey];
+    }];
+}
 
 + (SBChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey
 {
@@ -33,6 +52,8 @@
     
     return nil;
 }
+
+#pragma mark Mantle
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {

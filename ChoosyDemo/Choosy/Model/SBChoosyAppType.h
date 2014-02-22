@@ -17,6 +17,14 @@
 // the object is considered invalid and only used if data cannot be retrieved from server
 @property (nonatomic) NSDate *dateUpdated;
 
+/**
+ *  Check which apps that belong to this app type, if any, are installed on the device.
+ *
+ *  @return Array of SBChoosyAppInfo objects representing installed apps, or nil if none are installed.
+ */
+- (NSArray *)installedApps;
+- (SBChoosyAppInfo *)defaultApp;
+
 + (SBChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey;
 - (SBChoosyAppInfo *)findAppInfoWithAppKey:(NSString *)appKey;
 

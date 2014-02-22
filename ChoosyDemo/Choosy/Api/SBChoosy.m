@@ -5,6 +5,7 @@
 #import "SBChoosyPickerAppInfo.h"
 #import "SBChoosyLocalStore.h"
 #import "SBChoosyRegister.h"
+#import "NSArray+ObjectiveSugar.h"
 
 @interface SBChoosy () <SBChoosyPickerDelegate, SBChoosyBrainzDelegate>
 
@@ -92,11 +93,7 @@ static dispatch_once_t once_token;
 
 - (void)update
 {
-    // TODO
     [self.brainz prepareDataForAppTypes:[self.registeredAppTypes copy]];
-    
-    // take stock of apps
-    [self.brainz takeStockOfApps];
 }
 
 - (void)handleAction:(SBChoosyActionContext *)actionContext
@@ -107,7 +104,9 @@ static dispatch_once_t once_token;
         NSLog(@"Cannot show app picker b/c actionContext parameter is nil.");
     }
     
-    [self.brainz takeStockOfApps];
+    SBChoosyAppType *appType = [self.brainz appTypeWithKey:actionContext.appTypeKey];
+    
+    [self.brainz takeStockOfAppsForAppType:appType];
     
     SBChoosyAppInfo *appForAction = [self appForAction:actionContext];
     
@@ -131,7 +130,7 @@ static dispatch_once_t once_token;
         return;
     }
     
-    NSArray *installedApps = [self.brainz installedAppsForAppType:appType];
+    NSArray *installedApps = [appType installedApps];
     
     // now we have an array of SBChoosyAppInfo objects. Use them to create the view model objects
     NSMutableArray *apps = [NSMutableArray new];
@@ -180,7 +179,7 @@ static dispatch_once_t once_token;
     }
     
     // erase previously remembered default app for this app type
-    [SBChoosyLocalStore setDefaultApp:nil forAppType:actionContext.appTypeKey];
+    [SBChoosyLocalStore setDefaultApp:nil forAppTypeKey:actionContext.appTypeKey];
     
     [self handleAction:actionContext];
 }
@@ -225,16 +224,15 @@ static dispatch_once_t once_token;
 
 - (SBChoosyAppInfo *)appForAction:(SBChoosyActionContext *)actionContext
 {
-    // check if default app is already stored
-    SBChoosyAppInfo *defaultApp = [self.brainz defaultAppForAppType:actionContext.appTypeKey];
-    
-    // check if this app is still installed
-    BOOL isDefaultAppInstalled = [self.brainz isAppInstalled:defaultApp];
+    SBChoosyAppType *appType = [self.brainz appTypeWithKey:actionContext.appTypeKey];
     
     // check if new apps were installed for app type since last time default app was selected
-    BOOL newAppsInstalled = [self.brainz newAppsForAppType:actionContext.appTypeKey];
+    BOOL newAppsInstalled = [[appType.apps select:^BOOL(id object) {
+        return ((SBChoosyAppInfo *)object).isNew;
+    }] count] > 0;
     
-    if (!isDefaultAppInstalled || newAppsInstalled) {
+    SBChoosyAppInfo *defaultApp = appType.defaultApp;
+    if (!defaultApp.isInstalled || newAppsInstalled) {
         return nil;
     }
     

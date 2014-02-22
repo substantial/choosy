@@ -52,6 +52,10 @@
 		D9A80378189C5980002F642A /* SBTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80377189C5980002F642A /* SBTestViewController.m */; };
 		D9A80382189E0836002F642A /* SBChoosy.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80381189E0836002F642A /* SBChoosy.m */; };
 		D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80384189E0844002F642A /* SBChoosyActionContext.m */; };
+		D9BD5C7618B57D41009D934A /* systemAppTypes.json in Resources */ = {isa = PBXBuildFile; fileRef = D9BD5C7518B57D41009D934A /* systemAppTypes.json */; };
+		D9BD5C7918B57D51009D934A /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BD5C7718B57D51009D934A /* mail@2x.png */; };
+		D9BD5C7A18B57D51009D934A /* safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BD5C7818B57D51009D934A /* safari@2x.png */; };
+		D9BD5C7D18B57EB8009D934A /* NSThread+Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BD5C7C18B57EB8009D934A /* NSThread+Helpers.m */; };
 		D9C02B81189C162C004175A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B80189C162C004175A8 /* Foundation.framework */; };
 		D9C02B83189C162C004175A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B82189C162C004175A8 /* CoreGraphics.framework */; };
 		D9C02B85189C162C004175A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B84189C162C004175A8 /* UIKit.framework */; };
@@ -68,7 +72,8 @@
 		D9C02BBD189C1A62004175A8 /* SBChoosyAppType.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BBC189C1A62004175A8 /* SBChoosyAppType.m */; };
 		D9C02BC0189C1F9C004175A8 /* SBChoosyAppAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */; };
 		D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */; };
-		D9F8ABD818AEF09B0099E865 /* systemAppTypes.json in Resources */ = {isa = PBXBuildFile; fileRef = D9F8ABD718AEF09B0099E865 /* systemAppTypes.json */; };
+		D9D00E7418B7FBFC00672EBF /* SBChoosyAppType+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D00E7318B7FBFC00672EBF /* SBChoosyAppType+Protected.m */; };
+		D9D00E7618B855C800672EBF /* twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9D00E7518B855C800672EBF /* twitter@2x.png */; };
 		D9FB0923189C4CEC0018E507 /* SBChoosyAppTypeParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FB0922189C4CEC0018E507 /* SBChoosyAppTypeParameter.m */; };
 /* End PBXBuildFile section */
 
@@ -178,6 +183,11 @@
 		D9A80381189E0836002F642A /* SBChoosy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosy.m; sourceTree = "<group>"; };
 		D9A80383189E0844002F642A /* SBChoosyActionContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyActionContext.h; sourceTree = "<group>"; };
 		D9A80384189E0844002F642A /* SBChoosyActionContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyActionContext.m; sourceTree = "<group>"; };
+		D9BD5C7518B57D41009D934A /* systemAppTypes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = systemAppTypes.json; sourceTree = "<group>"; };
+		D9BD5C7718B57D51009D934A /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
+		D9BD5C7818B57D51009D934A /* safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "safari@2x.png"; sourceTree = "<group>"; };
+		D9BD5C7B18B57EB8009D934A /* NSThread+Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+Helpers.h"; sourceTree = "<group>"; };
+		D9BD5C7C18B57EB8009D934A /* NSThread+Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+Helpers.m"; sourceTree = "<group>"; };
 		D9C02B7D189C162C004175A8 /* ChoosyDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChoosyDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9C02B80189C162C004175A8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D9C02B82189C162C004175A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -201,7 +211,9 @@
 		D9C02BBF189C1F9C004175A8 /* SBChoosyAppAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppAction.m; sourceTree = "<group>"; };
 		D9C02BC7189C279D004175A8 /* SBChoosyAppTypeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppTypeAction.h; sourceTree = "<group>"; };
 		D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppTypeAction.m; sourceTree = "<group>"; };
-		D9F8ABD718AEF09B0099E865 /* systemAppTypes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = systemAppTypes.json; sourceTree = "<group>"; };
+		D9D00E7218B7FBFC00672EBF /* SBChoosyAppType+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBChoosyAppType+Protected.h"; sourceTree = "<group>"; };
+		D9D00E7318B7FBFC00672EBF /* SBChoosyAppType+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBChoosyAppType+Protected.m"; sourceTree = "<group>"; };
+		D9D00E7518B855C800672EBF /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter@2x.png"; sourceTree = "<group>"; };
 		D9FB0921189C4CEC0018E507 /* SBChoosyAppTypeParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppTypeParameter.h; sourceTree = "<group>"; };
 		D9FB0922189C4CEC0018E507 /* SBChoosyAppTypeParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppTypeParameter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -338,6 +350,8 @@
 		D960C86A18A1A715004CFABF /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D9BD5C7B18B57EB8009D934A /* NSThread+Helpers.h */,
+				D9BD5C7C18B57EB8009D934A /* NSThread+Helpers.m */,
 				D960C88B18A99C14004CFABF /* ObjectiveSugar */,
 				D960C86B18A1A71C004CFABF /* UIView+Helpers.h */,
 				D960C86C18A1A71C004CFABF /* UIView+Helpers.m */,
@@ -345,6 +359,8 @@
 				D9313EC318AAE5E30048385A /* NSDate-Utilities.m */,
 				D9313F0118ADF0820048385A /* NSString+Network.h */,
 				D9313F0218ADF0820048385A /* NSString+Network.m */,
+				D9D00E7218B7FBFC00672EBF /* SBChoosyAppType+Protected.h */,
+				D9D00E7318B7FBFC00672EBF /* SBChoosyAppType+Protected.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -389,6 +405,17 @@
 				D960C87618A4663F004CFABF /* SBChoosyRegister.m */,
 			);
 			path = Api;
+			sourceTree = "<group>";
+		};
+		D9BD5C7418B57D15009D934A /* SystemApps */ = {
+			isa = PBXGroup;
+			children = (
+				D9BD5C7718B57D51009D934A /* mail@2x.png */,
+				D9BD5C7818B57D51009D934A /* safari@2x.png */,
+				D9D00E7518B855C800672EBF /* twitter@2x.png */,
+				D9BD5C7518B57D41009D934A /* systemAppTypes.json */,
+			);
+			path = SystemApps;
 			sourceTree = "<group>";
 		};
 		D9C02B74189C162C004175A8 = {
@@ -470,6 +497,7 @@
 		D9C02BB8189C16D6004175A8 /* Choosy */ = {
 			isa = PBXGroup;
 			children = (
+				D9BD5C7418B57D15009D934A /* SystemApps */,
 				D9313EC518AC4B220048385A /* DataTranslation */,
 				D9313EA318AAC99E0048385A /* External */,
 				D960C87118A43DF4004CFABF /* ViewModel */,
@@ -480,7 +508,6 @@
 				D9C02BBA189C1810004175A8 /* Views */,
 				D9A80373189C576B002F642A /* SBChoosyAppPickerViewController.h */,
 				D9A80374189C576B002F642A /* SBChoosyAppPickerViewController.m */,
-				D9F8ABD718AEF09B0099E865 /* systemAppTypes.json */,
 			);
 			path = Choosy;
 			sourceTree = "<group>";
@@ -589,10 +616,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9F8ABD818AEF09B0099E865 /* systemAppTypes.json in Resources */,
+				D9BD5C7A18B57D51009D934A /* safari@2x.png in Resources */,
+				D9BD5C7918B57D51009D934A /* mail@2x.png in Resources */,
+				D9BD5C7618B57D41009D934A /* systemAppTypes.json in Resources */,
 				D9C02B9C189C162C004175A8 /* Images.xcassets in Resources */,
 				D9313EF418AD70600048385A /* Mantle-Info.plist in Resources */,
 				D9C02B94189C162C004175A8 /* Main.storyboard in Resources */,
+				D9D00E7618B855C800672EBF /* twitter@2x.png in Resources */,
 				D9C02B8B189C162C004175A8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -640,12 +670,14 @@
 				D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */,
 				D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */,
 				D9313EC118AAC9FB0048385A /* AFURLSessionManager.m in Sources */,
+				D9D00E7418B7FBFC00672EBF /* SBChoosyAppType+Protected.m in Sources */,
 				D9313EFA18AD70600048385A /* MTLValueTransformer.m in Sources */,
 				D9C02BC0189C1F9C004175A8 /* SBChoosyAppAction.m in Sources */,
 				D9313EBD18AAC9FB0048385A /* AFSecurityPolicy.m in Sources */,
 				D960C88918A99C0A004CFABF /* NSSet+ObjectiveSugar.m in Sources */,
 				D960C87418A43E30004CFABF /* SBChoosyPickerAppInfo.m in Sources */,
 				D9313EBC18AAC9FB0048385A /* AFNetworkReachabilityManager.m in Sources */,
+				D9BD5C7D18B57EB8009D934A /* NSThread+Helpers.m in Sources */,
 				D9FB0923189C4CEC0018E507 /* SBChoosyAppTypeParameter.m in Sources */,
 				D9313EFB18AD70600048385A /* NSArray+MTLManipulationAdditions.m in Sources */,
 				D9313EFE18AD70600048385A /* NSObject+MTLComparisonAdditions.m in Sources */,

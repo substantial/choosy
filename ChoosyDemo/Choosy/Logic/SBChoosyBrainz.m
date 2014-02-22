@@ -2,6 +2,7 @@
 #import "SBChoosyBrainz.h"
 #import "SBChoosyAppInfo.h"
 #import "SBChoosyAppAction.h"
+#import "SBChoosyAppType+Protected.h"
 #import "SBChoosyAppTypeParameter.h"
 #import "SBChoosyLocalStore.h"
 #import "SBChoosyNetworkStore.h"
@@ -13,8 +14,6 @@
 
 @property (nonatomic) NSOperationQueue *appPreparationQueue;
 @property (nonatomic) NSMutableArray *appTypes;
-@property (nonatomic) NSMutableDictionary *newlyAddedApps; // since the last check
-@property (nonatomic) NSMutableDictionary *newlyRemovedApps; // since the last check
 
 @end
 
@@ -22,11 +21,6 @@
 
 #pragma mark - Public
 #pragma mark - App Types
-
-- (NSArray *)installedAppsForAppType:(SBChoosyAppType *)appType
-{
-    return [self currentAppsForType:appType];
-}
 
 - (SBChoosyAppType *)appTypeWithKey:(NSString *)appTypeKey
 {
@@ -50,7 +44,7 @@
         
         // if nothing in cache, see if it's one of the built-in types
         if (!appType) {
-            appType = [SBChoosyLocalStore getBuiltInAppType:appTypeKey];
+            appType = [SBChoosyLocalStore builtInAppType:appTypeKey];
             
             // serialize this info to cache so we can later mix that info with fresh data from the server
             if (appType) [SBChoosyLocalStore cacheAppTypes:@[appType]];
@@ -61,54 +55,52 @@
         }
         
         // whether we found appType or not, check if an update from the server is required
-        [self downloadDataForAppTypeIfNecessary:appTypeKey];
+        [self downloadDataForAppTypeWithKey:appTypeKey];
     }
+    
+    // doesn't hurt to do this right away, to trigger app icon downloads and such
+    [self takeStockOfApps];
 }
 
 - (UIImage *)appIconForAppKey:(NSString *)appKey completion:(void (^)())completionBlock
 {
-    // TODO
-    
-    return nil;
+    // TODO: promise??
+    return [SBChoosyLocalStore appIconForAppKey:appKey];
 }
 
 #pragma mark Apps
 
 - (void)takeStockOfApps
 {
-    [self detectNewApps];
-    [self detectRemovedApps];
+    for (SBChoosyAppType *appType in self.appTypes) {
+        [self takeStockOfAppsForAppType:appType];
+    }
+}
+
+- (void)takeStockOfAppsForAppType:(SBChoosyAppType *)appType
+{
+    [appType checkForInstalledApps];
     
-    NSLog(@"Newly installed apps: \n%@", [self.newlyAddedApps description]);
-    NSLog(@"Newly removed apps: \n%@", [self.newlyRemovedApps description]);
+    [appType checkForNewlyInstalledAppsGivenLastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeWithKey:appType.key]];
+    
+    //        NSLog(@"Newly installed apps: \n%@", [[appType newlyAddedApps] description]);
+    //        NSLog(@"Newly removed apps: \n%@", [[appType newlyRemovedApps ] description]);
+    
+    // check if icons need to be downloaded
+    [self downloadAppIconsForAppsOfAppType:appType];
 }
 
 - (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey
 {
-    NSString *defaultAppKey = [SBChoosyLocalStore defaultAppForAppType:appTypeKey];
     SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:self.appTypes byKey:appTypeKey];
-    SBChoosyAppInfo *defaultApp = [appType findAppInfoWithAppKey:defaultAppKey];
     
-    return defaultApp;
+    return [appType defaultApp];
 }
 
 - (void)setDefaultAppForAppType:(NSString *)appTypeKey withKey:(NSString *)appKey
 {
-    [SBChoosyLocalStore setDefaultApp:appKey forAppType:appTypeKey];
-}
-
-- (BOOL)isAppInstalled:(SBChoosyAppInfo *)app
-{
-    return [[UIApplication sharedApplication] canOpenURL:app.appURLScheme];
-}
-
-- (NSArray *)newAppsForAppType:(NSString *)appTypeKey
-{
-    NSArray *newApps = self.newlyAddedApps[appTypeKey];
-    
-    if ([newApps count] == 0) return nil;
-        
-    return newApps;
+    [SBChoosyLocalStore setDefaultApp:appKey forAppTypeKey:appTypeKey];
+    [SBChoosyLocalStore setLastDetectedAppKeys:[self appKeysOfApps:[self findInMemoryAppTypeByKey:appTypeKey].installedApps] forAppTypeKey:appTypeKey];
 }
 
 #pragma mark URL Scheme
@@ -133,7 +125,7 @@
 #pragma mark - Private
 #pragma mark App Types
 
-- (void)downloadDataForAppTypeIfNecessary:(NSString *)appTypeKey
+- (void)downloadDataForAppTypeWithKey:(NSString *)appTypeKey
 {
     SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:self.appTypes byKey:appTypeKey];
     
@@ -141,13 +133,44 @@
     BOOL timeToRefresh = SBCHOOSY_DEVELOPMENT_MODE == 1 || cacheAgeInHours > SBCHOOSY_UPDATE_INTERVAL || !appType.dateUpdated;
     if (!appType || timeToRefresh) {
         // see if there's fresh/more data on the server
-        [SBChoosyNetworkStore downloadAppType:appTypeKey success:^(AFHTTPRequestOperation *operation, SBChoosyAppType *downloadedAppType) {
+        [SBChoosyNetworkStore downloadAppType:appTypeKey success:^(SBChoosyAppType *downloadedAppType) {
             if (downloadedAppType) {
                 [self addAppType:downloadedAppType];
                 [SBChoosyLocalStore cacheAppTypes:@[downloadedAppType]];
+                NSLog(@"Downloaded and cached app type: %@", downloadedAppType.key);
             }
         }];
     }
+}
+
+- (void)downloadAppIconsForAppsOfAppType:(SBChoosyAppType *)appType
+{
+    for (SBChoosyAppInfo *app in appType.installedApps) {
+        [self downloadAppIconForAppWithKey:app.appKey];
+    }
+}
+
+- (void)downloadAppIconForAppWithKey:(NSString *)appKey
+{
+    // TODO: make this a serial queue b/c weird shit's going on otherwise
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (![SBChoosyLocalStore appIconExistsForAppKey:appKey]) {
+            [SBChoosyNetworkStore downloadAppIconForAppKey:appKey success:^(UIImage *appIcon)
+            {
+                // TODO: make sure this doesn't execute multiple times for same app key... ugh bug somewhere
+                [SBChoosyLocalStore cacheAppIcon:appIcon forAppKey:appKey];
+                
+                // notify the delegate if it subscribed to the event
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([self.delegate respondsToSelector:@selector(didDownloadAppIcon:forAppKey:)]) {
+                        [self.delegate didDownloadAppIcon:appIcon forAppKey:appKey];
+                    }
+                });
+            } failure:^(NSError *error) {
+                NSLog(@"Couldn't download icon for app key %@", appKey);
+            }];
+        }
+    });
 }
 
 - (void)addAppType:(SBChoosyAppType *)appTypeToAdd
@@ -185,66 +208,10 @@
 {
     // check if an update from the server is required; the client app could have been open for a while
     // and enough time could have passed to expire the cache.
-    [self downloadDataForAppTypeIfNecessary:appType.key];
+    [self downloadDataForAppTypeWithKey:appType.key];
     
+    // but for now, return whatever we already have on this app type
     return appType.apps;
-}
-
-- (void)detectNewApps
-{
-    for (SBChoosyAppType *appType in self.appTypes) {
-        self.newlyAddedApps[appType.key] = [self newAppsForAppType:appType givenCurrentApps:[self currentAppsForType:appType] lastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeKey:appType.key]];
-    }
-}
-
-- (void)detectRemovedApps
-{
-    for (SBChoosyAppType *appType in self.appTypes) {
-        self.newlyRemovedApps[appType.key] = [self removedAppsForAppType:appType givenCurrentApps:[self currentAppsForType:appType] lastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeKey:appType.key]];
-    }
-}
-
-- (NSArray *)removedAppsForAppType:(SBChoosyAppType *)appType givenCurrentApps:(NSArray *)currentApps lastDetectedAppKeys:(NSArray *)lastDetectedAppKeys
-{
-	NSMutableArray *recentlyRemovedAppKeys = [NSMutableArray new];
-	for (NSString *appKey in lastDetectedAppKeys) {
-		id appMatchingKey = [[currentApps filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-			return [((SBChoosyAppInfo *)evaluatedObject).appKey isEqualToString:appKey];
-		}]] firstObject];
-		
-		if (!appMatchingKey) {
-			// didn't find that app key among currently installed apps, so count the app as removed
-            SBChoosyAppInfo *removedApp = [appType findAppInfoWithAppKey:appKey];
-            if (removedApp) [recentlyRemovedAppKeys addObject:removedApp];
-		}
-	}
-	
-	return [recentlyRemovedAppKeys copy];
-}
-
-- (NSArray *)newAppsForAppType:(SBChoosyAppType *)appType givenCurrentApps:(NSArray *)currentApps lastDetectedAppKeys:(NSArray *)lastDetectedAppKeys
-{
-	NSArray *newAppKeys = [currentApps filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-		return ![lastDetectedAppKeys containsObject:((SBChoosyAppInfo *)evaluatedObject).appKey];
-	}]];
-	
-	return [self appsFromAppKeys:newAppKeys forAppType:appType];
-}
-
-- (NSArray *)currentAppsForType:(SBChoosyAppType *)appType
-{
-	NSMutableArray *currentAppsMutable = [NSMutableArray new];
-	for (SBChoosyAppInfo *app in appType.apps) {
-		if ([self isAppInstalled:app]) {
-			[currentAppsMutable addObject:app];
-		}
-	}
-    
-    NSArray *currentApps = [currentAppsMutable copy];
-    
-    [SBChoosyLocalStore setLastDetectedAppKeys:[self appKeysOfApps:currentApps] forAppTypeKey:appType.key];
-	
-	return currentApps;
 }
 
 - (NSArray *)appsFromAppKeys:(NSArray *)appKeys forAppType:(SBChoosyAppType *)appType
@@ -276,7 +243,7 @@
         NSString *parameterValue = @"";
         if ([actionParameters.allKeys containsObject:appTypeParameter.key]) parameterValue = actionParameters[appTypeParameter.key];
         
-        NSString *parameterPlaceholder = [NSString stringWithFormat:@"(%@)", appTypeParameter.key];
+        NSString *parameterPlaceholder = [NSString stringWithFormat:@"{{%@}}", appTypeParameter.key];
         [urlString replaceOccurrencesOfString:parameterPlaceholder withString:parameterValue options:NSCaseInsensitiveSearch range:NSMakeRange(0, [urlString length])];
     }
     
@@ -296,23 +263,6 @@
         _appPreparationQueue.maxConcurrentOperationCount = 1;
     }
     return _appPreparationQueue;
-}
-
-#pragma mark Lazy Properties
-
-- (NSMutableDictionary *)newlyAddedApps
-{
-    if (!_newlyAddedApps) {
-        _newlyAddedApps = [NSMutableDictionary new];
-    }
-    return _newlyAddedApps;
-}
-
-- (NSMutableDictionary *)newlyRemovedApps {
-    if (!_newlyRemovedApps) {
-        _newlyRemovedApps = [NSMutableDictionary new];
-    }
-    return _newlyRemovedApps;
 }
 
 @end

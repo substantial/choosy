@@ -27,13 +27,20 @@
     
     [SBChoosy registerUIElement:self.openTwitter forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
     
-    [SBChoosy registerUIElement:self.showSubstantialProfile forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
-                                                                                                   action:@"show_profile"
-                                                                                               parameters:@{ @"profile_screenname" : @"Substantial" }]];
+    [SBChoosy registerUIElement:self.showSubstantialProfile
+                      forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
+                                                                   action:@"show_profile"
+                                                               parameters:@{ @"profile_screenname" : @"Substantial",
+                                                                             @"callback_url" : @"http://www.substantial.com//"}]];
     
     [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
                                                                                               action:@"Compose" parameters:@{ @"from" : @"choosy@substantial.com" }
                                                                                       appPickerTitle:@"choosy@substantial.com"]];
+    [SBChoosy update];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
     [SBChoosy update];
 }
 

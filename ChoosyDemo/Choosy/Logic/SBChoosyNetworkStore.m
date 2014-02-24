@@ -10,9 +10,9 @@
 
 #pragma Public
 
-+ (void)downloadAppType:(NSString *)appTypeKey success:(void (^)(SBChoosyAppType *downloadedAppType))successBlock
++ (void)downloadAppType:(NSString *)appTypeKey success:(void (^)(SBChoosyAppType *downloadedAppType))successBlock failure:(void(^)(NSError *error))failureBlock
 {
-    [[SBChoosyNetworkStore new] downloadAppType:appTypeKey success:successBlock];
+    [[SBChoosyNetworkStore new] downloadAppType:appTypeKey success:successBlock failure:failureBlock];
 }
 
 + (void)downloadAppIconForAppKey:(NSString *)appKey success:(void (^)(UIImage *))successBlock failure:(void (^)(NSError *error))failureBlock
@@ -22,7 +22,7 @@
 
 #pragma Private
 
-- (void)downloadAppType:(NSString *)appTypeKey success:(void (^)(SBChoosyAppType *downloadedAppType))successBlock
+- (void)downloadAppType:(NSString *)appTypeKey success:(void (^)(SBChoosyAppType *downloadedAppType))successBlock failure:(void(^)(NSError *error))failureBlock
 {
     NSString *fileUrl = [self urlForAppTypeData:appTypeKey];
     
@@ -31,6 +31,9 @@
         // TODO: on error, if b/c no connection, subscribe to the Connection now Available notification, and pull data when that occurs :P
         if (error) {
             NSLog(@"Error downloading app type data for type '%@'. DATA: %@. RESPONSE: %@. ERROR: %@", appTypeKey, data, response, error);
+            if (failureBlock) {
+                failureBlock(error);
+            }
             return;
         }
         

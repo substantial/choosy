@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */ = {isa = PBXBuildFile; fileRef = D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */; };
+		D922C81E18BADDA5004584C4 /* substantial.png in Resources */ = {isa = PBXBuildFile; fileRef = D922C81D18BADDA5004584C4 /* substantial.png */; };
+		D922C82018BB0636004584C4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D922C81F18BB0636004584C4 /* MapKit.framework */; };
+		D922C82418BB16D7004584C4 /* maps@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D922C82318BB16D7004584C4 /* maps@2x.png */; };
+		D922C82618BB2B39004584C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D922C82518BB2B39004584C4 /* SystemConfiguration.framework */; };
+		D922C82918BB2C4A004584C4 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = D922C82818BB2C4A004584C4 /* Reachability.m */; };
 		D9313EB918AAC9FB0048385A /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9313EA718AAC9FB0048385A /* AFHTTPRequestOperation.m */; };
 		D9313EBA18AAC9FB0048385A /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9313EA918AAC9FB0048385A /* AFHTTPRequestOperationManager.m */; };
 		D9313EBB18AAC9FB0048385A /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9313EAB18AAC9FB0048385A /* AFHTTPSessionManager.m */; };
@@ -88,8 +92,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D904193A18A0498700A1EFF8 /* SBChoosyBrainz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyBrainz.h; sourceTree = "<group>"; };
-		D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyBrainz.m; sourceTree = "<group>"; };
+		D922C81D18BADDA5004584C4 /* substantial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = substantial.png; sourceTree = "<group>"; };
+		D922C81F18BB0636004584C4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		D922C82318BB16D7004584C4 /* maps@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "maps@2x.png"; sourceTree = "<group>"; };
+		D922C82518BB2B39004584C4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D922C82718BB2C4A004584C4 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		D922C82818BB2C4A004584C4 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		D9313EA618AAC9FB0048385A /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D9313EA718AAC9FB0048385A /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D9313EA818AAC9FB0048385A /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -223,6 +231,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D922C82618BB2B39004584C4 /* SystemConfiguration.framework in Frameworks */,
+				D922C82018BB0636004584C4 /* MapKit.framework in Frameworks */,
 				D9C02B83189C162C004175A8 /* CoreGraphics.framework in Frameworks */,
 				D9C02B85189C162C004175A8 /* UIKit.framework in Frameworks */,
 				D9C02B81189C162C004175A8 /* Foundation.framework in Frameworks */,
@@ -245,8 +255,8 @@
 		D904193918A0497B00A1EFF8 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				D904193A18A0498700A1EFF8 /* SBChoosyBrainz.h */,
-				D904193B18A0498700A1EFF8 /* SBChoosyBrainz.m */,
+				D922C82718BB2C4A004584C4 /* Reachability.h */,
+				D922C82818BB2C4A004584C4 /* Reachability.m */,
 				D93A46D018A0AFF600742099 /* SBChoosyLocalStore.h */,
 				D93A46D118A0AFF600742099 /* SBChoosyLocalStore.m */,
 				D93A46D618A0C34B00742099 /* SBChoosyNetworkStore.h */,
@@ -410,6 +420,7 @@
 		D9BD5C7418B57D15009D934A /* SystemApps */ = {
 			isa = PBXGroup;
 			children = (
+				D922C82318BB16D7004584C4 /* maps@2x.png */,
 				D9BD5C7718B57D51009D934A /* mail@2x.png */,
 				D9BD5C7818B57D51009D934A /* safari@2x.png */,
 				D9D00E7518B855C800672EBF /* twitter@2x.png */,
@@ -441,6 +452,8 @@
 		D9C02B7F189C162C004175A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D922C82518BB2B39004584C4 /* SystemConfiguration.framework */,
+				D922C81F18BB0636004584C4 /* MapKit.framework */,
 				D9C02B80189C162C004175A8 /* Foundation.framework */,
 				D9C02B82189C162C004175A8 /* CoreGraphics.framework */,
 				D9C02B84189C162C004175A8 /* UIKit.framework */,
@@ -452,6 +465,7 @@
 		D9C02B86189C162C004175A8 /* ChoosyDemo */ = {
 			isa = PBXGroup;
 			children = (
+				D922C81D18BADDA5004584C4 /* substantial.png */,
 				D9C02B8F189C162C004175A8 /* SBAppDelegate.h */,
 				D9C02B90189C162C004175A8 /* SBAppDelegate.m */,
 				D9C02B92189C162C004175A8 /* Main.storyboard */,
@@ -619,11 +633,13 @@
 				D9BD5C7A18B57D51009D934A /* safari@2x.png in Resources */,
 				D9BD5C7918B57D51009D934A /* mail@2x.png in Resources */,
 				D9BD5C7618B57D41009D934A /* systemAppTypes.json in Resources */,
+				D922C82418BB16D7004584C4 /* maps@2x.png in Resources */,
 				D9C02B9C189C162C004175A8 /* Images.xcassets in Resources */,
 				D9313EF418AD70600048385A /* Mantle-Info.plist in Resources */,
 				D9C02B94189C162C004175A8 /* Main.storyboard in Resources */,
 				D9D00E7618B855C800672EBF /* twitter@2x.png in Resources */,
 				D9C02B8B189C162C004175A8 /* InfoPlist.strings in Resources */,
+				D922C81E18BADDA5004584C4 /* substantial.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -667,8 +683,8 @@
 				D960C88518A99C0A004CFABF /* NSArray+ObjectiveSugar.m in Sources */,
 				D960C88818A99C0A004CFABF /* NSNumber+ObjectiveSugar.m in Sources */,
 				D9C02B8D189C162C004175A8 /* main.m in Sources */,
-				D904193C18A0498700A1EFF8 /* SBChoosyBrainz.m in Sources */,
 				D9A80385189E0844002F642A /* SBChoosyActionContext.m in Sources */,
+				D922C82918BB2C4A004584C4 /* Reachability.m in Sources */,
 				D9313EC118AAC9FB0048385A /* AFURLSessionManager.m in Sources */,
 				D9D00E7418B7FBFC00672EBF /* SBChoosyAppType+Protected.m in Sources */,
 				D9313EFA18AD70600048385A /* MTLValueTransformer.m in Sources */,
@@ -827,6 +843,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChoosyDemo/ChoosyDemo-Prefix.pch";
 				INFOPLIST_FILE = "ChoosyDemo/ChoosyDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -843,6 +860,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChoosyDemo/ChoosyDemo-Prefix.pch";
 				INFOPLIST_FILE = "ChoosyDemo/ChoosyDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

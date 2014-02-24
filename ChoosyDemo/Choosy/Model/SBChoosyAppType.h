@@ -5,6 +5,12 @@
 
 @class SBChoosyAppInfo;
 
+@protocol SBChoosyAppTypeDelegate <NSObject>
+
+- (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
+
+@end
+
 @interface SBChoosyAppType : MTLModel <MTLJSONSerializing>
 
 @property (nonatomic) NSString *name;
@@ -17,6 +23,8 @@
 // the object is considered invalid and only used if data cannot be retrieved from server
 @property (nonatomic) NSDate *dateUpdated;
 
+@property (nonatomic, weak) id<SBChoosyAppTypeDelegate> delegate;
+
 /**
  *  Check which apps that belong to this app type, if any, are installed on the device.
  *
@@ -27,5 +35,7 @@
 
 + (SBChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey;
 - (SBChoosyAppInfo *)findAppInfoWithAppKey:(NSString *)appKey;
+
+-(void)takeStockOfApps;
 
 @end

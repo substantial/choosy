@@ -2,12 +2,8 @@
 #import "SBChoosyAppInfo.h"
 #import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
 #import "SBChoosyAppAction.h"
-
-@interface SBChoosyAppInfo ()
-
-//@property (nonatomic) NSNumber *isAppInstalled;
-
-@end
+#import "SBChoosyNetworkStore.h"
+#import "SBChoosyLocalStore.h"
 
 @implementation SBChoosyAppInfo
 
@@ -16,12 +12,32 @@ static NSString *_appIconFileExtension = @"png";
 - (SBChoosyAppAction *)findActionWithKey:(NSString *)actionKey
 {
     for (SBChoosyAppAction *action in self.appActions) {
-        if ([action.actionKey isEqualToString:actionKey]) {
+        if ([[action.actionKey lowercaseString] isEqualToString:[actionKey lowercaseString]]) {
             return action;
         }
     }
     
     return nil;
+}
+
+- (void)downloadAppIcon:(void (^)(UIImage *))successBlock
+{
+    if (self.isAppIconDownloading == YES) return;
+    
+    self.isAppIconDownloading = YES;
+    [SBChoosyNetworkStore downloadAppIconForAppKey:self.appKey success:^(UIImage *appIcon)
+     {
+         // TODO: make sure this doesn't execute multiple times for same app key... ugh bug somewhere
+         [SBChoosyLocalStore cacheAppIcon:appIcon forAppKey:self.appKey];
+         self.isAppIconDownloading = NO;
+         
+         if (successBlock) {
+             successBlock(appIcon);
+         }
+     } failure:^(NSError *error) {
+         NSLog(@"Couldn't download icon for app key %@", self.appKey);
+         self.isAppIconDownloading = NO;
+     }];
 }
 
 #pragma mark MTLJSONSerializing

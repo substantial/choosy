@@ -1,14 +1,18 @@
 #import <Foundation/Foundation.h>
 #import "SBChoosyAppPickerViewController.h"
 #import "SBChoosyActionContext.h"
-#import "SBChoosyAppType.h"
+
+#define SBCHOOSY_DEVELOPMENT_MODE 1
+#define SBCHOOSY_UPDATE_INTERVAL 24 * 3600
+
+@class SBChoosyAppType;
 
 @protocol SBChoosyDelegate <NSObject>
 
 @optional
 - (void)didAddAppType:(SBChoosyAppType *)newAppType;
 - (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType;
-- (void)didDownloadAppIcon:(UIImage *)appIcon forAppType:(NSString *)appType;
+- (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
 - (NSString *)textForAppPickerGivenContext:(SBChoosyActionContext *)actionContext;
 
 /**

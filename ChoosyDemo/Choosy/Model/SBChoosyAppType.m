@@ -7,6 +7,9 @@
 #import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
 #import "NSArray+ObjectiveSugar.h"
 #import "SBChoosyLocalStore.h"
+#import "SBChoosyNetworkStore.h"
+#import "SBChoosyAppType+Protected.h"
+#import "NSDate-Utilities.h"
 
 @implementation SBChoosyAppType
 
@@ -31,9 +34,11 @@
 {
     if (!appTypes || !appTypeKey) return nil;
     
-    for (SBChoosyAppType *appType in appTypes) {
-        if ([appType.key isEqualToString:appTypeKey]) {
-            return appType;
+    @synchronized(appTypes) {
+        for (SBChoosyAppType *appType in appTypes) {
+            if ([appType.key isEqualToString:appTypeKey]) {
+                return appType;
+            }
         }
     }
     
@@ -53,19 +58,56 @@
     return nil;
 }
 
+- (void)takeStockOfApps
+{
+    [self checkForInstalledApps];
+    
+    [self checkForNewlyInstalledAppsGivenLastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeWithKey:self.key]];
+    
+    // check if icons need to be downloaded
+    [self downloadAppIcons];
+}
+
+- (void)downloadAppIcons
+{
+    for (SBChoosyAppInfo *app in [self installedApps]) {
+        [self downloadAppIconForApp:app];
+    }
+}
+
+- (void)downloadAppIconForApp:(SBChoosyAppInfo *)app
+{
+    // TODO: make this a serial queue? b/c weird stuff's going on otherwise, it seems
+    
+    if (![SBChoosyLocalStore appIconExistsForAppKey:app.appKey] && !app.isAppIconDownloading)
+    {
+        [app downloadAppIcon:^(UIImage *appIcon)
+        {
+            // notify the delegate, if it subscribed to the event
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.delegate respondsToSelector:@selector(didDownloadAppIcon:forApp:)]) {
+                    [self.delegate didDownloadAppIcon:appIcon forApp:app];
+                }
+            });
+        }];
+    }
+}
+
 #pragma mark Mantle
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
     // no special mapping
     return @{
+             @"delegate" : NSNull.null
              };
 }
 
 + (NSValueTransformer *)dateUpdatedJSONTransformer
 {
     return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {
-        return [self.dateFormatter dateFromString:str];
+        NSDate *date = [self.dateFormatter dateFromString:str];
+        return date;
     } reverseBlock:^(NSDate *date) {
         return [self.dateFormatter stringFromDate:date];
     }];

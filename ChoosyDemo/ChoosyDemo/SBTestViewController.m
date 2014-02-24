@@ -10,12 +10,24 @@
 #import "SBChoosy.h"
 #import "SBChoosyActionContext.h"
 #import "SBChoosyRegister.h"
+#import "Reachability.h"
+@import MapKit;
 
 @interface SBTestViewController ()
 
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
-@property (weak, nonatomic) IBOutlet UILabel *showSubstantialProfile;
-@property (weak, nonatomic) IBOutlet UILabel *openTwitter;
+@property (weak, nonatomic) IBOutlet UIButton *showSubstantialProfile;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIButton *navigateButton;
+@property (weak, nonatomic) IBOutlet UIView *bottomView;
+@property (weak, nonatomic) IBOutlet UIButton *browserButton;
+
+@end
+
+@interface SFOfficeAnnotation : NSObject<MKAnnotation>
+
+@property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
+- (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate;
 
 @end
 
@@ -24,24 +36,77 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setupAppearance];
     
-    [SBChoosy registerUIElement:self.openTwitter forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"]];
+    [SBChoosy registerUIElement:self.navigateButton forAction:[SBChoosyActionContext contextWithAppType:@"Maps"
+                                                                                                 action:@"directions"
+                                                                                             parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102"}]];
     
     [SBChoosy registerUIElement:self.showSubstantialProfile
                       forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
                                                                    action:@"show_profile"
-                                                               parameters:@{ @"profile_screenname" : @"Substantial",
-                                                                             @"callback_url" : @"http://www.substantial.com//"}]];
+                                                               parameters:@{ @"profile_screenname" : @"KarlTheFog",
+                                                                             @"callback_url" : @"choosy://"}
+                                                           appPickerTitle:@"Karl the Fog's Timeline"]];
     
     [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
-                                                                                              action:@"Compose" parameters:@{ @"from" : @"choosy@substantial.com" }
-                                                                                      appPickerTitle:@"choosy@substantial.com"]];
+                                                                                              action:@"Compose"
+                                                                                          parameters:@{ @"to" : @"choosy@substantial.com",
+                                                                                                        @"subject" : @"HAI"
+                                                                                                        }
+                                                                                      appPickerTitle:@"sf@substantial.com"]];
+    
     [SBChoosy update];
+    
+    Reachability *reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
+    if (![reachability isReachable]) {
+        [reachability startNotifier];
+        [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleNetworkChange:) name:kReachabilityChangedNotification object: nil];
+    }
+//    reachability = [Reachability reachabilityForInternetConnection];
+//    [reachability startNotifier];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (IBAction)showInBrowser
 {
-    [SBChoosy update];
+    [SBChoosy handleAction:[SBChoosyActionContext contextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
+}
+
+- (void)handleNetworkChange:(NSNotification *)notification
+{
+    Reachability *reachability = (Reachability *)[notification object];
+    
+    if ([reachability isReachable]) {
+        [self showOnMap];
+        [SBChoosy update];
+        NSLog(@"Network is now reachable, called update");
+    }
+}
+
+- (void)setupAppearance
+{
+    [self showOnMap];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.text = @"ABOUT";
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont fontWithName:@"Verdana" size:20];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.navigationItem setTitleView:titleLabel];
+
+}
+
+- (void)showOnMap
+{
+    CLGeocoder *geocoder = [CLGeocoder new];
+    [geocoder geocodeAddressString:@"25 Taylor St, San Francisco, CA 94102" completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark *placemark = [placemarks firstObject];
+        
+        SFOfficeAnnotation *sfAnnotation = [[SFOfficeAnnotation alloc] initWithCoordinate: placemark.location.coordinate];
+        [self.mapView addAnnotation:sfAnnotation];
+        [self.mapView setRegion:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(placemark.location.coordinate.latitude, placemark.location.coordinate.longitude), 1000, 1000)];
+    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,5 +125,17 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+@end
+
+@implementation SFOfficeAnnotation
+
+- (instancetype)initWithCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    if (self = [super init]) {
+        _coordinate = coordinate;
+    }
+    return self;
+}
 
 @end

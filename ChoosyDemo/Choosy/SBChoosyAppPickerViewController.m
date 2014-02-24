@@ -34,6 +34,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
     if (self = [super init]) {
 		_apps = apps;
         _actionContext = actionContext;
+        _pickerTitle = actionContext.appPickerTitle;
         _appTypeName = appTypeName;
 		[self initialize];
 	}
@@ -88,7 +89,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	self.titleLabel = [[UILabel alloc] initWithFrame:self.titleView.bounds];
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	self.titleLabel.font = [UIFont systemFontOfSize:16];
-	self.titleLabel.text = self.pickerTitle ? self.pickerTitle : self.appTypeName;
+	self.titleLabel.text = self.appTypeName;
 	self.titleLabel.textColor = [UIColor colorWithRed:123/255.0f green:123/255.0f blue:123/255.0f alpha:1];
 	[self.titleView addSubview:self.titleLabel];
 	
@@ -141,6 +142,11 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	[super viewDidAppear:animated];
 	
 	//NSLog( @"Collection view fram: %@", NSStringFromCGRect(self.collectionView.frame) );
+}
+
+- (void)setPickerTitle:(NSString *)pickerTitle
+{
+    self.titleLabel.text = pickerTitle;
 }
 
 - (void)setTitleToDisplay:(NSString *)titleToDisplay

@@ -28,7 +28,7 @@
         SBChoosyAppType *appType = [SBChoosySerialization deserializeAppTypeFromJSON:appTypeJSON];
         
         if (appType) {
-            NSLog(@"Deserialized app type from JSON: %@", appType);
+            //NSLog(@"Deserialized app type from JSON: %@", appType);
             [appTypes addObject:appType];
         }
     }

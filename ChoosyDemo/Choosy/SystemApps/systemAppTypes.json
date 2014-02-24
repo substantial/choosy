@@ -1,4 +1,45 @@
-[{
+ [{
+  "name" : "Email",
+  "key" : "email",
+  "parameters" :
+  [{
+    "name" : "Body Text",
+    "description" : "Text to insert into the body of a new email",
+    "key" : "body"
+   },
+   {
+    "name" : "Recipients - To",
+    "description" : "Recipient(s) email address(ses)",
+    "key" : "to"
+   },
+   {
+    "name" : "Recipients - CC",
+    "description" : "Email addresses to CC (copy)",
+    "key" : "cc"
+   },
+   {
+   "name" : "Subject",
+   "description" : "Email subject",
+   "key" : "subject"
+   }],
+  "actions" :
+  [{
+    "name" : "Compose",
+    "key" : "compose"
+   }],
+  "apps" :
+  [{
+    "name" : "Mail",
+    "key" : "mail",
+    "app_url_scheme" : "mailto:",
+    "actions" :
+   [{
+    "key" : "compose",
+    "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
+    }]
+   }]
+  },
+  {
     "name" : "Twitter",
     "key" : "twitter",
     "parameters" :
@@ -38,4 +79,45 @@
             "url_format" : "twitter://"
             }]
         }]
- }]
+ },
+  {
+  "name" : "Maps",
+  "key" : "maps",
+  "parameters" :
+  [{
+   "name" : "Search Query",
+   "description" : "Name of business or address to search for",
+   "key" : "query"
+   },
+   {
+   "name" : "Start Location",
+   "description" : "",
+   "key" : "start_address"
+   },
+   {
+   "name" : "Destination Location",
+   "description" : "",
+   "key" : "end_address"
+   },
+   {
+   "name" : "Map Mode",
+   "description" : "Such as hybrid, sattelite, etc.",
+   "key" : "map_mode"
+   }],
+  "actions" :
+  [{
+   "name" : "Get Directions",
+   "key" : "directions"
+   }],
+  "apps" :
+  [{
+   "name" : "Maps",
+   "key" : "maps",
+   "app_url_scheme" : "http://maps.apple.com/?q",
+   "actions" :
+   [{
+    "key" : "directions",
+    "url_format" : "http://maps.apple.com/?q=&daddr={{end_address}}&saddr={{start_address}}"
+    }]
+   }]
+  }]

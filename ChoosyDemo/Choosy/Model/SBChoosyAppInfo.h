@@ -16,7 +16,11 @@
 @property (nonatomic) BOOL isNew;
 @property (nonatomic) BOOL isDefault;
 
+@property (nonatomic) BOOL isAppIconDownloading;
+
 - (SBChoosyAppAction *)findActionWithKey:(NSString *)actionKey;
+
+- (void)downloadAppIcon:(void (^)(UIImage *))successBlock;
 
 + (NSString *)appIconFileNameForAppKey:(NSString *)appKey;
 + (NSString *)appIconFileNameWithoutExtensionForAppKey:(NSString *)appKey;

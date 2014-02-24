@@ -92,6 +92,9 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
     
     // convert app types to JSON
     for (SBChoosyAppType *appType in appTypes) {
+        if (!appType.dateUpdated) {
+            appType.dateUpdated = [NSDate date];
+        }
         NSData *appTypeData = [SBChoosySerialization serializeAppTypesToNSData:@[appType]];
         NSString *filePath = [self filePathForAppTypeKey:appType.key];
         
@@ -147,10 +150,12 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 + (void)cacheAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appKey
 {
-    NSString *path = [[self pathForCacheDirectory] stringByAppendingPathComponent:[SBChoosyAppInfo appIconFileNameForAppKey:appKey]];
+    NSString *path = [self filePathForAppIconForAppKey:appKey];
     NSData *imageData = UIImagePNGRepresentation(appIcon);
     
     [imageData writeToFile:path atomically:YES];
+    
+    NSLog(@"Cached app icon for %@ at path %@", appKey, path);
 }
 
 #pragma mark - Private

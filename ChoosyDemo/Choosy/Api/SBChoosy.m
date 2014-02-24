@@ -279,7 +279,7 @@ static dispatch_once_t once_token;
         NSString *parameterValue = @"";
         if ([actionParameters.allKeys containsObject:appTypeParameter.key]) {
             parameterValue = actionParameters[appTypeParameter.key];
-            parameterValue = [parameterValue urlEncodeUsingEncoding:NSUTF8StringEncoding];
+            parameterValue = [parameterValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }
         
         NSString *parameterPlaceholder = [NSString stringWithFormat:@"{{%@}}", appTypeParameter.key];

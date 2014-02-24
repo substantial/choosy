@@ -599,7 +599,7 @@
 				ORGANIZATIONNAME = Substantial;
 				TargetAttributes = {
 					D9C02B7C189C162C004175A8 = {
-						DevelopmentTeam = 8MMLT795DY;
+						DevelopmentTeam = 92795XJ7C7;
 					};
 					D9C02BA0189C162C004175A8 = {
 						TestTargetID = D9C02B7C189C162C004175A8;
@@ -845,7 +845,7 @@
 				INFOPLIST_FILE = "ChoosyDemo/ChoosyDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "9298A280-0F0B-4585-B029-4FCB8C7A08E0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -862,7 +862,7 @@
 				INFOPLIST_FILE = "ChoosyDemo/ChoosyDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "9298A280-0F0B-4585-B029-4FCB8C7A08E0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

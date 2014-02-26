@@ -352,7 +352,14 @@ static dispatch_once_t once_token;
     // erase previously remembered default app for this app type
     [SBChoosyLocalStore setDefaultApp:nil forAppTypeKey:actionContext.appTypeKey];
     
-    [self handleAction:actionContext];
+    SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:self.appTypes byKey:actionContext.appTypeKey];
+    [appType takeStockOfApps];
+    
+    if ([appType.installedApps count] <= 1) {
+        [self showAppPickerForAction:actionContext];
+    } else {
+        [self handleAction:actionContext];
+    }
 }
 
 - (BOOL)isAppPickerShown
@@ -406,13 +413,13 @@ static dispatch_once_t once_token;
     
     // if default app is no longer installed or we detected new apps, don't have an app to return...
     // unless there's just one app!
+    if (!appToOpen && [appType.installedApps count] == 1) {
+        return appType.installedApps[0];
+    }
+    
     if (!appToOpen.isInstalled || newAppsInstalled)
     {
-        if (!appToOpen && [appType.installedApps count] == 1) {
-            return appType.installedApps[0];
-        } else {
-            return nil;
-        }
+        return nil;
     }
     
     return appToOpen; // will be nil if no default app is found for this app type

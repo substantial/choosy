@@ -56,6 +56,9 @@
                                                                                                         }
                                                                                       appPickerTitle:@"sf@substantial.com"]];
     
+    [SBChoosy registerUIElement:self.bottomView forAction:[SBChoosyActionContext contextWithAppType:@"Browser"
+                                                                                             action:@"browse_http"
+                                                                                         parameters:@{@"url_no_scheme" : @"www.substantial.com"}]];
     [SBChoosy update];
     
     Reachability *reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
@@ -63,9 +66,16 @@
         [reachability startNotifier];
         [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(handleNetworkChange:) name:kReachabilityChangedNotification object: nil];
     }
-//    reachability = [Reachability reachabilityForInternetConnection];
-//    [reachability startNotifier];
 }
+
+//- (IBAction)showDirections:(UIButton *)sender {
+//    NSString *destination = [@"25 Taylor St, San Francisco, CA 94102" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    
+//    NSString *urlString = [@"http://maps.apple.com/?q=&daddr=" stringByAppendingString:destination];
+//    NSURL *url = [NSURL URLWithString:urlString];
+//    
+//    [[UIApplication sharedApplication] openURL:url];
+//}
 
 - (IBAction)showInBrowser
 {

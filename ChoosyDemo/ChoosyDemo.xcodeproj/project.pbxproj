@@ -78,6 +78,7 @@
 		D9C02BC9189C279D004175A8 /* SBChoosyAppTypeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BC8189C279D004175A8 /* SBChoosyAppTypeAction.m */; };
 		D9D00E7418B7FBFC00672EBF /* SBChoosyAppType+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D00E7318B7FBFC00672EBF /* SBChoosyAppType+Protected.m */; };
 		D9D00E7618B855C800672EBF /* twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9D00E7518B855C800672EBF /* twitter@2x.png */; };
+		D9F2C41418C3CD5500133A7C /* SBChoosyUIElementRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F2C41318C3CD5500133A7C /* SBChoosyUIElementRegistration.m */; };
 		D9FB0923189C4CEC0018E507 /* SBChoosyAppTypeParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FB0922189C4CEC0018E507 /* SBChoosyAppTypeParameter.m */; };
 /* End PBXBuildFile section */
 
@@ -222,6 +223,8 @@
 		D9D00E7218B7FBFC00672EBF /* SBChoosyAppType+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBChoosyAppType+Protected.h"; sourceTree = "<group>"; };
 		D9D00E7318B7FBFC00672EBF /* SBChoosyAppType+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBChoosyAppType+Protected.m"; sourceTree = "<group>"; };
 		D9D00E7518B855C800672EBF /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter@2x.png"; sourceTree = "<group>"; };
+		D9F2C41218C3CD5500133A7C /* SBChoosyUIElementRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyUIElementRegistration.h; sourceTree = "<group>"; };
+		D9F2C41318C3CD5500133A7C /* SBChoosyUIElementRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyUIElementRegistration.m; sourceTree = "<group>"; };
 		D9FB0921189C4CEC0018E507 /* SBChoosyAppTypeParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyAppTypeParameter.h; sourceTree = "<group>"; };
 		D9FB0922189C4CEC0018E507 /* SBChoosyAppTypeParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyAppTypeParameter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -261,6 +264,8 @@
 				D93A46D118A0AFF600742099 /* SBChoosyLocalStore.m */,
 				D93A46D618A0C34B00742099 /* SBChoosyNetworkStore.h */,
 				D93A46D718A0C34B00742099 /* SBChoosyNetworkStore.m */,
+				D9F2C41218C3CD5500133A7C /* SBChoosyUIElementRegistration.h */,
+				D9F2C41318C3CD5500133A7C /* SBChoosyUIElementRegistration.m */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -658,6 +663,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9F2C41418C3CD5500133A7C /* SBChoosyUIElementRegistration.m in Sources */,
 				D9313EFF18AD70600048385A /* NSValueTransformer+MTLInversionAdditions.m in Sources */,
 				D9313EF318AD70600048385A /* EXTScope.m in Sources */,
 				D9313EFC18AD70600048385A /* NSDictionary+MTLManipulationAdditions.m in Sources */,

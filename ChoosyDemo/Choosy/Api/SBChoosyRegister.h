@@ -5,10 +5,21 @@
 
 #import <Foundation/Foundation.h>
 
-@class SBChoosyActionContext;
+@class SBChoosyActionContext, SBChoosyAppType, SBChoosyAppInfo;
 
 @interface SBChoosyRegister : NSObject
 
-- (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext;
++ (instancetype)sharedInstance;
+
+- (void)registerAppTypes:(NSArray *)appTypes;
+- (void)update;
+
+- (void)addAppType:(SBChoosyAppType *)appTypeToAdd then:(void(^)())block;
+- (void)appTypeWithKey:(NSString *)appTypeKey then:(void(^)(SBChoosyAppType *))block;
+- (UIImage *)appIconForAppKey:(NSString *)appKey completion:(void (^)())completionBlock;
+
+- (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey;
+- (void)setDefaultAppForAppType:(NSString *)appTypeKey withKey:(NSString *)appKey;
+- (void)resetDefaultAppForAppTypeKey:(NSString *)appTypeKey;
 
 @end

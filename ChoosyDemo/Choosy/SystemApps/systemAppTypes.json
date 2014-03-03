@@ -38,8 +38,8 @@
     "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
     }]
    }]
-  },
-  {
+},
+{
     "name" : "Twitter",
     "key" : "twitter",
     "parameters" :
@@ -79,8 +79,8 @@
             "url_format" : "twitter://"
             }]
         }]
- },
-  {
+},
+{
   "name" : "Maps",
   "key" : "maps",
   "parameters" :
@@ -120,8 +120,8 @@
     "url_format" : "http://maps.apple.com/?q=&daddr={{end_address}}&saddr={{start_address}}"
     }]
    }]
-  },
-  {
+},
+{
    "name" : "Browser",
    "key" : "browser",
    "parameters" :
@@ -129,11 +129,6 @@
     "name" : "Url Without Scheme",
     "description" : "Destination url, without the scheme (without the http or https part)",
     "key" : "url_no_scheme"
-    },
-    {
-    "name" : "Query",
-    "description" : "Search query",
-    "key" : "query"
     }],
    "actions" :
    [{

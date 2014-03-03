@@ -1,18 +1,23 @@
 #import <Foundation/Foundation.h>
 #import "SBChoosyAppPickerViewController.h"
-#import "SBChoosyActionContext.h"
 
 #define SBCHOOSY_DEVELOPMENT_MODE 1
 #define SBCHOOSY_UPDATE_INTERVAL 24 * 3600
 
-@class SBChoosyAppType;
+@class SBChoosyAppType, SBChoosyActionContext;
 
 @protocol SBChoosyDelegate <NSObject>
 
+// ALPHA CODE
+
 @optional
-- (void)didAddAppType:(SBChoosyAppType *)newAppType;
-- (void)didUpdateAppType:(SBChoosyAppType *)existingAppType withNewAppType:(SBChoosyAppType *)updatedAppType;
+- (void)didAddApp:(SBChoosyAppInfo *)newApp;
+
+- (void)didUpdateAppInfo:(SBChoosyAppInfo *)existingAppInfo
+          withNewAppInfo:(SBChoosyAppInfo *)updatedAppInfo;
+
 - (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
+
 - (NSString *)textForAppPickerGivenContext:(SBChoosyActionContext *)actionContext;
 
 /**
@@ -36,7 +41,7 @@
  *  @param actionContext Action context describing the category of app to be opened, 
  *                       and optionally Action name and its Parameters.
  */
-+ (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext;
+- (void)registerUIElement:(id)uiElement forAction:(SBChoosyActionContext *)actionContext;
 
 /**
  *  Use this to register app types on application launch.
@@ -44,7 +49,7 @@
  *
  *  @param appTypes Array of strings that name the appy types used in the app.
  */
-+ (void)registerAppTypes:(NSArray *)appTypes;
+- (void)registerAppTypes:(NSArray *)appTypes;
 
 /**
  *  Call this after done registering app types and/or UI elements.
@@ -52,14 +57,14 @@
  *  It will then check which of these apps are installed on the device,
  *  and it will start downloading app icons in the background (if not cached already).
  */
-+ (void)update;
+- (void)update;
 
 /**
  *  Manually cause the display of app picker.
  *
  *  @param actionContext An object describing what type of app action the picker is for.
  */
-+ (void)handleAction:(SBChoosyActionContext *)actionContext;
+- (void)handleAction:(SBChoosyActionContext *)actionContext;
 
 /**
  *  Reset memory of favorite app for a given app type (specified in the action context), 
@@ -67,6 +72,7 @@
  *
  *  @param actionContext An object describing what type of app action the picker is for.
  */
-+ (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext;
+- (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext;
 
 @end
+

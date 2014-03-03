@@ -9,7 +9,6 @@
 #import "SBTestViewController.h"
 #import "SBChoosy.h"
 #import "SBChoosyActionContext.h"
-#import "SBChoosyRegister.h"
 #import "Reachability.h"
 @import MapKit;
 
@@ -22,6 +21,8 @@
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (weak, nonatomic) IBOutlet UIButton *browserButton;
 
+@property (nonatomic) SBChoosy *choosy;
+
 @end
 
 @interface SFOfficeAnnotation : NSObject<MKAnnotation>
@@ -33,33 +34,41 @@
 
 @implementation SBTestViewController
 
+// code for this demo
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setupAppearance];
     
-    [SBChoosy registerUIElement:self.navigateButton forAction:[SBChoosyActionContext contextWithAppType:@"Maps"
-                                                                                                 action:@"directions"
-                                                                                             parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102"}]];
+    self.choosy = [SBChoosy new];
+    [self.choosy registerUIElement:self.navigateButton
+                      forAction:[SBChoosyActionContext contextWithAppType:@"Maps"
+                                                                   action:@"directions"
+                                                               parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102"}]];
     
-    [SBChoosy registerUIElement:self.showSubstantialProfile
+    [self.choosy registerUIElement:self.showSubstantialProfile
                       forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
                                                                    action:@"show_profile"
                                                                parameters:@{ @"profile_screenname" : @"KarlTheFog",
                                                                              @"callback_url" : @"choosy://"}
                                                            appPickerTitle:@"Karl the Fog's Timeline"]];
     
-    [SBChoosy registerUIElement:self.emailButton forAction:[SBChoosyActionContext contextWithAppType:@"Email"
-                                                                                              action:@"Compose"
-                                                                                          parameters:@{ @"to" : @"choosy@substantial.com",
+    [self.choosy registerUIElement:self.emailButton
+                      forAction:[SBChoosyActionContext contextWithAppType:@"Email"
+                                                                   action:@"Compose"
+                                                               parameters:@{ @"to" : @"choosy@substantial.com",
                                                                                                         @"subject" : @"HAI"
                                                                                                         }
-                                                                                      appPickerTitle:@"sf@substantial.com"]];
+                                                           appPickerTitle:@"choosy@substantial.com"]];
     
-    [SBChoosy registerUIElement:self.bottomView forAction:[SBChoosyActionContext contextWithAppType:@"Browser"
-                                                                                             action:@"browse_http"
-                                                                                         parameters:@{@"url_no_scheme" : @"www.substantial.com"}]];
-    [SBChoosy update];
+    [self.choosy registerUIElement:self.bottomView
+                      forAction:[SBChoosyActionContext contextWithAppType:@"Browser"
+                                                                   action:@"browse_http"
+                                                               parameters:@{@"url_no_scheme" : @"www.substantial.com"}]];
+    [self.choosy update];
+    
+    
+    [self setupAppearance];
     
     Reachability *reachability = [Reachability reachabilityWithHostname:@"www.google.com"];
     if (![reachability isReachable]) {
@@ -68,18 +77,38 @@
     }
 }
 
-//- (IBAction)showDirections:(UIButton *)sender {
-//    NSString *destination = [@"25 Taylor St, San Francisco, CA 94102" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//- (IBAction)showDirections:(UIButton *)sender
+//{
+//    NSString *destination = [@"25 Taylor St, San Francisco, CA 94102"
+//                             stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 //    
-//    NSString *urlString = [@"http://maps.apple.com/?q=&daddr=" stringByAppendingString:destination];
+//    NSString *urlString = [@"http://maps.apple.com/?q=&daddr="
+//                           stringByAppendingString:destination];
+//    
 //    NSURL *url = [NSURL URLWithString:urlString];
 //    
 //    [[UIApplication sharedApplication] openURL:url];
 //}
 
+- (IBAction)showDirections:(UIButton *)sender
+{
+    
+    [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
+                                                              action:@"show_profile"
+                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
+                                                                             @"callback_url" : @"choosy://"}
+                                                      appPickerTitle:@"Karl the Fog's Timeline"]];
+    
+    
+    [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Maps"
+                                                              action:@"directions"
+                                                          parameters:@{@"end_address" :
+                                                @"25 Taylor St, San Francisco, CA 94102"}]];
+}
+
 - (IBAction)showInBrowser
 {
-    [SBChoosy handleAction:[SBChoosyActionContext contextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
+    [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
 }
 
 - (void)handleNetworkChange:(NSNotification *)notification
@@ -88,7 +117,7 @@
     
     if ([reachability isReachable]) {
         [self showOnMap];
-        [SBChoosy update];
+        [self.choosy update];
         NSLog(@"Network is now reachable, called update");
     }
 }

@@ -7,8 +7,6 @@
 //
 
 #import "SBTestViewController.h"
-#import "SBChoosy.h"
-#import "SBChoosyActionContext.h"
 #import "Reachability.h"
 @import MapKit;
 

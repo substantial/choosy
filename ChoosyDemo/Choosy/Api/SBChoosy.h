@@ -1,20 +1,34 @@
 #import <Foundation/Foundation.h>
-#import "SBChoosyAppPickerViewController.h"
+#import "SBChoosyActionContext.h"
+#import "SBChoosyPickerDelegate.h"
 
 #define SBCHOOSY_DEVELOPMENT_MODE 1
 #define SBCHOOSY_UPDATE_INTERVAL 24 * 3600
 
-@class SBChoosyAppType, SBChoosyActionContext;
+@class SBChoosyAppType, SBChoosyAppInfo, SBChoosyAppPickerViewController, SBChoosyPickerViewModel;
 
 @protocol SBChoosyDelegate <NSObject>
 
 // ALPHA CODE
 
 @optional
-- (void)didAddApp:(SBChoosyAppInfo *)newApp;
+//- (void)didAddApp:(SBChoosyAppInfo *)newApp;
+//
+//- (void)didUpdateAppInfo:(SBChoosyAppInfo *)existingAppInfo
+//          withNewAppInfo:(SBChoosyAppInfo *)updatedAppInfo;
 
-- (void)didUpdateAppInfo:(SBChoosyAppInfo *)existingAppInfo
-          withNewAppInfo:(SBChoosyAppInfo *)updatedAppInfo;
+/**
+ *  Implement this method if you wrote your own app picker view controller.
+ *  Choosy will only show the default picker if this method is not implemented.
+ *  This method is always called on the main thread.
+ */
+- (void)showChoosyPickerWithModel:(SBChoosyPickerViewModel *)viewModel;
+
+/**
+ *  Called right before the default picker UI is shown. 
+ *  Implement this to customize view controller's view, such as font and colors.
+ */
+- (void)willShowChoosyDefaultPicker:(SBChoosyAppPickerViewController *)pickerViewController;
 
 - (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
 
@@ -29,7 +43,7 @@
 
 @end
 
-@interface SBChoosy : NSObject
+@interface SBChoosy : NSObject <SBChoosyPickerDelegate>
 
 @property (nonatomic, weak) id<SBChoosyDelegate> delegate;
 

@@ -1,8 +1,7 @@
 #import "SBChoosyAppPickerViewController.h"
 #import "UIView+Helpers.h"
-#import "SBChoosyAppInfo.h"
-#import "SBChoosyActionContext.h"
-#import "SBChoosyPickerAppInfo.h"
+#import "SBChoosyPickerViewModel.h"
+#import "SBChoosyPickerView.h"
 
 @interface SBChoosyAppCell : UICollectionViewCell
 
@@ -11,6 +10,8 @@
 @end
 
 @interface SBChoosyAppPickerViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+
+@property (nonatomic) SBChoosyPickerViewModel *viewModel;
 
 @property (nonatomic) UIView *contentArea; // this is the whole visible part
 @property (nonatomic) UIView *appRow; // this is just the row showing app icons
@@ -29,13 +30,10 @@ static CGFloat _appIconWidth = 60;
 static CGFloat _appsRowLeftPadding = 5;
 static CGFloat _appsRowGapBetweenApps = 10;
 
-- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext appTypeName:(NSString *)appTypeName
+- (instancetype)initWithModel:(SBChoosyPickerViewModel *)viewModel
 {
     if (self = [super init]) {
-		_apps = apps;
-        _actionContext = actionContext;
-        _pickerTitle = actionContext.appPickerTitle;
-        _appTypeName = appTypeName;
+		_viewModel = viewModel;
 		[self initialize];
 	}
 	return self;
@@ -69,7 +67,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	
 	CGFloat openWithXOffset = collectionViewContentInset.left / 2.0f + spacingBetweenApps / 2.0f;
 	UILabel *appListSectionTitle = [[UILabel alloc] initWithFrame:CGRectMake(openWithXOffset, appsRowTitleTextTopPadding, self.view.width - openWithXOffset, 20)];
-    NSString *pickerText = self.pickerText ? self.pickerText : NSLocalizedString(@"Pick your favorite app...", @"'Pick your favorite app...' app picker text");
+    NSString *pickerText = self.viewModel.pickerText ? self.viewModel.pickerText : NSLocalizedString(@"Pick your favorite app...", @"'Pick your favorite app...' app picker text");
 	appListSectionTitle.text = pickerText;
 	appListSectionTitle.font = [UIFont systemFontOfSize:13];
 	appListSectionTitle.textColor = [UIColor whiteColor];
@@ -89,7 +87,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	self.titleLabel = [[UILabel alloc] initWithFrame:self.titleView.bounds];
 	self.titleLabel.textAlignment = NSTextAlignmentCenter;
 	self.titleLabel.font = [UIFont systemFontOfSize:16];
-	self.titleLabel.text = self.appTypeName;
+	self.titleLabel.text = self.viewModel.pickerTitleText;
 	self.titleLabel.textColor = [UIColor colorWithRed:123/255.0f green:123/255.0f blue:123/255.0f alpha:1];
 	[self.titleView addSubview:self.titleLabel];
 	
@@ -167,7 +165,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	
 	if (!CGRectContainsPoint(self.contentArea.frame, point)) {
 		// tapped outside of sharing sheet - interpret as dismiss
-		[self.delegate didDismissAppPicker];
+		[self.delegate didDismissPicker];
 	}
 }
 
@@ -175,7 +173,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 {
 	if ((gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateRecognized) && gesture.direction == UISwipeGestureRecognizerDirectionDown) {
 		// interpret swipe down as dismiss
-		[self.delegate didDismissAppPicker];
+		[self.delegate didDismissPicker];
 	}
 }
 
@@ -187,21 +185,21 @@ static CGFloat _appsRowGapBetweenApps = 10;
     
     NSLog(@"Picked app %@", cell.appInfo.appName);
 	
-	[self.delegate didSelectApp:appKey forAction:self.actionContext];
+	[self.delegate didSelectApp:appKey];
 }
 
 #pragma mark Collection View
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-	return (NSInteger)[self.apps count];
+	return (NSInteger)[self.viewModel.appTypeInfo.installedApps count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
 	SBChoosyAppCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
 	
-	cell.appInfo = self.apps[(NSUInteger)indexPath.row];
+	cell.appInfo = self.viewModel.appTypeInfo.installedApps[(NSUInteger)indexPath.row];
 	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
 		return [evaluatedObject isKindOfClass:[UITapGestureRecognizer class]];
 	}]];

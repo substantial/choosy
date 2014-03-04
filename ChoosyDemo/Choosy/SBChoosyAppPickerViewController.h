@@ -1,33 +1,16 @@
-
-
 #import <UIKit/UIKit.h>
-#import "SBChoosyAppInfo.h"
+#import "SBChoosyPickerDelegate.h"
 
-@class SBChoosyActionContext;
-@class SBChoosyPickerAppInfo;
-
-@protocol SBChoosyPickerDelegate <NSObject>
-
-@required
-- (void)didDismissAppPicker;
-- (void)didSelectApp:(NSString *)appKey forAction:(SBChoosyActionContext *)actionContext;
-
-@end
+@class SBChoosyPickerViewModel;
 
 @interface SBChoosyAppPickerViewController : UIViewController
 
 // designated
-- (instancetype)initWithApps:(NSArray *)apps actionContext:(SBChoosyActionContext *)actionContext appTypeName:(NSString *)appTypeName;
+- (instancetype)initWithModel:(SBChoosyPickerViewModel *)viewModel;
 
 @property (nonatomic, weak) id<SBChoosyPickerDelegate> delegate;
-@property (nonatomic) NSString *pickerTitle;
-@property (nonatomic) NSString *pickerText;
-
-@property (nonatomic, readonly) NSArray *apps;
-@property (nonatomic, readonly) NSString *appTypeName;
-@property (nonatomic, readonly) SBChoosyActionContext *actionContext;
 
 // The size of the view that doesn't include the background
-@property (nonatomic) CGSize visibleSize;
+@property (nonatomic, readonly) CGSize visibleSize;
 
 @end

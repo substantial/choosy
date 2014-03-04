@@ -16,4 +16,17 @@
 	}
 }
 
++ (void)executeOnNonMainThread:(void (^)())block withPriority:(long)priority
+{
+    if (!block) return;
+    
+    if ([[NSThread currentThread] isMainThread]) {
+        dispatch_async(dispatch_get_global_queue(priority, 0), ^{
+            block();
+        });
+    } else {
+        block();
+    }
+}
+
 @end

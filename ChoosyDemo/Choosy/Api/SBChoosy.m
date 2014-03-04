@@ -1,18 +1,19 @@
 
 #import "SBChoosy.h"
 #import "SBChoosyAppType.h"
+#import "SBChoosyAppInfo.h"
 #import "SBChoosyAppAction.h"
 #import "SBChoosyAppTypeParameter.h"
-#import "SBChoosyActionContext.h"
-#import "SBChoosyPickerAppInfo.h"
+#import "SBChoosyPickerViewModel.h"
 #import "SBChoosyRegister.h"
 #import "NSArray+ObjectiveSugar.h"
 #import "UIView+Helpers.h"
 #import "NSThread+Helpers.h"
 #import "SBChoosyUIElementRegistration.h"
+#import "SBChoosyAppPickerViewController.h"
 
 
-@interface SBChoosy () <SBChoosyPickerDelegate, SBChoosyAppTypeDelegate>
+@interface SBChoosy () <SBChoosyRegisterDelegate>
 
 @property (nonatomic) SBChoosyAppPickerViewController *appPicker;
 @property (nonatomic) SBChoosyRegister *appStore;
@@ -20,7 +21,9 @@
 
 @end
 
-@implementation SBChoosy
+@implementation SBChoosy {
+    SBChoosyActionContext *_pickerActionContext;
+}
 
 #pragma mark - Public
 
@@ -76,7 +79,7 @@
     
     __weak SBChoosy *weakSelf = self;
     [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
-        [appType takeStockOfApps];
+        [[SBChoosyRegister sharedInstance] takeStockOfAppsForAppType:appType];
         
         [weakSelf appForAction:actionContext then:^(SBChoosyAppInfo *appInfo)
         {
@@ -93,6 +96,7 @@
     
 }
 
+// TODO: rename this
 - (void)handleSelectAppEvent:(UITapGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateRecognized) {
@@ -164,17 +168,28 @@
             // now we have an array of SBChoosyAppInfo objects. Use them to create the view model objects
             NSMutableArray *apps = [NSMutableArray new];
             for (SBChoosyAppInfo *appInfo in installedApps) {
-                SBChoosyPickerAppInfo *appViewModel = [[SBChoosyPickerAppInfo alloc] initWithName:appInfo.appName key:appInfo.appKey icon:[[SBChoosyRegister sharedInstance] appIconForAppKey:appInfo.appKey completion:nil]];
+                SBChoosyPickerAppInfo *appViewModel = [[SBChoosyPickerAppInfo alloc] initWithName:appInfo.appName key:appInfo.appKey icon:[[SBChoosyRegister sharedInstance] appIconForAppKey:appInfo.appKey]];
                 [apps addObject:appViewModel];
             }
             
-            // show app picker
-            self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithApps:[apps copy] actionContext:actionContext appTypeName:appType.name];
-            self.appPicker.delegate = self;
+            SBChoosyPickerViewModel *viewModel = [SBChoosyPickerViewModel new];
+            viewModel.appTypeInfo = [SBChoosyPickerAppTypeInfo new];
+            viewModel.appTypeInfo.appTypeName = appType.name;
+            viewModel.appTypeInfo.installedApps = [apps copy];
+            viewModel.pickerTitleText = actionContext.appPickerTitle ? actionContext.appPickerTitle : appType.name;
             if ([self.delegate respondsToSelector:@selector(textForAppPickerGivenContext:)]) {
-                self.appPicker.pickerText = [self.delegate textForAppPickerGivenContext:actionContext];
+                viewModel.pickerText = [self.delegate textForAppPickerGivenContext:actionContext];
             }
-            self.appPicker.pickerTitle = actionContext.appPickerTitle ? actionContext.appPickerTitle : appType.name;
+            _pickerActionContext = actionContext;
+            
+            // show app picker
+            self.appPicker = [[SBChoosyAppPickerViewController alloc] initWithModel:viewModel];
+            self.appPicker.delegate = self;
+            
+            if ([self.delegate respondsToSelector:@selector(willShowChoosyDefaultPicker:)]) {
+                [self.delegate willShowChoosyDefaultPicker:self.appPicker];
+            }
+            
             UIViewController *parentVC = [self getParentViewControllerForPicker];
             
             // went with this instead of [parentVC presentViewController] because a) tapping outside of the app picker works better (thanks, iOS! /s)
@@ -214,7 +229,7 @@
     
     __weak SBChoosy *weakSelf = self;
     [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
-        [appType takeStockOfApps];
+        [[SBChoosyRegister sharedInstance] takeStockOfAppsForAppType:appType];
         
         if ([appType.installedApps count] <= 1) {
             [weakSelf showAppPickerForAction:actionContext];
@@ -277,6 +292,7 @@
         if (!appToOpen && [appType.installedApps count] == 1) {
             if (block) {
                 block(appType.installedApps[0]);
+                return;
             }
         }
         
@@ -284,11 +300,13 @@
         {
             if (block) {
                 block(nil);
+                return;
             }
         }
         
         if (block) {
             block(appToOpen); // will be nil if no default app is found for this app type
+            return;
         }
     }];
 }
@@ -313,7 +331,7 @@
     return nil;
 }
 
-#pragma mark SBChoosyAppTypeDelegate
+#pragma mark SBChoosyRegisterDelegate
 
 - (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app
 {
@@ -324,38 +342,38 @@
 
 #pragma mark SBChoosyAppPickerDelegate
 
-- (void)didDismissAppPicker
+- (void)didDismissPicker
 {
-    // TODO
     // close the UI
     NSLog(@"Dismissing app picker...");
     if ([self isAppPickerShown]) {
-        [self dismissAppPicker];
+        [self dismissAppPickerWithCompletion:nil];
     }
 }
 
-- (void)didSelectApp:(NSString *)appKey forAction:(SBChoosyActionContext *)actionContext
+- (void)didSelectApp:(NSString *)appKey
 {
     // remember the selection
-    [[SBChoosyRegister sharedInstance] setDefaultAppForAppType:actionContext.appTypeKey withKey:appKey];
+    [[SBChoosyRegister sharedInstance] setDefaultAppForAppType:_pickerActionContext.appTypeKey withKey:appKey];
     
     // close the UI
-    [self dismissAppPicker];
-    
-    [self executeAction:actionContext forAppWithKey:appKey];
+    [self dismissAppPickerWithCompletion:^{
+        [self executeAction:_pickerActionContext forAppWithKey:appKey];
+    }];
 }
 
-- (void)dismissAppPicker
+- (void)dismissAppPickerWithCompletion:(void(^)())completionBlock
 {
 	[self.appPicker willMoveToParentViewController:nil];
 	
-	[UIView animateWithDuration:0.5f animations:^ {
+	[UIView animateWithDuration:0.4f animations:^ {
 //		self.blurredLayer.alpha = 0;
 		self.appPicker.view.center = CGPointMake(self.appPicker.view.center.x, self.appPicker.view.center.y + self.appPicker.view.width);
 	}completion:^(BOOL finished) {
 		[self.appPicker.view removeFromSuperview];
 		[self.appPicker didMoveToParentViewController:nil];
 		self.appPicker = nil;
+        if (completionBlock) completionBlock();
 	}];
 }
 

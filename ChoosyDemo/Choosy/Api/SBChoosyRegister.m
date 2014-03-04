@@ -5,6 +5,7 @@
 #import "SBChoosyLocalStore.h"
 #import "SBChoosyNetworkStore.h"
 #import "SBChoosyAppType+Protected.h"
+#import "NSThread+Helpers.h"
 
 @interface SBChoosyRegister ()
 
@@ -70,10 +71,11 @@ static dispatch_once_t once_token;
     }];
 }
 
-- (UIImage *)appIconForAppKey:(NSString *)appKey completion:(void (^)())completionBlock
+- (UIImage *)appIconForAppKey:(NSString *)appKey
 {
-    // TODO: promise??
-    return [SBChoosyLocalStore appIconForAppKey:appKey];
+    // if we haz ze icon, we returnz it. If we don'tz, it's probabbly downloading.
+    // When it's done downloading, didDownload will be calledz on ze delegate.
+    return [SBChoosyLocalStore appIconForAppKey:appKey];;
 }
 
 - (void)update
@@ -113,8 +115,43 @@ static dispatch_once_t once_token;
 
 - (void)takeStockOfApps
 {
-    for (SBChoosyAppType *appType in self.appTypes) {
-        [appType takeStockOfApps];
+    [self.appTypesSerialAccessQueue addOperationWithBlock:^{
+        for (SBChoosyAppType *appType in self.appTypes) {
+            [self takeStockOfAppsForAppType:appType];
+        }
+    }];
+}
+
+- (void)takeStockOfAppsForAppType:(SBChoosyAppType *)appType
+{
+    [appType checkForInstalledApps];
+    
+    [appType checkForNewlyInstalledAppsGivenLastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeWithKey:appType.key]];
+    
+    // check if icons need to be downloaded
+    [self downloadAppIconsAsNeededForAppType:appType];
+}
+
+- (void)downloadAppIconsAsNeededForAppType:(SBChoosyAppType *)appType
+{
+    for (SBChoosyAppInfo *app in [appType installedApps]) {
+        [self downloadAppIconForApp:app];
+    }
+}
+
+- (void)downloadAppIconForApp:(SBChoosyAppInfo *)app
+{
+    if (![SBChoosyLocalStore appIconExistsForAppKey:app.appKey] && !app.isAppIconDownloading)
+    {
+        [app downloadAppIcon:^(UIImage *appIcon)
+         {
+             // notify the delegate, if it subscribed to the event
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 if ([self.delegate respondsToSelector:@selector(didDownloadAppIcon:forApp:)]) {
+                     [self.delegate didDownloadAppIcon:appIcon forApp:app];
+                 }
+             });
+         }];
     }
 }
 
@@ -173,7 +210,7 @@ static dispatch_once_t once_token;
 - (void)addAppType:(SBChoosyAppType *)appTypeToAdd then:(void(^)())block
 {
     // check installed apps for this app type, and trigger app icon downloads if needed
-    [appTypeToAdd takeStockOfApps];
+    [[SBChoosyRegister sharedInstance] takeStockOfApps];
     
     [self appTypeWithKey:appTypeToAdd.key then:^(SBChoosyAppType *existingAppType)
      {

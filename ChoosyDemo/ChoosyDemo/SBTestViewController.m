@@ -25,6 +25,7 @@
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 
 @property (nonatomic) SBCustomPickerViewController *customAppPicker;
+@property (nonatomic) SBChoosyPickerViewModel *pickerViewModel;
 
 @property (nonatomic) SBChoosy *choosy;
 
@@ -152,11 +153,13 @@
 
 - (void)showCustomChoosyPickerWithModel:(SBChoosyPickerViewModel *)viewModel
 {
+    self.pickerViewModel = viewModel;
+    
     UIActionSheet *appSheet = [[UIActionSheet alloc] init];
-    appSheet.title = viewModel.pickerTitleText;
+    appSheet.title = self.pickerViewModel.pickerTitleText;
     appSheet.delegate = self;
 
-    for (SBChoosyPickerAppInfo *appInfo in viewModel.appTypeInfo.installedApps) {
+    for (SBChoosyPickerAppInfo *appInfo in self.pickerViewModel.appTypeInfo.installedApps) {
         [appSheet addButtonWithTitle:appInfo.appName];
     }
     [appSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
@@ -173,7 +176,7 @@
 //    [self presentViewController:customPicker animated:NO completion:nil];
 }
 
-#pragma mark "SBChoosyPickerDelegate
+#pragma mark SBChoosyPickerDelegate
 
 - (void)didDismissPicker
 {
@@ -185,6 +188,18 @@
 - (void)didSelectApp:(NSString *)appKey
 {
     [self.choosy didSelectApp:appKey];
+}
+
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // see if an app was selected
+    if (buttonIndex < [self.pickerViewModel.appTypeInfo.installedApps count]) {
+        [self.choosy didSelectApp:((SBChoosyPickerAppInfo *)self.pickerViewModel.appTypeInfo.installedApps[buttonIndex]).appKey];
+    } else {
+        [self.choosy didDismissPicker];
+    }
 }
 
 @end

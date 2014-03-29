@@ -374,18 +374,24 @@
 
 - (void)dismissAppPickerWithCompletion:(void(^)())completionBlock
 {
-	[self.appPicker willMoveToParentViewController:nil];
-    
-    [self.appPicker animateDisappearanceWithDuration:0.15f completion:^{
-        [self.appPicker.view removeFromSuperview];
-        [self.appPicker removeFromParentViewController];
-        [self.appPicker didMoveToParentViewController:nil];
-        self.appPicker = nil;
+    if (self.appPicker) {
+        [self.appPicker willMoveToParentViewController:nil];
         
+        [self.appPicker animateDisappearanceWithDuration:0.15f completion:^{
+            [self.appPicker.view removeFromSuperview];
+            [self.appPicker removeFromParentViewController];
+            [self.appPicker didMoveToParentViewController:nil];
+            self.appPicker = nil;
+            
+            if (completionBlock) {
+                completionBlock();
+            }
+        }];
+    } else {
         if (completionBlock) {
             completionBlock();
         }
-    }];
+    }
 	
 //	[UIView animateWithDuration:0.4f animations:^ {
 ////		self.blurredLayer.alpha = 0;

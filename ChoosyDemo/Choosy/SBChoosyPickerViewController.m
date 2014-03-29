@@ -76,7 +76,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
     [self.view addSubview:self.backgroundTint];
 		
     // title text
-    UIColor *lightGrayColor = [UIColor colorWithRed:0.467195 green:0.467181 blue:0.467189 alpha:1.0];
+    UIColor *lightGrayColor = [UIColor colorWithWhite:0.467195 alpha:1.0];
 	self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, titleHeight)];
 	self.titleView.backgroundColor = [UIColor clearColor];
 	self.titleLabel = [[UILabel alloc] initWithFrame:self.titleView.bounds];

@@ -70,4 +70,32 @@
 	return self.fx + self.width;
 }
 
+- (void)setFx:(CGFloat)newX
+{
+    CGRect frame = self.frame;
+    frame.origin.x = newX;
+    self.frame = frame;
+}
+
+- (void)setFy:(CGFloat)newY
+{
+    CGRect frame = self.frame;
+    frame.origin.y = newY;
+    self.frame = frame;
+}
+
+- (void)setFHeight:(CGFloat)newHeight
+{
+    CGRect frame = self.frame;
+    frame.size.height = newHeight;
+    self.frame = frame;
+}
+
+- (void)setFWidth:(CGFloat)newWidth
+{
+    CGRect frame = self.frame;
+    frame.size.width = newWidth;
+    self.frame = frame;
+}
+
 @end

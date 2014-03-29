@@ -10,7 +10,7 @@
 
 @property (nonatomic, weak) id<SBChoosyPickerDelegate> delegate;
 
-// The size of the view that doesn't include the background
-@property (nonatomic, readonly) CGSize visibleSize;
+- (void)animateAppearanceWithDuration:(NSTimeInterval)duration;
+- (void)animateDisappearanceWithDuration:(NSTimeInterval)duration completion:(void(^)())block;
 
 @end

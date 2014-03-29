@@ -23,4 +23,9 @@
 - (CGFloat)bottomY; // fy + height
 - (CGFloat)rightX; // fx + width
 
+- (void)setFx:(CGFloat)newX;
+- (void)setFy:(CGFloat)newY;
+- (void)setFHeight:(CGFloat)newHeight;
+- (void)setFWidth:(CGFloat)newWidth;
+
 @end

@@ -8,16 +8,23 @@
 
 #import "SBTestViewController.h"
 #import "Reachability.h"
+#import "SBCustomPickerViewController.h"
 @import MapKit;
 
-@interface SBTestViewController ()
+@interface SBTestViewController () <SBChoosyPickerDelegate, UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
-@property (weak, nonatomic) IBOutlet UIButton *showSubstantialProfile;
+@property (weak, nonatomic) IBOutlet UIButton *twitterButton;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIButton *navigateButton;
+
+@property (weak, nonatomic) IBOutlet UIButton *navigateButtonCustom;
+@property (weak, nonatomic) IBOutlet UIButton *emailButtonCustom;
+@property (weak, nonatomic) IBOutlet UIButton *twitterButtonCustom;
+
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
-@property (weak, nonatomic) IBOutlet UIButton *browserButton;
+
+@property (nonatomic) SBCustomPickerViewController *customAppPicker;
 
 @property (nonatomic) SBChoosy *choosy;
 
@@ -39,32 +46,38 @@
     [super viewDidLoad];
     
     self.choosy = [SBChoosy new];
-    [self.choosy registerUIElement:self.navigateButton
-                      forAction:[SBChoosyActionContext contextWithAppType:@"Maps"
-                                                                   action:@"directions"
-                                                               parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102"}]];
+    self.choosy.delegate = self;
+    SBChoosyActionContext *navigateAction = [SBChoosyActionContext contextWithAppType:@"Maps"
+                                                                               action:@"directions"
+                                                                           parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102"}
+                                                                       appPickerTitle:@"Directions"];
+    [self.choosy registerUIElement:self.navigateButton forAction:navigateAction];
+    [self.choosy registerUIElement:self.navigateButtonCustom forAction:navigateAction];
     
-    [self.choosy registerUIElement:self.showSubstantialProfile
-                      forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
-                                                                   action:@"show_profile"
-                                                               parameters:@{ @"profile_screenname" : @"KarlTheFog",
-                                                                             @"callback_url" : @"choosy://"}
-                                                           appPickerTitle:@"Karl the Fog's Timeline"]];
     
-    [self.choosy registerUIElement:self.emailButton
-                      forAction:[SBChoosyActionContext contextWithAppType:@"Email"
-                                                                   action:@"Compose"
-                                                               parameters:@{ @"to" : @"choosy@substantial.com",
-                                                                                                        @"subject" : @"HAI"
-                                                                                                        }
-                                                           appPickerTitle:@"choosy@substantial.com"]];
+    SBChoosyActionContext *twitterAction = [SBChoosyActionContext contextWithAppType:@"Twitter"
+                                                                              action:@"show_profile"
+                                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
+                                                                                        @"callback_url" : @"choosy://"}
+                                                                      appPickerTitle:@"Karl the Fog's Timeline"];
+    [self.choosy registerUIElement:self.twitterButton forAction:twitterAction];
+    [self.choosy registerUIElement:self.twitterButtonCustom forAction:twitterAction];
+    
+    
+    SBChoosyActionContext *emailAction = [SBChoosyActionContext contextWithAppType:@"Email"
+                                                                            action:@"Compose"
+                                                                        parameters:@{ @"to" : @"choosy@substantial.com",
+                                                                                      @"subject" : @"HAI"
+                                                                                      }
+                                                                    appPickerTitle:@"choosy@substantial.com"];
+    [self.choosy registerUIElement:self.emailButton forAction:emailAction];
+    [self.choosy registerUIElement:self.emailButtonCustom forAction:emailAction];
     
     [self.choosy registerUIElement:self.bottomView
                       forAction:[SBChoosyActionContext contextWithAppType:@"Browser"
                                                                    action:@"browse_http"
                                                                parameters:@{@"url_no_scheme" : @"www.substantial.com"}]];
     [self.choosy update];
-    
     
     [self setupAppearance];
     
@@ -75,29 +88,18 @@
     }
 }
 
-//- (IBAction)showDirections:(UIButton *)sender
-//{
-//    NSString *destination = [@"25 Taylor St, San Francisco, CA 94102"
-//                             stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    
-//    NSString *urlString = [@"http://maps.apple.com/?q=&daddr="
-//                           stringByAppendingString:destination];
-//    
-//    NSURL *url = [NSURL URLWithString:urlString];
-//    
-//    [[UIApplication sharedApplication] openURL:url];
-//}
+-(IBAction)switchToDefaultChoosyUI
+{
+    self.choosy.delegate = nil;
+}
+
+- (IBAction)switchToCustomChoosyUI
+{
+    self.choosy.delegate = self;
+}
 
 - (IBAction)showDirections:(UIButton *)sender
 {
-    
-    [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
-                                                              action:@"show_profile"
-                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
-                                                                             @"callback_url" : @"choosy://"}
-                                                      appPickerTitle:@"Karl the Fog's Timeline"]];
-    
-    
     [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Maps"
                                                               action:@"directions"
                                                           parameters:@{@"end_address" :
@@ -146,22 +148,44 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning
+#pragma mark SBChoosyDelegate
+
+- (void)showCustomChoosyPickerWithModel:(SBChoosyPickerViewModel *)viewModel
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    UIActionSheet *appSheet = [[UIActionSheet alloc] init];
+    appSheet.title = viewModel.pickerTitleText;
+    appSheet.delegate = self;
+
+    for (SBChoosyPickerAppInfo *appInfo in viewModel.appTypeInfo.installedApps) {
+        [appSheet addButtonWithTitle:appInfo.appName];
+    }
+    [appSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+    
+    appSheet.cancelButtonIndex = appSheet.numberOfButtons - 1;
+    
+    [appSheet showInView:self.view];
+    
+//    SBCustomPickerViewController *customPicker = [[SBCustomPickerViewController alloc] initWithModel:viewModel];
+//    self.customAppPicker = customPicker;
+//    
+//    customPicker.delegate = self;
+//    
+//    [self presentViewController:customPicker animated:NO completion:nil];
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark "SBChoosyPickerDelegate
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)didDismissPicker
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    [self.customAppPicker dismissViewControllerAnimated:YES completion:nil];
+    
+    [self.choosy didDismissPicker];
 }
-*/
+
+- (void)didSelectApp:(NSString *)appKey
+{
+    [self.choosy didSelectApp:appKey];
+}
 
 @end
 

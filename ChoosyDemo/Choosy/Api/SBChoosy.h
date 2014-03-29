@@ -22,13 +22,13 @@
  *  Choosy will only show the default picker if this method is not implemented.
  *  This method is always called on the main thread.
  */
-- (void)showChoosyPickerWithModel:(SBChoosyPickerViewModel *)viewModel;
+- (void)showCustomChoosyPickerWithModel:(SBChoosyPickerViewModel *)viewModel;
 
 /**
  *  Called right before the default picker UI is shown. 
  *  Implement this to customize view controller's view, such as font and colors.
  */
-- (void)willShowChoosyDefaultPicker:(SBChoosyAppPickerViewController *)pickerViewController;
+- (void)willShowDefaultChoosyPicker:(SBChoosyAppPickerViewController *)pickerViewController;
 
 - (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
 

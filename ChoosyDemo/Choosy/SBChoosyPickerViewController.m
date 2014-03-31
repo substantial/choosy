@@ -4,6 +4,7 @@
 #import "UIImage+ImageEffects.h"
 #import "SBChoosyPickerViewModel.h"
 #import "NSThread+Helpers.h"
+#import "NSArray+ObjectiveSugar.h"
 //#import "SBChoosyPickerView.h"
 
 @interface SBChoosyAppCell : UICollectionViewCell
@@ -120,13 +121,13 @@ static CGFloat _appsRowGapBetweenApps = 10;
     self.blurredBackground.backgroundColor = [UIColor clearColor];
     self.blurredBackground.contentMode = UIViewContentModeBottom;
     self.blurredBackground.clipsToBounds = YES;
-    self.blurredBackground.alpha = 0.4f;
+    self.blurredBackground.alpha = 0.6f;
     NSLog(@"blur frame start: %@", NSStringFromCGRect(self.blurredBackground.frame));
     
     // the nearly-opaque view over the blurred background that smoothes out the blurred image
     self.blurVeilView = [[UIView alloc] initWithFrame:self.contentArea.bounds];
     self.blurVeilView.backgroundColor = [UIColor colorWithRed:238/255.0f green:239/255.0f blue:240/255.0f alpha:1.0f];
-    self.blurVeilView.alpha = 0.75f;
+    self.blurVeilView.alpha = 0.8f;
     
     [self.contentArea addSubview:self.blurVeilView];
 	[self.contentArea addSubview:self.titleView];
@@ -154,7 +155,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
             self.blurredBackground.image = blurredBackground;
             
             [UIView animateWithDuration:0.1 animations:^{
-                self.blurredBackground.alpha = 1.0f;
+                self.blurredBackground.alpha = 0.94f;
             }];
         }];
     } withPriority:DISPATCH_QUEUE_PRIORITY_DEFAULT];
@@ -181,7 +182,12 @@ static CGFloat _appsRowGapBetweenApps = 10;
     [UIView animateWithDuration:duration animations:^{
         self.backgroundTint.alpha = 0;
         [self.contentArea setFy:self.view.height];
-        [self.blurredBackground setFy:self.view.height];
+        //[self.blurredBackground setFy:self.view.height];
+        CGRect newFrame = self.blurredBackground.frame;
+        newFrame.size.height = 0;
+        newFrame.origin.y = self.view.height;
+        self.blurredBackground.frame = newFrame;
+        self.blurredBackground.alpha = 0.75f;
     } completion:^(BOOL finished) {
         if (block) {
             block();
@@ -237,6 +243,31 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	[self.delegate didSelectApp:appKey];
 }
 
+- (void)appLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    SBChoosyAppCell *cell = (SBChoosyAppCell *)gesture.view;
+    NSString *appKey = cell.appInfo.appKey;
+    
+    switch (gesture.state) {
+        case UIGestureRecognizerStatePossible:
+            
+            break;
+            
+        case UIGestureRecognizerStateChanged:
+            
+            break;
+            
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateFailed:
+        case UIGestureRecognizerStateCancelled:
+            
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (void)handleCancel
 {
     [self.delegate didDismissPicker];
@@ -254,12 +285,19 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	SBChoosyAppCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
 	
 	cell.appInfo = self.viewModel.appTypeInfo.installedApps[(NSUInteger)indexPath.row];
-	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-		return [evaluatedObject isKindOfClass:[UITapGestureRecognizer class]];
-	}]];
+	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
+        return [object isKindOfClass:[UITapGestureRecognizer class]];
+    }];
+    NSArray *longPressGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
+        return [object isKindOfClass:[UILongPressGestureRecognizer class]];
+    }];
+    
 	if ([tapGestureRecognizersAttachedToCell count] == 0) {
 		[cell addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(appTapped:)]];
 	}
+    if ([longPressGestureRecognizersAttachedToCell count] == 0) {
+        [cell addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(appLongPressed:)]];
+    }
 	
 	return cell;
 }
@@ -315,7 +353,6 @@ static CGFloat _paddingBetweenTextAndImage = 5;
 	if (!appInfo) return;
 	
 	_appInfo = appInfo;
-	self.backgroundColor = [UIColor clearColor];
 	self.imageView.image = _appInfo.appIcon;
 	self.imageView.backgroundColor = [UIColor clearColor];
 	self.labelTitle.text = _appInfo.appName;
@@ -326,7 +363,7 @@ static CGFloat _paddingBetweenTextAndImage = 5;
 	CGFloat totalHeightOfItemsInCell = _appIconHeight + self.labelTitle.height + _paddingBetweenTextAndImage;
 	
 	// really the whole purpose of container view was so that I can center views easier hah
-	self.containerView.bounds = CGRectMake(0, 0, self.width - 10, totalHeightOfItemsInCell);
+	self.containerView.bounds = CGRectMake(0, 0, self.width, totalHeightOfItemsInCell);
 	self.containerView.center = CGPointMake(self.width / 2.0f, self.height / 2.0f);
 	
 	// position image and title inside the container view

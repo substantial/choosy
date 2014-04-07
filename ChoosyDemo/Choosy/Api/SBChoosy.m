@@ -32,8 +32,8 @@
 // Adding app type to the list of registered app types, if not already there
 - (void)registerUIElement:(__weak id)uiElement forAction:(SBChoosyActionContext *)actionContext
 {
-    if (![uiElement isKindOfClass:[UIControl class]]) {
-        NSLog(@"Only objects inheriting from UIControl can be registered. You passed ui element: %@", [uiElement description]);
+    if (![uiElement isKindOfClass:[UIView class]]) {
+        NSLog(@"Only objects inheriting from UIView can be registered. You passed ui element: %@", [uiElement description]);
     };
     
     // check if the ui element is already registered
@@ -223,7 +223,7 @@
     [parentVC.view addSubview:self.appPicker.view];
     [self.appPicker didMoveToParentViewController:parentVC];
     
-    [self.appPicker animateAppearanceWithDuration:0.23f];
+    [self.appPicker animateAppearanceWithDuration:.25f];
 }
 
 - (void)resetAppSelectionAndHandleAction:(SBChoosyActionContext *)actionContext
@@ -363,13 +363,17 @@
 
 - (void)didSelectApp:(NSString *)appKey
 {
-    // remember the selection
-    [[SBChoosyRegister sharedInstance] setDefaultAppForAppType:_pickerActionContext.appTypeKey withKey:appKey];
-    
-    // close the UI
     [self dismissAppPickerWithCompletion:^{
         [self executeAction:_pickerActionContext forAppWithKey:appKey];
     }];
+}
+
+- (void)didSelectAppAsDefault:(NSString *)appKey
+{
+    // remember the selection
+    [[SBChoosyRegister sharedInstance] setDefaultAppForAppType:_pickerActionContext.appTypeKey withKey:appKey];
+    
+    [self didSelectApp:appKey];
 }
 
 - (void)dismissAppPickerWithCompletion:(void(^)())completionBlock
@@ -392,17 +396,6 @@
             completionBlock();
         }
     }
-	
-//	[UIView animateWithDuration:0.4f animations:^ {
-////		self.blurredLayer.alpha = 0;
-//		self.appPicker.view.center = CGPointMake(self.appPicker.view.center.x, self.appPicker.view.center.y + self.appPicker.view.width);
-//	}completion:^(BOOL finished) {
-//		[self.appPicker.view removeFromSuperview];
-//        [self.appPicker removeFromParentViewController];
-//		[self.appPicker didMoveToParentViewController:nil];
-//		self.appPicker = nil;
-//        if (completionBlock) completionBlock();
-//	}];
 }
 
 #pragma Lazy Properties

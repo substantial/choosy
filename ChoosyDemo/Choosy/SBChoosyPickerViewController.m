@@ -4,6 +4,7 @@
 #import "UIImage+ImageEffects.h"
 #import "SBChoosyPickerViewModel.h"
 #import "NSThread+Helpers.h"
+#import "SBReversibleAnimation.h"
 #import "NSArray+ObjectiveSugar.h"
 //#import "SBChoosyPickerView.h"
 
@@ -26,10 +27,19 @@
 @property (nonatomic) UIImageView *blurredBackground;
 @property (nonatomic) UIView *blurVeilView;
 @property (nonatomic) UIView *backgroundTint;
+@property (nonatomic) UIView *instructionTextView;
+@property (nonatomic) UILabel *instructionTextLabel;
+@property (nonatomic) UILabel *confirmationTextLabel;
+@property (nonatomic) UIButton *cancelButton;
+
+//@property (nonatomic) NSMutableDictionary *animationsForSettingDefaultApp;
+@property (nonatomic) NSMutableArray *animationsForSettingDefaultApp;
 
 @end
 
-@implementation SBChoosyAppPickerViewController
+@implementation SBChoosyAppPickerViewController {
+    BOOL _completedSettingDefault;
+}
 
 static CGFloat _appIconHeight = 60;
 static CGFloat _appIconWidth = 60;
@@ -59,7 +69,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
     // tap (outside the content area)
 	[self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)]];
     
-    // swipe down
+    // swipe (down)
     UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(viewSwiped:)];
     swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
 	[self.view addGestureRecognizer:swipeDown];
@@ -90,12 +100,32 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	// line separator
 	UIView *lineSeparator = [[UIView alloc] initWithFrame:CGRectMake(0, self.titleView.bottomY, self.view.width, 1 / [[UIScreen mainScreen] scale])];
 	lineSeparator.backgroundColor = lightGrayColor;//[UIColor colorWithRed:162/255.0f green:155/255.0f blue:155/255.0f alpha:1];
+    
+    // instruction & confirmation text
+    self.instructionTextView = [[UIView alloc] initWithFrame:CGRectMake(0, lineSeparator.bottomY, self.view.width, 30)];
+    self.instructionTextView.backgroundColor = [UIColor clearColor];
+    
+    self.instructionTextLabel = [[UILabel alloc] initWithFrame:self.instructionTextView.bounds];
+    self.instructionTextLabel.text = NSLocalizedString(@"Long-press app to always use it", @"'Long-press app to always use it' instruction text");
+    self.instructionTextLabel.textColor = [UIColor grayColor];
+    self.instructionTextLabel.textAlignment = NSTextAlignmentCenter;
+    self.instructionTextLabel.font = [UIFont systemFontOfSize:13];
+    
+    self.confirmationTextLabel = [[UILabel alloc] initWithFrame:self.instructionTextView.bounds];
+    self.confirmationTextLabel.text = NSLocalizedString(@"Default set! Long-press to reset", @"'Default set! Long-press to reset' confirmation text");
+    self.confirmationTextLabel.textColor = [UIColor darkGrayColor];
+    self.confirmationTextLabel.textAlignment = NSTextAlignmentCenter;
+    self.confirmationTextLabel.font = self.instructionTextLabel.font;
+    self.confirmationTextLabel.alpha = 0;
+    
+    [self.instructionTextView addSubview:self.instructionTextLabel];
+    [self.instructionTextView addSubview:self.confirmationTextLabel];
 	
     // apps collection view
 	UICollectionViewFlowLayout *collectionViewLayout = [UICollectionViewFlowLayout new];
 	collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, lineSeparator.bottomY, self.view.width, appsCollectionViewHeight) collectionViewLayout:collectionViewLayout];
+	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, self.instructionTextView.bottomY, self.view.width, appsCollectionViewHeight) collectionViewLayout:collectionViewLayout];
 	self.collectionView.dataSource = self;
 	self.collectionView.delegate = self;
 	self.collectionView.backgroundColor = [UIColor clearColor];
@@ -105,15 +135,15 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	self.collectionView.contentInset = UIEdgeInsetsMake(0, _appsRowLeftPadding, 0, _appsRowLeftPadding);
     
     // cancel button
-    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    cancelButton.frame = CGRectMake(0, self.collectionView.bottomY, self.view.width, 45);
-    [cancelButton setTitle:NSLocalizedString(@"Cancel", @"Cancel button text") forState:UIControlStateNormal];
-    cancelButton.backgroundColor = [UIColor colorWithRed:237/255.0f green:237/255.0f blue:242/255.0f alpha:0.85f];
-    cancelButton.titleLabel.font = [UIFont systemFontOfSize:23];
-    [cancelButton addTarget:self action:@selector(handleCancel) forControlEvents:UIControlEventTouchUpInside];
+    self.cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.cancelButton.frame = CGRectMake(0, self.collectionView.bottomY, self.view.width, 45);
+    [self.cancelButton setTitle:NSLocalizedString(@"Cancel", @"Cancel button text") forState:UIControlStateNormal];
+    self.cancelButton.backgroundColor = [UIColor colorWithRed:237/255.0f green:237/255.0f blue:242/255.0f alpha:0.85f];
+    self.cancelButton.titleLabel.font = [UIFont systemFontOfSize:23];
+    [self.cancelButton addTarget:self action:@selector(handleCancel) forControlEvents:UIControlEventTouchUpInside];
     
     // the view is full screen, so put all the elements in a smaller content area and stick it at the bottom of the view
-	self.contentArea = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, cancelButton.bottomY)]; // will size to fit/be positioned at the end
+	self.contentArea = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height, self.view.width, self.cancelButton.bottomY)]; // will size to fit/be positioned at the end
 	self.contentArea.backgroundColor = [UIColor clearColor];
     
     // this will contain a blurred image of w/e is behind contentArea
@@ -121,8 +151,8 @@ static CGFloat _appsRowGapBetweenApps = 10;
     self.blurredBackground.backgroundColor = [UIColor clearColor];
     self.blurredBackground.contentMode = UIViewContentModeBottom;
     self.blurredBackground.clipsToBounds = YES;
-    self.blurredBackground.alpha = 0.6f;
-    NSLog(@"blur frame start: %@", NSStringFromCGRect(self.blurredBackground.frame));
+    self.blurredBackground.alpha = 0.75f;
+    //NSLog(@"blur frame start: %@", NSStringFromCGRect(self.blurredBackground.frame));
     
     // the nearly-opaque view over the blurred background that smoothes out the blurred image
     self.blurVeilView = [[UIView alloc] initWithFrame:self.contentArea.bounds];
@@ -131,9 +161,10 @@ static CGFloat _appsRowGapBetweenApps = 10;
     
     [self.contentArea addSubview:self.blurVeilView];
 	[self.contentArea addSubview:self.titleView];
+    [self.contentArea addSubview:self.instructionTextView];
     [self.contentArea addSubview:lineSeparator];
     [self.contentArea addSubview:self.collectionView];
-    [self.contentArea addSubview:cancelButton];
+    [self.contentArea addSubview:self.cancelButton];
 	   
     [self.view addSubview:self.blurredBackground];
 	[self.view addSubview:self.contentArea];
@@ -146,16 +177,17 @@ static CGFloat _appsRowGapBetweenApps = 10;
                                                                                                self.view.width, self.contentArea.height)
                                                                              toView:self.parentViewController.view];
     UIImage *viewScreenshot = [self.parentViewController.view screenshotOfRect:backgroundRectInParentView];
-    NSLog(@"Rect for blur: %@", NSStringFromCGRect(backgroundRectInParentView));
+    //NSLog(@"Rect for blur: %@", NSStringFromCGRect(backgroundRectInParentView));
     
     [NSThread executeOnNonMainThread:^{
-        UIImage *blurredBackground = [viewScreenshot applyBlurWithRadius:16 tintColor:nil saturationDeltaFactor:1.0f maskImage:nil];
+        UIImage *blurredBackground = [viewScreenshot applyBlurWithRadius:16 tintColor:nil saturationDeltaFactor:1.f maskImage:nil];
         
         [NSThread executeOnMainThread:^{
             self.blurredBackground.image = blurredBackground;
             
-            [UIView animateWithDuration:0.1 animations:^{
+            [UIView animateWithDuration:0.13f animations:^{
                 self.blurredBackground.alpha = 0.94f;
+                //self.blurVeilView.alpha = 0.8f;
             }];
         }];
     } withPriority:DISPATCH_QUEUE_PRIORITY_DEFAULT];
@@ -170,7 +202,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
         newFrame.origin.y = contentAreaNewY;
         self.blurredBackground.frame = newFrame;
         
-        NSLog(@"blur frame end: %@", NSStringFromCGRect(self.blurredBackground.frame));
+        //NSLog(@"blur frame end: %@", NSStringFromCGRect(self.blurredBackground.frame));
         self.backgroundTint.alpha = 1.0f;
     } completion:^(BOOL finished) {
         
@@ -193,6 +225,12 @@ static CGFloat _appsRowGapBetweenApps = 10;
             block();
         }
     }];
+}
+
+- (void)selectAppAsDefault:(NSString *)appKey
+{
+    [self.delegate didSelectAppAsDefault:appKey];
+    _completedSettingDefault = NO;
 }
 
 #pragma mark Properties
@@ -238,34 +276,88 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	
 	NSString *appKey = cell.appInfo.appKey;
     
-    NSLog(@"Picked app %@", cell.appInfo.appName);
-	
 	[self.delegate didSelectApp:appKey];
 }
 
 - (void)appLongPressed:(UILongPressGestureRecognizer *)gesture
 {
     SBChoosyAppCell *cell = (SBChoosyAppCell *)gesture.view;
-    NSString *appKey = cell.appInfo.appKey;
     
     switch (gesture.state) {
-        case UIGestureRecognizerStatePossible:
-            
-            break;
-            
-        case UIGestureRecognizerStateChanged:
-            
+        case UIGestureRecognizerStateBegan:
+            if (!_completedSettingDefault) {
+                [self startSettingDefaultAppAnimation:cell];
+            }
             break;
             
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateFailed:
         case UIGestureRecognizerStateCancelled:
-            
+            if (!_completedSettingDefault) {
+                [self stopSettingDefaultAppAnimation:cell];
+            }
             break;
             
         default:
             break;
     }
+}
+
+- (void)startSettingDefaultAppAnimation:(SBChoosyAppCell *)cell
+{
+    CFTimeInterval fadeOutDuration = 0.55f;
+    
+    // fade out the instruction text
+    SBReversibleAnimation *instructionTextAnimation = [SBReversibleAnimation animationWithKeyPath:@"opacity"];
+    instructionTextAnimation.duration = fadeOutDuration;
+    instructionTextAnimation.startValue = @(1.f);
+    instructionTextAnimation.endValue = @(0);
+    instructionTextAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    instructionTextAnimation.layer = self.instructionTextLabel.layer;
+    instructionTextAnimation.animationCompletionBlock = ^void() {
+        _completedSettingDefault = YES;
+        self.confirmationTextLabel.alpha = 1.f;
+        self.cancelButton.enabled = NO;
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self selectAppAsDefault:cell.appInfo.appKey];
+        });
+    };
+    [self.animationsForSettingDefaultApp addObject:instructionTextAnimation];
+    
+    // fade out other app icons
+    for (SBChoosyAppCell *otherCell in [self.collectionView visibleCells]) {
+        if (otherCell == cell) continue;
+        
+        SBReversibleAnimation *fadeAppOutAnimation = [SBReversibleAnimation animationWithKeyPath:@"opacity"];
+        fadeAppOutAnimation.duration = fadeOutDuration;
+        fadeAppOutAnimation.startValue = @(1.f);
+        fadeAppOutAnimation.endValue = @(0.2f);
+        fadeAppOutAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        fadeAppOutAnimation.layer = otherCell.layer;
+        [self.animationsForSettingDefaultApp addObject:fadeAppOutAnimation];
+    }
+    
+    [self.animationsForSettingDefaultApp each:^(id object) {
+        [((SBReversibleAnimation *)object) start];
+    }];
+ }
+
+- (void)stopSettingDefaultAppAnimation:(SBChoosyAppCell *)cell
+{
+    [self.animationsForSettingDefaultApp each:^(id object) {
+        [((SBReversibleAnimation *)object) reverse];
+    }];
+    
+    [self.animationsForSettingDefaultApp removeAllObjects];
+}
+
+- (NSMutableArray *)animationsForSettingDefaultApp
+{
+    if (!_animationsForSettingDefaultApp) {
+        _animationsForSettingDefaultApp = [NSMutableArray new];
+    }
+    return _animationsForSettingDefaultApp;
 }
 
 - (void)handleCancel

@@ -48,9 +48,12 @@
     
     self.choosy = [SBChoosy new];
     self.choosy.delegate = self;
+    // @"end_address" : @"25 Taylor St, San Francisco, CA 94102"
     SBChoosyActionContext *navigateAction = [SBChoosyActionContext contextWithAppType:@"Maps"
-                                                                               action:@"directions"
-                                                                           parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102"}
+                                                                               action:@"open"
+                                                                           parameters:@{@"query" : @"Pizza",
+                                                                                        @"callback_url" : @"choosy://",
+                                                                                        @"callback_name" : @"Choosy" }
                                                                        appPickerTitle:@"Directions"];
     [self.choosy registerUIElement:self.navigateButton forAction:navigateAction];
     [self.choosy registerUIElement:self.navigateButtonCustom forAction:navigateAction];
@@ -76,8 +79,10 @@
     
     [self.choosy registerUIElement:self.bottomView
                       forAction:[SBChoosyActionContext contextWithAppType:@"Browser"
-                                                                   action:@"browse_http"
-                                                               parameters:@{@"url_no_scheme" : @"www.substantial.com"}]];
+                                                                   action:@"browse"
+                                                               parameters:@{@"url" : @"https://www.substantial.com",
+                                                                            @"callback_url" : @"choosy://",
+                                                                            @"callback_name" : @"Choosy" }]];
     [self.choosy update];
     
     [self setupAppearance];

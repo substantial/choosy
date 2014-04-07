@@ -8,6 +8,7 @@
 @required
 - (void)didDismissPicker;
 - (void)didSelectApp:(NSString *)appKey;
+- (void)didSelectAppAsDefault:(NSString *)appKey;
 
 @end
 

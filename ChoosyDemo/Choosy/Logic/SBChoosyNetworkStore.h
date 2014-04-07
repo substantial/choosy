@@ -1,7 +1,6 @@
 
 #import <Foundation/Foundation.h>
 #import "SBChoosyAppType.h"
-#import "AFHTTPRequestOperationManager.h"
 
 /**
  *  Interface to remotely stored data.

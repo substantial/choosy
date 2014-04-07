@@ -4,10 +4,10 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Choosy : Meowzers!" />
+    <meta name="description" content="Choosy : Effortlessly enable your users to specify and change default apps for external actions without writing any custom code." />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
     <title>Choosy</title>
   </head>
 
@@ -16,15 +16,15 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/substantial/choosy">View on GitHub</a>
+          <!--<a id="forkme_banner" href="https://github.com/substantial/choosy">View on GitHub</a>-->
 
           <h1 id="project_title">Choosy</h1>
-          <h2 id="project_tagline">Meowzers!</h2>
+          <h3 id="project_tagline">Effortlessly enable your users to choose default apps for external actions like browsing, emailing, tweeting, etc.</h3>
 
-            <section id="downloads">
+           <!-- <section id="downloads">
               <a class="zip_download_link" href="https://github.com/substantial/choosy/zipball/master">Download this project as a .zip file</a>
               <a class="tar_download_link" href="https://github.com/substantial/choosy/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+            </section>-->
         </header>
     </div>
 
@@ -32,48 +32,110 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="choosy" class="anchor" href="#choosy"><span class="octicon octicon-link">
+</span></a>Why</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>People will love your app even more if it helps them use their other favorite apps. We're essentially solving the iOS' lack of default app selection mechanism.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>Once Choosy is widely implemented, end users will be able to traverse the iOS ecosystem using just the apps they love, be they built-in ones or not.</p>
+
+<h3>Check It Out!</h3>
+<p>
+<iframe src="http://player.vimeo.com/video/87752578" width="625" height="370" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</p>
+
+<!-- <h3>
+<a name="a-picture-is-worth-" class="anchor" href="#a-picture-is-worth-"><span class="octicon octicon-link"></span>
+</a>Imagine... </h3>
+
+<p>No Choosy: your WebView is forced to have an 'Open in Safari' button, but this particular user loves Chrome. *the sound of a quiet, devoid-of-hope sigh from user*</p>
+With Choosy: your button says 'Open in Browser'. When the button is tapped, Choosy displays a list of installed browsers, such as Safari and Chrome.
+If a user selects Chrome, the button now says 'Open in Chrome' and sends the user to that browser. *the sound of a grin and a great review being typed!* </p>
+
+<!-- <p>No Choosy: your About screen has Email Us link, but your user loves Mailbox. *wishful and slightly sad user face*</p>
+<p>Choosy: User is asked for their favorite email client when they tap the Email Us link. *pleasantly surprised and excited user face* </p> -->
+
+<!--<h3>How?</h3>
+<p>You don't need to write any code specific to 3rd party apps. Simply tell Choosy what app category you want, and what action (if any) you'd like to perform and with what parameters.
+  Choosy will figure out how to pass those parameters to the app user selects, and it will fall back to only passing the parameters the said app supports.
+  If the selected app doesn't support that action, Choosy will fall back to just opening that app.</p>
+<p>For example, let's say your About page has a twitter link to your company's profile:</p>
+<pre class="prettyprint"><code>
+[SBChoosy registerUIElement:self.companyTwitterLink
+                  forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
+                                                               action:@"show_profile"
+                                                           parameters:@{ @"profile_screenname" : @"KarlTheFog",
+                                                                         @"callback_url" : @"choosyDemoApp://"}]];
+</code></pre>
+<p>Choosy creates and executes a different URL based on which app user selects, e.g.:</p>
+<p>Safari: http://www.twitter.com/KarlTheFog</p>
+<p>Twitter: twitter://user?screen_name=KarlTheFog</p>
+<p>Tweetbot: tweetbot:///user_profile/KarlTheFog?callback_url=choosyDemoApp://</p> -->
+
+<h3>
+<a name="how-easy-to-implement" class="anchor" href="#how-easy-to-implement"><span class="octicon octicon-link"></span>
+</a>How</h3>
+
+<p>Easy. You have two options.</p>
+
+<h4>
+<a name="easiest-" class="anchor" href="#easiest-">
+  <span class="octicon octicon-link"></span></a>Easiest</h4>
+
+<p>In viewDidLoad:</p>
+<pre class="prettyprint"><code>[SBChoosy registerUIElement:self.myButton forAction:[SBChoosyActionContext initWithAppType:@"Twitter"]];
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>That's it! Choosy will hook up a tap and long press gesture recognizers to that button (or any other UIControl), display the app selection UI, etc.</p>
+
+<h4>
+<a name="easier-" class="anchor" href="#easier-">
+  <span class="octicon octicon-link"></span></a>Easier</h4>
+
+<p>In your viewDidLoad or applicationDidLoad: </p>
+<pre class="prettyprint"><code>[SBChoosy registerAppTypes: @[@"Twitter", @"Browser", @"Email", ...]]
+</code></pre>
+
+<p>And then call Choosy from your own event handlers:</p>
+<pre class="prettyprint"><code>[SBChoosy handleAction: [SBChoosyActionContext contextWithAppType:@"Email" action:@"Compose" parameters:@{ @"to" : @"choosy@substantial.com" }]];</code></pre>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="customization" class="anchor" href="#customization"><span class="octicon octicon-link"></span></a>Customization</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>Yes.</p>
+<!--<p>More complex cases:
+1. Register a delegate with Choosy. The most important question a delegate can answer is, what is the parent view controller for Choosy's view controller? If the delegate does not respond to that question, but the delegate itself is a view controller, that view controller is used as the parent. But if the delegate is not present at all, Choosy uses top-most (i.e. currently visible) view controller in the Window hierarchy as the parent.</p>-->
 
 <h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a name="how-is-this-possible" class="anchor" href="#how-is-this-possible"><span class="octicon octicon-link"></span></a>But how...</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>Thanks to UIApplication's canOpenURL method and iOS forcing unique url schemes. Basically, we store a list of URL schemes for each app on the server, and categorize apps. Choosy downloads that info as needed.</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>Choosy caches network data, so the traffic footprint is small. It also instantly knows when a new app from same category is installed, or the default app is deleted, and lets user re-select the default app. Choosy is non-intrusive - if there's no connection and the default app hasn't been selected yet, it just opens the default iOS app.</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<h3>When</h3>
+
+<p>
+We're at alpha (including the look and feel). Beta should be within 2 weeks, and then it's just a lot of polish - the devil is in the details, as they say. Honestly, we love this, for it truly makes iOS experience better, but we also want to make sure other developers are as excited to implement it. So please let us know what you think at choosy@substantial.com!
+</p>
+
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Choosy maintained by <a href="https://github.com/substantial">substantial</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+<!--         <p class="copyright">By <a href="http://www.substantial.com">Substantial</a>
+        </p> -->
+
+        <p><a href="http://www.substantial.com"><img src="images/substantial.png" width="650px" alt="Substantial logo"></a></p>
+
       </footer>
     </div>
 
-    
+  <script type="text/javascript">
+     SyntaxHighlighter.all()
+</script>
 
   </body>
 </html>

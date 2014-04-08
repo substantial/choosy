@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   
   s.platform     = :ios, "7.0"
 
-  s.source_files  = "SBChoosy", "SBChoosy/**/*.{h,m}", "SBChoosy/*.{h,m}"
+  s.source_files  = "SBChoosy", "SBChoosy/**/*.{h,m,png,json}", "SBChoosy/*.{h,m}"
   s.requires_arc = true
 end

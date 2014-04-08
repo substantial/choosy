@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SBChoosy"
-  s.version      = "0.1.1"
+  s.version      = "0.1.2"
   s.summary      = "Effortlessly enable choosing of default apps for external actions like browsing, emailing, tweeting, etc."
   s.homepage     = "http://substantial.github.io/choosy"
   s.source       = { :git => "https://github.com/substantial/choosy.git", :tag => "0.1" }
@@ -18,6 +18,6 @@ Pod::Spec.new do |s|
   
   s.platform     = :ios, "7.0"
 
-  s.source_files  = "SBChoosy", "SBChoosy/**/*.{h,m,png,json}", "SBChoosy/*.{h,m}"
+  s.source_files  = "SBChoosy", "SBChoosy/**/*.{h,m,png,json}", "SBChoosy/*.{h,m,png,json}"
   s.requires_arc = true
 end

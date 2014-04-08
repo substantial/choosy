@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SBChoosy"
-  s.version      = "0.1"
+  s.version      = "0.1.1"
   s.summary      = "Effortlessly enable choosing of default apps for external actions like browsing, emailing, tweeting, etc."
   s.homepage     = "http://substantial.github.io/choosy"
   s.source       = { :git => "https://github.com/substantial/choosy.git", :tag => "0.1" }

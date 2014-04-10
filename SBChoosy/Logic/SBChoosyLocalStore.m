@@ -161,7 +161,7 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 {
     NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:fileType];
     if (!filePath) {
-        NSBundle *resourcesBundle = [NSBundle bundleWithIdentifier:@"Resources"];
+        NSBundle *resourcesBundle = [NSBundle bundleWithIdentifier:@"SBChoosyResources"];
         filePath = [resourcesBundle pathForResource:fileName ofType:fileType];
     }
     

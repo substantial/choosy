@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "SBChoosy"
-  s.version      = "0.1.3"
+  s.version      = "0.1.4"
   s.summary      = "Effortlessly enable choosing of default apps for external actions like browsing, emailing, tweeting, etc."
   s.homepage     = "http://substantial.github.io/choosy"
-  s.source       = { :git => ".", :tag => "0.1.3" }
+  s.source       = { :git => ".", :tag => "0.1.4" }
 
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.authors      = { "Alex Novosad" => "alexn@substantial.com",
@@ -20,6 +20,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "7.0"
 
   s.source_files  = "SBChoosy", "SBChoosy/**/*.{h,m}", "SBChoosy/*.{h,m}"
-  s.resource_bundle = { "Resources" => "SBChoosy/BuiltInApps/*" }
+  s.resource_bundle = { "SBChoosyResources" => "SBChoosy/BuiltInApps/*" }
   s.requires_arc = true
 end

@@ -70,14 +70,14 @@
 
 - (NSString *)urlForAppTypeData:(NSString *)appTypeKey
 {
-    NSString *fileUrl = [NSString stringWithFormat:@"https://raw.github.com/substantial/choosy/master/app-data/%@.json", appTypeKey];
+    NSString *fileUrl = [NSString stringWithFormat:@"https://raw.github.com/substantial/choosy-data/master/app-data/%@.json", appTypeKey];
     return fileUrl;
 }
 
 - (NSString *)urlForAppIcon:(NSString *)appKey
 {
     NSString *appIconName = [SBChoosyAppInfo appIconFileNameForAppKey:appKey];
-    NSString *fileUrl = [NSString stringWithFormat:@"https://raw.github.com/substantial/choosy/master/app-icons/%@", appIconName];
+    NSString *fileUrl = [NSString stringWithFormat:@"https://raw.github.com/substantial/choosy-data/master/app-icons/%@", appIconName];
     return fileUrl;
 }
 

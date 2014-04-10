@@ -15,10 +15,11 @@ Pod::Spec.new do |s|
 
                    There's a server-side component where lists of various URL schemes supported by apps are maintained by Substantial.
                    DESC
+  s.screenshots  = [ "https://flic.kr/p/mWUFgv", "https://flic.kr/p/mWUvX2" ]
   
   s.platform     = :ios, "7.0"
 
   s.source_files  = "SBChoosy", "SBChoosy/**/*.{h,m}", "SBChoosy/*.{h,m}"
-  s.resources = ["Resources/*"]
+  s.resource_bundle = { "Resources" => "SBChoosy/Resources/*" }
   s.requires_arc = true
 end

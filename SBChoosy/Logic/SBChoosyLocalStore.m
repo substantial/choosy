@@ -105,7 +105,7 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 + (SBChoosyAppType *)builtInAppType:(NSString *)appTypeKey
 {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"systemAppTypes" ofType:@".json"];
+    NSString *filePath = [self filePathForBundledFileNamed:@"systemAppTypes" ofType:@"json"];
     
     NSArray *appTypes = [SBChoosyLocalStore cachedAppTypesAtPath:filePath];
     
@@ -116,16 +116,15 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 {
     // TODO: background thread
     // check if amid system app icons
-    NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *fileName = [SBChoosyAppInfo appIconFileNameWithoutExtensionForAppKey:appKey];
     NSString *fileExtension = [SBChoosyAppInfo appIconFileExtension];
-    NSString *builtInAppIconPath = [mainBundle pathForResource:fileName ofType:fileExtension];
+    NSString *builtInAppIconPath = [self filePathForBundledFileNamed:fileName ofType:fileExtension];
     
     if (builtInAppIconPath) return YES;
     
     // check cache
     NSString *filePath = [self filePathForAppIconForAppKey:appKey];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+    if (filePath && [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         return YES;
     }
     
@@ -156,6 +155,17 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
     [imageData writeToFile:path atomically:YES];
     
     NSLog(@"Cached app icon for %@ at path %@", appKey, path);
+}
+
++ (NSString *)filePathForBundledFileNamed:(NSString *)fileName ofType:(NSString *)fileType
+{
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:fileType];
+    if (!filePath) {
+        NSBundle *resourcesBundle = [NSBundle bundleWithIdentifier:@"Resources"];
+        filePath = [resourcesBundle pathForResource:fileName ofType:fileType];
+    }
+    
+    return filePath;
 }
 
 #pragma mark - Private

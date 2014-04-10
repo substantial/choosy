@@ -37,7 +37,7 @@
 
 - (void)reverse
 {
-    CFTimeInterval duration;
+    CFTimeInterval duration = self.duration;
     CFTimeInterval currentMediaTime = CACurrentMediaTime();
     
     // if we previously animated, then calculate how far along in the previous animation we were

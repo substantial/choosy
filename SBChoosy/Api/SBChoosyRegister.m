@@ -184,7 +184,7 @@ static dispatch_once_t once_token;
          NSInteger cacheAgeInHours = [[NSDate date] timeIntervalSinceDate:dateLastUpdated];
          BOOL timeToRefresh = SBCHOOSY_DEVELOPMENT_MODE == 1 || cacheAgeInHours > SBCHOOSY_UPDATE_INTERVAL || !appType.dateUpdated;
          BOOL isDownloadingThisType = [self isDownloadingAppType:appTypeKey];
-         NSLog(@"timeToRefresh: %d, isDownloading: %d", timeToRefresh, isDownloadingThisType);
+         //NSLog(@"timeToRefresh: %d, isDownloading: %d", timeToRefresh, isDownloadingThisType);
          if ((!appType || timeToRefresh) && !isDownloadingThisType)
          {
              //NSLog(@"Cache age is %ldx and update interval is %ldx, date is %@.", (long)cacheAgeInHours, (long)SBCHOOSY_UPDATE_INTERVAL, [dateLastUpdated description]);

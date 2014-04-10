@@ -73,11 +73,11 @@
 		D9C02BA5189C162C004175A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9C02B84189C162C004175A8 /* UIKit.framework */; };
 		D9C02BAD189C162C004175A8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9C02BAB189C162C004175A8 /* InfoPlist.strings */; };
 		D9C02BAF189C162C004175A8 /* ChoosyDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C02BAE189C162C004175A8 /* ChoosyDemoTests.m */; };
-		D9CAA6FA18F60A6B002B0B73 /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA6F518F60A6B002B0B73 /* mail@2x.png */; };
-		D9CAA6FB18F60A6B002B0B73 /* maps@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA6F618F60A6B002B0B73 /* maps@2x.png */; };
-		D9CAA6FC18F60A6B002B0B73 /* safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA6F718F60A6B002B0B73 /* safari@2x.png */; };
-		D9CAA6FD18F60A6B002B0B73 /* systemAppTypes.json in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA6F818F60A6B002B0B73 /* systemAppTypes.json */; };
-		D9CAA6FE18F60A6B002B0B73 /* twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA6F918F60A6B002B0B73 /* twitter@2x.png */; };
+		D9CAA74618F71D11002B0B73 /* mail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA74118F71D11002B0B73 /* mail@2x.png */; };
+		D9CAA74718F71D11002B0B73 /* maps@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA74218F71D11002B0B73 /* maps@2x.png */; };
+		D9CAA74818F71D11002B0B73 /* safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA74318F71D11002B0B73 /* safari@2x.png */; };
+		D9CAA74918F71D11002B0B73 /* systemAppTypes.json in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA74418F71D11002B0B73 /* systemAppTypes.json */; };
+		D9CAA74A18F71D11002B0B73 /* twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CAA74518F71D11002B0B73 /* twitter@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -216,11 +216,11 @@
 		D9C02BAA189C162C004175A8 /* ChoosyDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ChoosyDemoTests-Info.plist"; sourceTree = "<group>"; };
 		D9C02BAC189C162C004175A8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D9C02BAE189C162C004175A8 /* ChoosyDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChoosyDemoTests.m; sourceTree = "<group>"; };
-		D9CAA6F518F60A6B002B0B73 /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
-		D9CAA6F618F60A6B002B0B73 /* maps@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "maps@2x.png"; sourceTree = "<group>"; };
-		D9CAA6F718F60A6B002B0B73 /* safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "safari@2x.png"; sourceTree = "<group>"; };
-		D9CAA6F818F60A6B002B0B73 /* systemAppTypes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = systemAppTypes.json; sourceTree = "<group>"; };
-		D9CAA6F918F60A6B002B0B73 /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter@2x.png"; sourceTree = "<group>"; };
+		D9CAA74118F71D11002B0B73 /* mail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mail@2x.png"; sourceTree = "<group>"; };
+		D9CAA74218F71D11002B0B73 /* maps@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "maps@2x.png"; sourceTree = "<group>"; };
+		D9CAA74318F71D11002B0B73 /* safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "safari@2x.png"; sourceTree = "<group>"; };
+		D9CAA74418F71D11002B0B73 /* systemAppTypes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = systemAppTypes.json; sourceTree = "<group>"; };
+		D9CAA74518F71D11002B0B73 /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,7 +253,7 @@
 		D9BDA8CF18F34F2800796547 /* SBChoosy */ = {
 			isa = PBXGroup;
 			children = (
-				D9CAA6F418F60A6B002B0B73 /* Resources */,
+				D9CAA74018F71D11002B0B73 /* BuiltInApps */,
 				D9BDA8D018F34F2800796547 /* Api */,
 				D9BDA8D818F34F2800796547 /* Categories */,
 				D9BDA8F418F34F2800796547 /* DataTranslation */,
@@ -511,16 +511,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		D9CAA6F418F60A6B002B0B73 /* Resources */ = {
+		D9CAA74018F71D11002B0B73 /* BuiltInApps */ = {
 			isa = PBXGroup;
 			children = (
-				D9CAA6F518F60A6B002B0B73 /* mail@2x.png */,
-				D9CAA6F618F60A6B002B0B73 /* maps@2x.png */,
-				D9CAA6F718F60A6B002B0B73 /* safari@2x.png */,
-				D9CAA6F818F60A6B002B0B73 /* systemAppTypes.json */,
-				D9CAA6F918F60A6B002B0B73 /* twitter@2x.png */,
+				D9CAA74118F71D11002B0B73 /* mail@2x.png */,
+				D9CAA74218F71D11002B0B73 /* maps@2x.png */,
+				D9CAA74318F71D11002B0B73 /* safari@2x.png */,
+				D9CAA74418F71D11002B0B73 /* systemAppTypes.json */,
+				D9CAA74518F71D11002B0B73 /* twitter@2x.png */,
 			);
-			path = Resources;
+			path = BuiltInApps;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -603,14 +603,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9CAA6FE18F60A6B002B0B73 /* twitter@2x.png in Resources */,
-				D9CAA6FC18F60A6B002B0B73 /* safari@2x.png in Resources */,
+				D9CAA74A18F71D11002B0B73 /* twitter@2x.png in Resources */,
+				D9CAA74818F71D11002B0B73 /* safari@2x.png in Resources */,
 				D9C02B9C189C162C004175A8 /* Images.xcassets in Resources */,
 				D9C02B94189C162C004175A8 /* Main.storyboard in Resources */,
-				D9CAA6FD18F60A6B002B0B73 /* systemAppTypes.json in Resources */,
+				D9CAA74918F71D11002B0B73 /* systemAppTypes.json in Resources */,
 				D9C02B8B189C162C004175A8 /* InfoPlist.strings in Resources */,
-				D9CAA6FA18F60A6B002B0B73 /* mail@2x.png in Resources */,
-				D9CAA6FB18F60A6B002B0B73 /* maps@2x.png in Resources */,
+				D9CAA74618F71D11002B0B73 /* mail@2x.png in Resources */,
+				D9CAA74718F71D11002B0B73 /* maps@2x.png in Resources */,
 				D922C81E18BADDA5004584C4 /* substantial.png in Resources */,
 				D9BDA95218F34F2900796547 /* Mantle-Info.plist in Resources */,
 			);

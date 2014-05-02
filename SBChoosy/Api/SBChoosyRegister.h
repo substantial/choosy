@@ -7,28 +7,15 @@
 
 @class SBChoosyActionContext, SBChoosyAppType, SBChoosyAppInfo;
 
-@protocol SBChoosyRegisterDelegate <NSObject>
-
-//- (void)didAddApp:(SBChoosyAppInfo *)newApp;
-//
-//- (void)didUpdateAppInfo:(SBChoosyAppInfo *)existingAppInfo
-//          withNewAppInfo:(SBChoosyAppInfo *)updatedAppInfo;
-
-- (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
-
-@end
-
 @interface SBChoosyRegister : NSObject
 
 + (instancetype)sharedInstance;
-@property (nonatomic, weak) id<SBChoosyRegisterDelegate> delegate;
 
 - (void)registerAppTypes:(NSArray *)appTypes;
-- (void)update;
-- (void)takeStockOfAppsForAppType:(SBChoosyAppType *)appType;
+- (void)registerAppTypeWithKey:(NSString *)appTypeKey;
+- (void)updateRegisteredAppTypes;
 
-- (void)addAppType:(SBChoosyAppType *)appTypeToAdd then:(void(^)())block;
-- (void)appTypeWithKey:(NSString *)appTypeKey then:(void(^)(SBChoosyAppType *))block;
+- (void)findAppTypeWithKey:(NSString *)appTypeKey andIfFound:(void(^)(SBChoosyAppType *appType))successBlock ifNotFound:(void(^)())failureBlock;
 - (UIImage *)appIconForAppKey:(NSString *)appKey;
 
 - (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey;

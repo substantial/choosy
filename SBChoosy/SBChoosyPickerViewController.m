@@ -102,30 +102,32 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	lineSeparator.backgroundColor = lightGrayColor;//[UIColor colorWithRed:162/255.0f green:155/255.0f blue:155/255.0f alpha:1];
     
     // instruction & confirmation text
-    self.instructionTextView = [[UIView alloc] initWithFrame:CGRectMake(0, lineSeparator.bottomY, self.view.width, 30)];
-    self.instructionTextView.backgroundColor = [UIColor clearColor];
-    
-    self.instructionTextLabel = [[UILabel alloc] initWithFrame:self.instructionTextView.bounds];
-    self.instructionTextLabel.text = NSLocalizedString(@"Long-press app to always use it", @"'Long-press app to always use it' instruction text");
-    self.instructionTextLabel.textColor = [UIColor grayColor];
-    self.instructionTextLabel.textAlignment = NSTextAlignmentCenter;
-    self.instructionTextLabel.font = [UIFont systemFontOfSize:13];
-    
-    self.confirmationTextLabel = [[UILabel alloc] initWithFrame:self.instructionTextView.bounds];
-    self.confirmationTextLabel.text = NSLocalizedString(@"Default set! Long-press to reset", @"'Default set! Long-press to reset' confirmation text");
-    self.confirmationTextLabel.textColor = [UIColor darkGrayColor];
-    self.confirmationTextLabel.textAlignment = NSTextAlignmentCenter;
-    self.confirmationTextLabel.font = self.instructionTextLabel.font;
-    self.confirmationTextLabel.alpha = 0;
-    
-    [self.instructionTextView addSubview:self.instructionTextLabel];
-    [self.instructionTextView addSubview:self.confirmationTextLabel];
+    if (self.viewModel.allowDefaultAppSelection) {
+        self.instructionTextView = [[UIView alloc] initWithFrame:CGRectMake(0, lineSeparator.bottomY, self.view.width, 30)];
+        self.instructionTextView.backgroundColor = [UIColor clearColor];
+        
+        self.instructionTextLabel = [[UILabel alloc] initWithFrame:self.instructionTextView.bounds];
+        self.instructionTextLabel.text = NSLocalizedString(@"Long-press app to always use it", @"'Long-press app to always use it' instruction text");
+        self.instructionTextLabel.textColor = [UIColor grayColor];
+        self.instructionTextLabel.textAlignment = NSTextAlignmentCenter;
+        self.instructionTextLabel.font = [UIFont systemFontOfSize:13];
+        
+        self.confirmationTextLabel = [[UILabel alloc] initWithFrame:self.instructionTextView.bounds];
+        self.confirmationTextLabel.text = NSLocalizedString(@"Default set! Long-press to reset", @"'Default set! Long-press to reset' confirmation text");
+        self.confirmationTextLabel.textColor = [UIColor darkGrayColor];
+        self.confirmationTextLabel.textAlignment = NSTextAlignmentCenter;
+        self.confirmationTextLabel.font = self.instructionTextLabel.font;
+        self.confirmationTextLabel.alpha = 0;
+        
+        [self.instructionTextView addSubview:self.instructionTextLabel];
+        [self.instructionTextView addSubview:self.confirmationTextLabel];
+    }
 	
     // apps collection view
 	UICollectionViewFlowLayout *collectionViewLayout = [UICollectionViewFlowLayout new];
 	collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, self.instructionTextView.bottomY, self.view.width, appsCollectionViewHeight) collectionViewLayout:collectionViewLayout];
+	self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, self.viewModel.allowDefaultAppSelection ? self.instructionTextView.bottomY : lineSeparator.bottomY, self.view.width, appsCollectionViewHeight) collectionViewLayout:collectionViewLayout];
 	self.collectionView.dataSource = self;
 	self.collectionView.delegate = self;
 	self.collectionView.backgroundColor = [UIColor clearColor];
@@ -231,6 +233,18 @@ static CGFloat _appsRowGapBetweenApps = 10;
 {
     [self.delegate didSelectAppAsDefault:appKey];
     _completedSettingDefault = NO;
+}
+
+- (void)updateIconForAppKey:(NSString *)appKey withIcon:(UIImage *)appIcon
+{
+    for (SBChoosyPickerAppInfo *app in self.viewModel.appTypeInfo.installedApps) {
+        if ([app.appKey isEqualToString:appKey]) {
+            app.appIcon = appIcon;
+            
+            // TODO: make this better!
+            [self.collectionView reloadData];
+        }
+    }
 }
 
 #pragma mark Properties
@@ -380,15 +394,17 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
         return [object isKindOfClass:[UITapGestureRecognizer class]];
     }];
-    NSArray *longPressGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
-        return [object isKindOfClass:[UILongPressGestureRecognizer class]];
-    }];
-    
 	if ([tapGestureRecognizersAttachedToCell count] == 0) {
 		[cell addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(appTapped:)]];
 	}
-    if ([longPressGestureRecognizersAttachedToCell count] == 0) {
-        [cell addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(appLongPressed:)]];
+    
+    if (self.viewModel.allowDefaultAppSelection) {
+        NSArray *longPressGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
+            return [object isKindOfClass:[UILongPressGestureRecognizer class]];
+        }];
+        if ([longPressGestureRecognizersAttachedToCell count] == 0) {
+            [cell addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(appLongPressed:)]];
+        }
     }
 	
 	return cell;

@@ -5,6 +5,14 @@
 
 @class SBChoosyAppAction;
 
+extern NSString * const SBChoosyDidUpdateAppIconNotification;
+
+@protocol SBChoosyAppInfoDelegate <NSObject>
+
+- (void)didUpdateAppIcon:(UIImage *)newAppIcon;
+
+@end
+
 @interface SBChoosyAppInfo : MTLModel <MTLJSONSerializing>
 
 @property (nonatomic) NSString *appName;
@@ -15,12 +23,12 @@
 @property (nonatomic) BOOL isInstalled;
 @property (nonatomic) BOOL isNew;
 @property (nonatomic) BOOL isDefault;
-
 @property (nonatomic) BOOL isAppIconDownloading;
+@property (nonatomic, weak) id delegate;
 
 - (SBChoosyAppAction *)findActionWithKey:(NSString *)actionKey;
 
-- (void)downloadAppIcon:(void (^)(UIImage *))successBlock;
+- (void)downloadAppIcon;
 
 + (NSString *)appIconFileNameForAppKey:(NSString *)appKey;
 + (NSString *)appIconFileNameWithoutExtensionForAppKey:(NSString *)appKey;

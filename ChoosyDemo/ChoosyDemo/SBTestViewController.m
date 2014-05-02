@@ -47,9 +47,11 @@
     [super viewDidLoad];
     
     self.choosy = [SBChoosy new];
-    self.choosy.delegate = self;
+//    self.choosy.delegate = self;
+    self.choosy.allowsDefaultAppSelection = NO;
+    
     // @"end_address" : @"25 Taylor St, San Francisco, CA 94102"
-    SBChoosyActionContext *navigateAction = [SBChoosyActionContext contextWithAppType:@"Maps"
+    SBChoosyActionContext *navigateAction = [SBChoosyActionContext actionContextWithAppType:@"Maps"
                                                                                action:@"open"
                                                                            parameters:@{@"query" : @"Pizza",
                                                                                         @"callback_url" : @"choosy://",
@@ -59,7 +61,7 @@
     [self.choosy registerUIElement:self.navigateButtonCustom forAction:navigateAction];
     
     
-    SBChoosyActionContext *twitterAction = [SBChoosyActionContext contextWithAppType:@"Twitter"
+    SBChoosyActionContext *twitterAction = [SBChoosyActionContext actionContextWithAppType:@"Twitter"
                                                                               action:@"show_profile"
                                                                           parameters:@{ @"profile_screenname" : @"KarlTheFog",
                                                                                         @"callback_url" : @"choosy://"}
@@ -68,7 +70,7 @@
     [self.choosy registerUIElement:self.twitterButtonCustom forAction:twitterAction];
     
     
-    SBChoosyActionContext *emailAction = [SBChoosyActionContext contextWithAppType:@"Email"
+    SBChoosyActionContext *emailAction = [SBChoosyActionContext actionContextWithAppType:@"Email"
                                                                             action:@"Compose"
                                                                         parameters:@{ @"to" : @"choosy@substantial.com",
                                                                                       @"subject" : @"HAI"
@@ -78,12 +80,11 @@
     [self.choosy registerUIElement:self.emailButtonCustom forAction:emailAction];
     
     [self.choosy registerUIElement:self.bottomView
-                      forAction:[SBChoosyActionContext contextWithAppType:@"Browser"
+                      forAction:[SBChoosyActionContext actionContextWithAppType:@"Browser"
                                                                    action:@"browse"
                                                                parameters:@{@"url" : @"https://www.substantial.com",
                                                                             @"callback_url" : @"choosy://",
                                                                             @"callback_name" : @"Choosy" }]];
-    [self.choosy update];
     
     [self setupAppearance];
     
@@ -106,7 +107,7 @@
 
 - (IBAction)showDirections:(UIButton *)sender
 {
-    [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Maps"
+    [self.choosy handleAction:[SBChoosyActionContext actionContextWithAppType:@"Maps"
                                                               action:@"directions"
                                                           parameters:@{@"end_address" :
                                                 @"25 Taylor St, San Francisco, CA 94102"}]];
@@ -114,7 +115,7 @@
 
 - (IBAction)showInBrowser
 {
-    [self.choosy handleAction:[SBChoosyActionContext contextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
+    [self.choosy handleAction:[SBChoosyActionContext actionContextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
 }
 
 - (void)handleNetworkChange:(NSNotification *)notification
@@ -179,6 +180,16 @@
 //    customPicker.delegate = self;
 //    
 //    [self presentViewController:customPicker animated:NO completion:nil];
+}
+
+- (void)didSelectAppAsDefault:(NSString *)appKey
+{
+    NSLog(@"Add custom code here to handle default app selection");
+}
+
+- (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app
+{
+    NSLog(@"Got icon update notification in custom implementation delegate");
 }
 
 #pragma mark SBChoosyPickerDelegate

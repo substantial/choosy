@@ -7,5 +7,6 @@
 @property (nonatomic) SBChoosyPickerAppTypeInfo *appTypeInfo;
 @property (nonatomic) NSString *pickerTitleText;
 @property (nonatomic) NSString *pickerText;
+@property (nonatomic) BOOL allowDefaultAppSelection;
 
 @end

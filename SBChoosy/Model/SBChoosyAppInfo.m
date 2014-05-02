@@ -4,6 +4,9 @@
 #import "SBChoosyAppAction.h"
 #import "SBChoosyNetworkStore.h"
 #import "SBChoosyLocalStore.h"
+#import "NSThread+Helpers.h"
+
+NSString * const SBChoosyDidUpdateAppIconNotification = @"SBChoosyDidUpdateAppIconNotification";
 
 @implementation SBChoosyAppInfo
 
@@ -20,23 +23,18 @@ static NSString *_appIconFileExtension = @"png";
     return nil;
 }
 
-- (void)downloadAppIcon:(void (^)(UIImage *))successBlock
+- (void)downloadAppIcon
 {
-    if (self.isAppIconDownloading == YES) return;
-    
-    self.isAppIconDownloading = YES;
     [SBChoosyNetworkStore downloadAppIconForAppKey:self.appKey success:^(UIImage *appIcon)
      {
-         // TODO: make sure this doesn't execute multiple times for same app key... ugh bug somewhere
          [SBChoosyLocalStore cacheAppIcon:appIcon forAppKey:self.appKey];
-         self.isAppIconDownloading = NO;
          
-         if (successBlock) {
-             successBlock(appIcon);
-         }
+         // tell everyone icon got updated! woooo
+         [NSThread executeOnMainThread:^{
+             [[NSNotificationCenter defaultCenter] postNotificationName:SBChoosyDidUpdateAppIconNotification object:self userInfo:@{@"appIcon" : appIcon}];
+         }];
      } failure:^(NSError *error) {
          NSLog(@"Couldn't download icon for app key %@", self.appKey);
-         self.isAppIconDownloading = NO;
      }];
 }
 
@@ -48,7 +46,11 @@ static NSString *_appIconFileExtension = @"png";
              @"appName" : @"name",
              @"appKey" : @"key",
              @"appURLScheme" : @"app_url_scheme",
-             @"appActions" : @"actions"
+             @"appActions" : @"actions",
+             @"isInstalled" : NSNull.null,
+             @"isNew" : NSNull.null,
+             @"isDefault" : NSNull.null,
+             @"isAppIconDownloading" : NSNull.null
              };
 }
 
@@ -63,6 +65,7 @@ static NSString *_appIconFileExtension = @"png";
 
 + (NSString *)appIconFileNameForAppKey:(NSString *)appKey
 {
+    // TODO: what if scale goes up to @3x or @4x? We need to then show previous-X icons such as @2x.
     NSString *appIconName = [self appIconFileNameWithoutExtensionForAppKey:appKey];
 
     appIconName = [[appIconName stringByAppendingString:@"."] stringByAppendingString:[self appIconFileExtension]];
@@ -73,10 +76,10 @@ static NSString *_appIconFileExtension = @"png";
 + (NSString *)appIconFileNameWithoutExtensionForAppKey:(NSString *)appKey
 {
     NSString *appIconName = appKey;
-    // add suffix for retina screens
+    
+    // add suffix for retina screens, ex: safari@2x.png
     NSInteger scale = (NSInteger)[[UIScreen mainScreen] scale];
     
-    // ex: safari@2x.png
     if (scale > 1) appIconName = [appIconName stringByAppendingFormat:@"@%ldx", (long)scale];
     
     return appIconName;

@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D91498791912F0BC003D55BC /* SBChoosyGlobals.m in Sources */ = {isa = PBXBuildFile; fileRef = D91498781912F0BC003D55BC /* SBChoosyGlobals.m */; };
 		D922C81E18BADDA5004584C4 /* substantial.png in Resources */ = {isa = PBXBuildFile; fileRef = D922C81D18BADDA5004584C4 /* substantial.png */; };
 		D922C82018BB0636004584C4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D922C81F18BB0636004584C4 /* MapKit.framework */; };
 		D922C82618BB2B39004584C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D922C82518BB2B39004584C4 /* SystemConfiguration.framework */; };
+		D95DBED51912AE9600F351FC /* SBChoosyAppInfo+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = D95DBED41912AE9600F351FC /* SBChoosyAppInfo+Protected.m */; };
 		D96BDD5E18E227B100C31C7F /* SBCustomPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96BDD5D18E227B100C31C7F /* SBCustomPickerViewController.m */; };
 		D96BDD6618E3A11400C31C7F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96BDD6518E3A11400C31C7F /* Accelerate.framework */; };
 		D9A80372189C5719002F642A /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80371189C5719002F642A /* MainViewController.m */; };
@@ -91,9 +93,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D91498771912F0BC003D55BC /* SBChoosyGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyGlobals.h; sourceTree = "<group>"; };
+		D91498781912F0BC003D55BC /* SBChoosyGlobals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyGlobals.m; sourceTree = "<group>"; };
 		D922C81D18BADDA5004584C4 /* substantial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = substantial.png; sourceTree = "<group>"; };
 		D922C81F18BB0636004584C4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		D922C82518BB2B39004584C4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D95DBED31912AE9600F351FC /* SBChoosyAppInfo+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBChoosyAppInfo+Protected.h"; sourceTree = "<group>"; };
+		D95DBED41912AE9600F351FC /* SBChoosyAppInfo+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBChoosyAppInfo+Protected.m"; sourceTree = "<group>"; };
 		D96BDD5C18E227B100C31C7F /* SBCustomPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCustomPickerViewController.h; sourceTree = "<group>"; };
 		D96BDD5D18E227B100C31C7F /* SBCustomPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCustomPickerViewController.m; sourceTree = "<group>"; };
 		D96BDD6518E3A11400C31C7F /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -278,6 +284,8 @@
 				D9BDA8D518F34F2800796547 /* SBChoosyPickerDelegate.h */,
 				D9BDA8D618F34F2800796547 /* SBChoosyRegister.h */,
 				D9BDA8D718F34F2800796547 /* SBChoosyRegister.m */,
+				D91498771912F0BC003D55BC /* SBChoosyGlobals.h */,
+				D91498781912F0BC003D55BC /* SBChoosyGlobals.m */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -304,14 +312,16 @@
 				D9BDA8E918F34F2800796547 /* NSThread+Helpers.h */,
 				D9BDA8EA18F34F2800796547 /* NSThread+Helpers.m */,
 				D9BDA8EB18F34F2800796547 /* ObjectiveSugar.h */,
-				D9BDA8EC18F34F2800796547 /* SBChoosyAppType+Protected.h */,
-				D9BDA8ED18F34F2800796547 /* SBChoosyAppType+Protected.m */,
 				D9BDA8EE18F34F2800796547 /* UIImage+ImageEffects.h */,
 				D9BDA8EF18F34F2800796547 /* UIImage+ImageEffects.m */,
 				D9BDA8F018F34F2800796547 /* UIView+Helpers.h */,
 				D9BDA8F118F34F2800796547 /* UIView+Helpers.m */,
 				D9BDA8F218F34F2800796547 /* UIView+Screenshot.h */,
 				D9BDA8F318F34F2800796547 /* UIView+Screenshot.m */,
+				D9BDA8EC18F34F2800796547 /* SBChoosyAppType+Protected.h */,
+				D9BDA8ED18F34F2800796547 /* SBChoosyAppType+Protected.m */,
+				D95DBED31912AE9600F351FC /* SBChoosyAppInfo+Protected.h */,
+				D95DBED41912AE9600F351FC /* SBChoosyAppInfo+Protected.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -649,6 +659,7 @@
 				D9BDA96218F34F2900796547 /* SBChoosyNetworkStore.m in Sources */,
 				D9C02B8D189C162C004175A8 /* main.m in Sources */,
 				D9BDA96718F34F2900796547 /* SBChoosyAppTypeAction.m in Sources */,
+				D91498791912F0BC003D55BC /* SBChoosyGlobals.m in Sources */,
 				D9BDA96518F34F2900796547 /* SBChoosyAppInfo.m in Sources */,
 				D9BDA94A18F34F2900796547 /* NSString+ObjectiveSugar.m in Sources */,
 				D9BDA94618F34F2900796547 /* NSMutableArray+ObjectiveSugar.m in Sources */,
@@ -675,6 +686,7 @@
 				D9BDA95518F34F2900796547 /* MTLModel+NSCoding.m in Sources */,
 				D9BDA95B18F34F2900796547 /* NSError+MTLModelException.m in Sources */,
 				D9BDA95318F34F2900796547 /* MTLJSONAdapter.m in Sources */,
+				D95DBED51912AE9600F351FC /* SBChoosyAppInfo+Protected.m in Sources */,
 				D9BDA96918F34F2900796547 /* SBChoosyPickerViewController.m in Sources */,
 				D9A80378189C5980002F642A /* SBTestViewController.m in Sources */,
 				D9BDA94E18F34F2900796547 /* UIView+Helpers.m in Sources */,

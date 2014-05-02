@@ -34,6 +34,7 @@
 + (SBChoosyAppType *)builtInAppType:(NSString *)appTypeKey;
 
 + (void)cacheAppTypes:(NSArray *)jsonAppTypes;
++ (void)cacheAppType:(SBChoosyAppType *)appType;
 
 + (BOOL)appIconExistsForAppKey:(NSString *)appKey;
 + (UIImage *)appIconForAppKey:(NSString *)appKey;

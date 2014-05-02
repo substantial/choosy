@@ -2,9 +2,6 @@
 #import "SBChoosyActionContext.h"
 #import "SBChoosyPickerDelegate.h"
 
-#define SBCHOOSY_DEVELOPMENT_MODE 1
-#define SBCHOOSY_UPDATE_INTERVAL 24 * 3600
-
 @class SBChoosyAppType, SBChoosyAppInfo, SBChoosyAppPickerViewController, SBChoosyPickerViewModel;
 
 @protocol SBChoosyDelegate <NSObject>
@@ -30,7 +27,7 @@
  */
 - (void)willShowDefaultChoosyPicker:(SBChoosyAppPickerViewController *)pickerViewController;
 
-- (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
+- (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app;
 
 - (NSString *)textForAppPickerGivenContext:(SBChoosyActionContext *)actionContext;
 
@@ -46,6 +43,12 @@
 @interface SBChoosy : NSObject <SBChoosyPickerDelegate>
 
 @property (nonatomic, weak) id<SBChoosyDelegate> delegate;
+
+/**
+ *  Set this to NO if you want to always display app picker and remove default app selection affordances in the default picker.
+ *  Default value is YES.
+ */
+@property (nonatomic) BOOL allowsDefaultAppSelection;
 
 /**
  *  Adds gesture recognizers to the ui element and calls Choosy with the given action context when they are triggered.

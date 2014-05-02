@@ -18,6 +18,11 @@
 @property (nonatomic) NSDate *dateUpdated;
 
 /**
+ *  Call this once the type is instantiated, including a list of apps, to grab latest data, etc.
+ */
+- (void)update;
+
+/**
  *  Check which apps that belong to this app type, if any, are installed on the device.
  *
  *  @return Array of SBChoosyAppInfo objects representing installed apps, or nil if none are installed.

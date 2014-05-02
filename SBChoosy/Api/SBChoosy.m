@@ -1,6 +1,8 @@
 
 #import "SBChoosy.h"
+#import "SBChoosyGlobals.h"
 #import "SBChoosyAppType.h"
+#import "SBChoosyAppType+Protected.h"
 #import "SBChoosyAppInfo.h"
 #import "SBChoosyAppAction.h"
 #import "SBChoosyAppTypeParameter.h"
@@ -13,7 +15,7 @@
 #import "SBChoosyUIElementRegistration.h"
 #import "SBChoosyPickerViewController.h"
 
-@interface SBChoosy () <SBChoosyRegisterDelegate>
+@interface SBChoosy ()
 
 @property (nonatomic) SBChoosyAppPickerViewController *appPicker;
 @property (nonatomic) SBChoosyRegister *appStore;
@@ -23,6 +25,35 @@
 
 @implementation SBChoosy {
     SBChoosyActionContext *_pickerActionContext;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _allowsDefaultAppSelection = YES;
+        
+        [self subscribeToAppIconUpdateNotifications];
+    }
+    return self;
+}
+
+- (void)subscribeToAppIconUpdateNotifications
+{
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserverForName:SBChoosyDidUpdateAppIconNotification
+                                    object:nil
+                                     queue:nil
+                                usingBlock:^(NSNotification *note) {
+                                    SBChoosyAppInfo *app = (SBChoosyAppInfo *)note.object;
+                                    UIImage *appIcon = note.userInfo[@"appIcon"];
+                                  
+                                    if ([self.delegate respondsToSelector:@selector(didUpdateAppIcon:forApp:)]) {
+                                        [self.delegate didUpdateAppIcon:appIcon forApp:app];
+                                    } else {
+                                        [self.appPicker updateIconForAppKey:app.appKey withIcon:appIcon];
+                                    }
+                              }];
 }
 
 #pragma mark - Public
@@ -41,7 +72,7 @@
         if (elementRegistration.uiElement == uiElement) return;
     }
     
-    [[SBChoosyRegister sharedInstance] registerAppTypes:@[actionContext.appTypeKey]];
+    [[SBChoosyRegister sharedInstance] registerAppTypeWithKey:actionContext.appTypeKey];
     
     // create a new registration for the ui element
     SBChoosyUIElementRegistration *elementRegistration = [SBChoosyUIElementRegistration new];
@@ -65,8 +96,8 @@
 - (void)update
 {
     // TODO: get rid of update altogether - update automatically on registration.
-    // Just gotta make sure we don't kick off too many updates and they don't stop on each other.
-    [[SBChoosyRegister sharedInstance] update];
+    // Just gotta make sure we don't kick off too many updates and they don't stomp on each other.
+    [[SBChoosyRegister sharedInstance] updateRegisteredAppTypes];
 }
 
 - (void)handleAction:(SBChoosyActionContext *)actionContext
@@ -78,23 +109,25 @@
     }
     
     __weak SBChoosy *weakSelf = self;
-    [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
+    [[SBChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(SBChoosyAppType *appType)
+    {
         // check what apps are installed
-        [[SBChoosyRegister sharedInstance] takeStockOfAppsForAppType:appType];
+        [appType takeStockOfApps];
         
         // get app to use for this action
         [weakSelf appForAction:actionContext then:^(SBChoosyAppInfo *appInfo)
-        {
-            if (appInfo) {
-                // we know which app to use for the action
-                [weakSelf executeAction:actionContext forAppWithKey:appInfo.appKey];
-            } else {
-                // we don't know, so ask user to pick an app
-                [weakSelf showAppPickerForAction:actionContext];
-            }
-        }];
+         {
+             if (appInfo && !SBCHOOSY_ALWAYS_DISPLAY_PICKER) {
+                 // we know which app to use for the action
+                 [weakSelf executeAction:actionContext forAppWithKey:appInfo.appKey];
+             } else {
+                 // we don't know, so ask user to pick an app
+                 [weakSelf showAppPickerForAction:actionContext appType:appType];
+             }
+         }];
+    } ifNotFound:^{
+        NSLog(@"Cannot handle action '%@', app type '%@' not found/registered.", actionContext.actionKey, actionContext.appTypeKey);
     }];
-    
 }
 
 // TODO: rename this?
@@ -140,12 +173,13 @@
     
     for (SBChoosyAppTypeParameter *appTypeParameter in appTypeParameters) {
         NSString *parameterValue = @"";
-        if ([actionParameters.allKeys containsObject:appTypeParameter.key]) {
-            parameterValue = actionParameters[appTypeParameter.key];
+        NSString *parameterKey = [appTypeParameter.key lowercaseString];
+        if ([actionParameters.allKeys containsObject:parameterKey]) {
+            parameterValue = actionParameters[parameterKey];
             parameterValue = [parameterValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }
         
-        NSString *parameterPlaceholder = [NSString stringWithFormat:@"{{%@}}", appTypeParameter.key];
+        NSString *parameterPlaceholder = [NSString stringWithFormat:@"{{%@}}", parameterKey];
         [urlString replaceOccurrencesOfString:parameterPlaceholder withString:parameterValue options:NSCaseInsensitiveSearch range:NSMakeRange(0, [urlString length])];
     }
     
@@ -154,10 +188,22 @@
 
 #pragma mark - App Picker
 
-- (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext
+- (void)showAppPickerForAction:(SBChoosyActionContext *)actionContext appType:(SBChoosyAppType *)appType
 {
-    [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
-        
+    if (!appType) {
+        NSLog(@"ERROR: appType (SBChoosyAppType) is nil for app type key %@", actionContext.appTypeKey);
+        return;
+    }
+    
+    NSString *keyWindowClass = NSStringFromClass([[[UIApplication sharedApplication] keyWindow] class]);
+    
+    // are we blocked from showing choosy due to a pop-over/alert view?
+    if ([keyWindowClass isEqualToString: @"_UIAlertOverlayWindow"]) {
+        // show app picker when the blocking modal window disappears
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIWindowDidResignKeyNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [self showAppPickerForAction:actionContext appType:appType];
+        }];
+    } else {
         SBChoosyPickerViewModel *viewModel = [self pickerViewModelForActionContext:actionContext appType:appType];
         
         [NSThread executeOnMainThread:^{
@@ -172,7 +218,7 @@
                 [self showDefaultPickerWithModel:viewModel];
             }
         }];
-    }];
+    }
 }
 
 - (SBChoosyPickerViewModel *)pickerViewModelForActionContext:(SBChoosyActionContext *)actionContext appType:(SBChoosyAppType *)appType
@@ -198,6 +244,7 @@
     if ([self.delegate respondsToSelector:@selector(textForAppPickerGivenContext:)]) {
         viewModel.pickerText = [self.delegate textForAppPickerGivenContext:actionContext];
     }
+    viewModel.allowDefaultAppSelection = self.allowsDefaultAppSelection;
     
     return viewModel;
 }
@@ -238,14 +285,16 @@
     [[SBChoosyRegister sharedInstance] resetDefaultAppForAppTypeKey:actionContext.appTypeKey];
     
     __weak SBChoosy *weakSelf = self;
-    [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
-        [[SBChoosyRegister sharedInstance] takeStockOfAppsForAppType:appType];
+    [[SBChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(SBChoosyAppType *appType) {
+        [appType takeStockOfApps];
         
         if ([appType.installedApps count] <= 1) {
-            [weakSelf showAppPickerForAction:actionContext];
+            [weakSelf showAppPickerForAction:actionContext appType:appType];
         } else {
             [weakSelf handleAction:actionContext];
         }
+    } ifNotFound:^{
+        NSLog(@"Could not reset app selection for app type '%@', app type not found/registered", actionContext.appTypeKey);
     }];
 }
 
@@ -289,7 +338,8 @@
 
 - (void)appForAction:(SBChoosyActionContext *)actionContext then:(void(^)(SBChoosyAppInfo *appInfo))block
 {
-    [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
+    [[SBChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(SBChoosyAppType *appType)
+    {
         // check if new apps were installed for app type since last time default app was selected
         BOOL newAppsInstalled = [[appType.apps select:^BOOL(id object) {
             return ((SBChoosyAppInfo *)object).isNew;
@@ -318,19 +368,19 @@
             block(appToOpen); // will be nil if no default app is found for this app type
             return;
         }
-    }];
+    } ifNotFound:nil];
 }
 
 - (void)executeAction:(SBChoosyActionContext *)actionContext forAppWithKey:(NSString *)appKey
 {
     __weak SBChoosy *weakSelf = self;
-    [[SBChoosyRegister sharedInstance] appTypeWithKey:actionContext.appTypeKey then:^(SBChoosyAppType *appType) {
+    [[SBChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(SBChoosyAppType *appType) {
         // create the URL to be called
         NSURL *url = [weakSelf urlForAction:actionContext targetingApp:appKey appType:appType];
         
         // call the URL
         [[UIApplication sharedApplication] openURL:url];
-    }];
+    } ifNotFound:nil];
 }
 
 - (SBChoosyUIElementRegistration *)findRegistrationInfoForUIElement:(id)uiElement
@@ -341,21 +391,11 @@
     return nil;
 }
 
-#pragma mark SBChoosyRegisterDelegate
-
-- (void)didDownloadAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app
-{
-    if ([self.delegate respondsToSelector:@selector(didDownloadAppIcon:forApp:)]) {
-        [self.delegate didDownloadAppIcon:appIcon forApp:app];
-    }
-}
-
 #pragma mark SBChoosyAppPickerDelegate
 
 - (void)didDismissPicker
 {
     // close the UI
-    NSLog(@"Dismissing app picker...");
     if ([self isAppPickerShown]) {
         [self dismissAppPickerWithCompletion:nil];
     }

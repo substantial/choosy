@@ -1,6 +1,6 @@
 //
 //  SBChoosyAppType+Protected.h
-//  ChoosyDemo
+//  Choosy
 //
 //  Created by Sasha Novosad on 2/21/14.
 //  Copyright (c) 2014 Substantial. All rights reserved.
@@ -10,7 +10,7 @@
 
 @interface SBChoosyAppType (Protected)
 
-- (void)checkForInstalledApps;
-- (void)checkForNewlyInstalledAppsGivenLastDetectedAppKeys:(NSArray *)lastDetectedAppKeys;
+- (void)takeStockOfApps;
+- (BOOL)needsUpdate;
 
 @end

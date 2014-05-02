@@ -13,6 +13,12 @@
 
 @implementation SBChoosyAppType
 
+
+- (void)update
+{
+    [self takeStockOfApps];
+}
+
 - (NSArray *)installedApps
 {
     return [self.apps select:^BOOL(id object) {
@@ -34,6 +40,7 @@
 {
     if (!appTypes || !appTypeKey) return nil;
     
+    appTypeKey = [appTypeKey lowercaseString];
     @synchronized(appTypes) {
         for (SBChoosyAppType *appType in appTypes) {
             if ([appType.key isEqualToString:appTypeKey]) {
@@ -49,6 +56,7 @@
 {
     if (!self.apps) return nil;
     
+    appKey = [appKey lowercaseString];
     for (SBChoosyAppInfo *appInfo in self.apps) {
         if ([appInfo.appKey isEqualToString:appKey]) {
             return appInfo;
@@ -62,10 +70,8 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
-    // no special mapping
-    return @{
-             @"delegate" : NSNull.null
-             };
+    // no special name mapping
+    return @{};
 }
 
 + (NSValueTransformer *)dateUpdatedJSONTransformer

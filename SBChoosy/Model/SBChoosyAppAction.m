@@ -1,6 +1,5 @@
 
 #import "SBChoosyAppAction.h"
-#import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
 
 @implementation SBChoosyAppAction
 

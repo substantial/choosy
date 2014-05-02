@@ -1,4 +1,5 @@
 
+#import "SBChoosyGlobals.h"
 #import "SBChoosyLocalStore.h"
 #import "SBChoosySerialization.h"
 
@@ -88,19 +89,24 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 {
     if (!appTypes) return;
     
-    // TODO: make sure this runs on a background thread
-    
     // convert app types to JSON
     for (SBChoosyAppType *appType in appTypes) {
+        [self cacheAppType:appType];
+   }
+}
+
++ (void)cacheAppType:(SBChoosyAppType *)appType
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         if (!appType.dateUpdated) {
             appType.dateUpdated = [NSDate date];
         }
-        NSData *appTypeData = [SBChoosySerialization serializeAppTypesToNSData:@[appType]];
-        NSString *filePath = [self filePathForAppTypeKey:appType.key];
         
-        //        NSError *error;
+        NSData *appTypeData = [SBChoosySerialization serializeAppTypesToNSData:@[appType]];
+        NSString *filePath = [SBChoosyLocalStore filePathForAppTypeKey:appType.key];
+        
         [appTypeData writeToFile:filePath atomically:YES];
-    }
+    });
 }
 
 + (SBChoosyAppType *)builtInAppType:(NSString *)appTypeKey
@@ -157,6 +163,10 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 + (void)cacheAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appKey
 {
+    if (!appIcon) {
+        return;
+    }
+    
     NSString *path = [self filePathForCachedAppIconForAppKey:appKey];
     NSData *imageData = UIImagePNGRepresentation(appIcon);
     
@@ -192,7 +202,7 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 + (NSString *)filePathForAppTypeKey:(NSString *)appTypeKey
 {
-    return [[self pathForCacheDirectory] stringByAppendingPathComponent:[appTypeKey stringByAppendingString:@".json"]];
+    return [[SBChoosyLocalStore pathForCacheDirectory] stringByAppendingPathComponent:[appTypeKey stringByAppendingString:@".json"]];
 }
 
 + (NSString *)pathForCacheDirectory

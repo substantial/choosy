@@ -33,6 +33,9 @@ static dispatch_once_t once_token;
     if (_sharedInstance == nil) {
 		dispatch_once(&once_token, ^ {
 			_sharedInstance = [SBChoosyRegister new];
+            
+            // TODO: sign up for reachability updates and update all registered
+            // app types whenever connection is re-established
 		});
     }
 	
@@ -41,119 +44,110 @@ static dispatch_once_t once_token;
 
 #pragma mark Public
 
-
 - (void)registerAppTypes:(NSArray *)appTypes
 {
     if (!appTypes) return;
     
     for (NSString *appType in appTypes) {
-        [self registerAppType:appType];
+        [self registerAppTypeWithKey:appType];
+    }
+}
+
+- (void)registerAppTypeKey:(NSString *)appTypeKey
+{
+    if (![self isAppTypeRegistered:appTypeKey]) {
+        [self.registeredAppTypeKeys addObject:appTypeKey];
+    }
+}
+
+- (void)registerAppTypeWithKey:(NSString *)appTypeKey
+{
+    __weak SBChoosyRegister *weakSelf = self;
+    
+    // check memory for app type
+    [self findAppTypeWithKey:appTypeKey andIfFound:nil ifNotFound:^{
+        // if not in memory, check file cache
+        SBChoosyAppType *appType = [SBChoosyLocalStore cachedAppType:appTypeKey];
+        
+        // if nothing in file cache, see if it's one of the built-in types
+        if (!appType) {
+            appType = [SBChoosyLocalStore builtInAppType:appTypeKey];
+        }
+        
+        if (appType) {
+            if (appType.needsUpdate) {
+                [weakSelf downloadAppTypeWithKey:appType.key];
+            } else {
+                [self addAppType:appType];
+            }
+        } else {
+            [self downloadAppTypeWithKey:appTypeKey];
+        }
+        
+    }];
+}
+
+- (BOOL)isAppTypeRegistered:(NSString *)appTypeKey
+{
+    appTypeKey = [appTypeKey lowercaseString];
+    if ([self.registeredAppTypeKeys containsObject:appTypeKey]) {
+        return YES;
     }
     
-    [self update];
+    return NO;
 }
 
-- (void)registerAppType:(NSString *)appType
+- (void)findAppTypeWithKey:(NSString *)appTypeKey andIfFound:(void(^)(SBChoosyAppType *appType))successBlock ifNotFound:(void(^)())failureBlock
 {
-    if (![self.registeredAppTypeKeys containsObject:appType]) {
-        [self.registeredAppTypeKeys addObject:appType];
-    }
-}
-
-- (void)appTypeWithKey:(NSString *)appTypeKey then:(void(^)(SBChoosyAppType *appType))block
-{
+    appTypeKey = [appTypeKey lowercaseString];
     [self.appTypesSerialAccessQueue addOperationWithBlock:^{
         SBChoosyAppType *appType = [SBChoosyAppType filterAppTypesArray:self.appTypes byKey:appTypeKey];
         
-        if (block) {
-            block(appType);
+        if (appType) {
+            if (successBlock) {
+                successBlock(appType);
+            }
+        } else {
+            if (failureBlock) {
+                failureBlock(appType);
+            }
         }
     }];
 }
 
 - (UIImage *)appIconForAppKey:(NSString *)appKey
 {
-    // if we haz ze icon, we returnz it. If we don'tz, it's probabbly downloading.
-    // When it's done downloading, didDownload will be calledz on ze delegate.
+    appKey = [appKey lowercaseString];
+    
+    // if the below returns nil, the icon is probably downloading still,
+    // and so it will be returned via the "did download icon" delegate method later
     return [SBChoosyLocalStore appIconForAppKey:appKey];;
 }
 
-- (void)update
+- (void)updateRegisteredAppTypes
 {
+    // due to multithreading, make a copy just in case there's a modification
+    // to the array during the for..each loop below
     NSArray *appTypeKeys = [self.registeredAppTypeKeys copy];
     
     if (!appTypeKeys) return;
     
-    for (NSString *appTypeKey in appTypeKeys) {
-        // check memory
-        __weak SBChoosyRegister *weakSelf = self;
-        [self appTypeWithKey:appTypeKey then:^(SBChoosyAppType *appType)
-         {
-             // check cache
-             if (!appType) {
-                 appType = [SBChoosyLocalStore cachedAppType:appTypeKey];
-             }
-             
-             // if nothing in cache, see if it's one of the built-in types
-             if (!appType) {
-                 appType = [SBChoosyLocalStore builtInAppType:appTypeKey];
-                 
-                 // serialize this info to cache so we can later mix that info with fresh data from the server
-                 if (appType) [SBChoosyLocalStore cacheAppTypes:@[appType]];
-             }
-             
-             // add the cached version to the list of app types
-             if (appType) {
-                 [self addAppType:appType then:^ {
-                     // but go and check the server for any new app type data, if cache expired
-                     [weakSelf updateDataIfNecessaryForAppTypeWithKey:appTypeKey];
-                 }];
-             }
-         }];
-    }
-}
-
-- (void)takeStockOfApps
-{
-    [self.appTypesSerialAccessQueue addOperationWithBlock:^{
-        for (SBChoosyAppType *appType in self.appTypes) {
-            [self takeStockOfAppsForAppType:appType];
-        }
-    }];
-}
-
-- (void)takeStockOfAppsForAppType:(SBChoosyAppType *)appType
-{
-    [appType checkForInstalledApps];
+    __weak SBChoosyRegister *weakSelf = self;
     
-    [appType checkForNewlyInstalledAppsGivenLastDetectedAppKeys:[SBChoosyLocalStore lastDetectedAppKeysForAppTypeWithKey:appType.key]];
-    
-    // check if icons need to be downloaded
-    [self downloadAppIconsAsNeededForAppType:appType];
-}
-
-- (void)downloadAppIconsAsNeededForAppType:(SBChoosyAppType *)appType
-{
-    for (SBChoosyAppInfo *app in [appType installedApps]) {
-        [self downloadAppIconForApp:app];
-    }
-}
-
-- (void)downloadAppIconForApp:(SBChoosyAppInfo *)app
-{
-    if (![SBChoosyLocalStore appIconExistsForAppKey:app.appKey] && !app.isAppIconDownloading)
+    for (NSString *appTypeKey in appTypeKeys)
     {
-        [app downloadAppIcon:^(UIImage *appIcon)
-         {
-             // notify the delegate, if it subscribed to the event
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 if ([self.delegate respondsToSelector:@selector(didDownloadAppIcon:forApp:)]) {
-                     [self.delegate didDownloadAppIcon:appIcon forApp:app];
-                 }
-             });
-         }];
+        [self findAppTypeWithKey:appTypeKey andIfFound:^(SBChoosyAppType *appType)
+        {
+            if (appType.needsUpdate) {
+                [weakSelf downloadAppTypeWithKey:appTypeKey];
+            }
+        } ifNotFound:^(void)
+        {
+            [self registerAppTypeWithKey:appTypeKey];
+        }];
     }
 }
+
 
 - (SBChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey
 {
@@ -176,58 +170,44 @@ static dispatch_once_t once_token;
 
 #pragma mark Prvate
 
-- (void)updateDataIfNecessaryForAppTypeWithKey:(NSString *)appTypeKey
+- (void)downloadAppTypeWithKey:(NSString *)appTypeKey
 {
-    [self appTypeWithKey:appTypeKey then:^(SBChoosyAppType *appType)
-     {
-         NSDate *dateLastUpdated = appType.dateUpdated;
-         NSInteger cacheAgeInHours = [[NSDate date] timeIntervalSinceDate:dateLastUpdated];
-         BOOL timeToRefresh = SBCHOOSY_DEVELOPMENT_MODE == 1 || cacheAgeInHours > SBCHOOSY_UPDATE_INTERVAL || !appType.dateUpdated;
-         BOOL isDownloadingThisType = [self isDownloadingAppType:appTypeKey];
-         //NSLog(@"timeToRefresh: %d, isDownloading: %d", timeToRefresh, isDownloadingThisType);
-         if ((!appType || timeToRefresh) && !isDownloadingThisType)
-         {
-             //NSLog(@"Cache age is %ldx and update interval is %ldx, date is %@.", (long)cacheAgeInHours, (long)SBCHOOSY_UPDATE_INTERVAL, [dateLastUpdated description]);
-             // see if there's fresh/more data on the server
-             self.appTypeDownloadStatus[appTypeKey] = @(YES);
-             
-             [SBChoosyNetworkStore downloadAppType:appTypeKey success:^(SBChoosyAppType *downloadedAppType) {
-                 if (downloadedAppType)
-                 {
-                     [self addAppType:downloadedAppType then:nil];
-                     [SBChoosyLocalStore cacheAppTypes:@[downloadedAppType]];
-                     self.appTypeDownloadStatus[appTypeKey] = @(NO);
-                     
-                     NSLog(@"Downloaded and cached app type: %@", downloadedAppType.key);
-                 }
-             } failure:^(NSError *error) {
-                 self.appTypeDownloadStatus[appTypeKey] = @(NO);
-             }];
-         }
-     }];
+    BOOL isDownloadingThisType = [self isDownloadingAppType:appTypeKey];
+    if (!isDownloadingThisType) {
+        // see if there's fresh/more data on the server
+        self.appTypeDownloadStatus[appTypeKey] = @(YES);
+        NSLog(@"Downloading app type %@", appTypeKey);
+        
+        [SBChoosyNetworkStore downloadAppType:appTypeKey success:^(SBChoosyAppType *downloadedAppType) {
+            if (downloadedAppType)
+            {
+                [self addAppType:downloadedAppType];
+                [SBChoosyLocalStore cacheAppType:downloadedAppType];
+                self.appTypeDownloadStatus[appTypeKey] = @(NO);
+                
+                NSLog(@"Downloaded and cached app type: %@", downloadedAppType.key);
+            }
+        } failure:^(NSError *error) {
+            NSLog(@"Failed to download app type with key %@, error: %@", appTypeKey, error);
+            self.appTypeDownloadStatus[appTypeKey] = @(NO);
+        }];
+    }
 }
 
-- (void)addAppType:(SBChoosyAppType *)appTypeToAdd then:(void(^)())block
+- (void)addAppType:(SBChoosyAppType *)appTypeToAdd
 {
-    // check installed apps for this app type, and trigger app icon downloads if needed
-    [[SBChoosyRegister sharedInstance] takeStockOfApps];
+    if (!appTypeToAdd) return;
     
-    [self appTypeWithKey:appTypeToAdd.key then:^(SBChoosyAppType *existingAppType)
-     {
-         [self.appTypesSerialAccessQueue addOperationWithBlock:^
-          {
-              if (!existingAppType) {
-                  [self.appTypes addObject:appTypeToAdd];
-              } else {
-                  NSInteger index = [self.appTypes indexOfObject:existingAppType];
-                  self.appTypes[index] = appTypeToAdd;
-              }
-              
-              if (block) {
-                  block();
-              }
-          }];
-     }];
+    // check installed apps for this app type, and trigger app icon downloads if needed
+    [appTypeToAdd takeStockOfApps];
+    
+    __weak SBChoosyRegister *weakSelf = self;
+    [self findAppTypeWithKey:appTypeToAdd.key andIfFound:^(SBChoosyAppType *existingAppType) {
+        NSInteger index = [weakSelf.appTypes indexOfObject:existingAppType];
+        weakSelf.appTypes[index] = appTypeToAdd;
+    } ifNotFound:^(void) {
+        [weakSelf.appTypes addObject:appTypeToAdd];
+    }];
 }
 
 - (BOOL)isDownloadingAppType:(NSString *)appTypeKey

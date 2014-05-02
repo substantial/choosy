@@ -27,6 +27,6 @@
  *
  *  @return An instance of SBChoosyActionContext
  */
-+ (instancetype)actionContextWithUrl:(NSURLRequest *)url;
++ (instancetype)actionContextWithUrl:(NSURL *)url;
 
 @end

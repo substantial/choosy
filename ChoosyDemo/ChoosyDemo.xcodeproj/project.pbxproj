@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D91498791912F0BC003D55BC /* SBChoosyGlobals.m in Sources */ = {isa = PBXBuildFile; fileRef = D91498781912F0BC003D55BC /* SBChoosyGlobals.m */; };
+		D914988219144C48003D55BC /* SBChoosyUrlParserFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D914988119144C48003D55BC /* SBChoosyUrlParserFactory.m */; };
+		D914988519144F07003D55BC /* SBChoosyUrlParserTwitter.m in Sources */ = {isa = PBXBuildFile; fileRef = D914988419144F07003D55BC /* SBChoosyUrlParserTwitter.m */; };
 		D922C81E18BADDA5004584C4 /* substantial.png in Resources */ = {isa = PBXBuildFile; fileRef = D922C81D18BADDA5004584C4 /* substantial.png */; };
 		D922C82018BB0636004584C4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D922C81F18BB0636004584C4 /* MapKit.framework */; };
 		D922C82618BB2B39004584C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D922C82518BB2B39004584C4 /* SystemConfiguration.framework */; };
@@ -95,6 +97,11 @@
 /* Begin PBXFileReference section */
 		D91498771912F0BC003D55BC /* SBChoosyGlobals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBChoosyGlobals.h; sourceTree = "<group>"; };
 		D91498781912F0BC003D55BC /* SBChoosyGlobals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBChoosyGlobals.m; sourceTree = "<group>"; };
+		D914987F19144BB5003D55BC /* SBChoosyUrlParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBChoosyUrlParser.h; path = UrlParsing/SBChoosyUrlParser.h; sourceTree = "<group>"; };
+		D914988019144C48003D55BC /* SBChoosyUrlParserFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBChoosyUrlParserFactory.h; path = UrlParsing/SBChoosyUrlParserFactory.h; sourceTree = "<group>"; };
+		D914988119144C48003D55BC /* SBChoosyUrlParserFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBChoosyUrlParserFactory.m; path = UrlParsing/SBChoosyUrlParserFactory.m; sourceTree = "<group>"; };
+		D914988319144F07003D55BC /* SBChoosyUrlParserTwitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBChoosyUrlParserTwitter.h; path = UrlParsing/SBChoosyUrlParserTwitter.h; sourceTree = "<group>"; };
+		D914988419144F07003D55BC /* SBChoosyUrlParserTwitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBChoosyUrlParserTwitter.m; path = UrlParsing/SBChoosyUrlParserTwitter.m; sourceTree = "<group>"; };
 		D922C81D18BADDA5004584C4 /* substantial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = substantial.png; sourceTree = "<group>"; };
 		D922C81F18BB0636004584C4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		D922C82518BB2B39004584C4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -256,6 +263,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D914987B191449B5003D55BC /* UrlParsing */ = {
+			isa = PBXGroup;
+			children = (
+				D914987F19144BB5003D55BC /* SBChoosyUrlParser.h */,
+				D914988019144C48003D55BC /* SBChoosyUrlParserFactory.h */,
+				D914988119144C48003D55BC /* SBChoosyUrlParserFactory.m */,
+				D914988319144F07003D55BC /* SBChoosyUrlParserTwitter.h */,
+				D914988419144F07003D55BC /* SBChoosyUrlParserTwitter.m */,
+			);
+			name = UrlParsing;
+			sourceTree = "<group>";
+		};
 		D9BDA8CF18F34F2800796547 /* SBChoosy */ = {
 			isa = PBXGroup;
 			children = (
@@ -387,6 +406,7 @@
 		D9BDA91A18F34F2900796547 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				D914987B191449B5003D55BC /* UrlParsing */,
 				D9BDA91B18F34F2900796547 /* Reachability.h */,
 				D9BDA91C18F34F2900796547 /* Reachability.m */,
 				D9BDA91D18F34F2900796547 /* SBChoosyLocalStore.h */,
@@ -653,10 +673,12 @@
 				D9BDA94D18F34F2900796547 /* UIImage+ImageEffects.m in Sources */,
 				D9BDA95418F34F2900796547 /* MTLManagedObjectAdapter.m in Sources */,
 				D9BDA94C18F34F2900796547 /* SBChoosyAppType+Protected.m in Sources */,
+				D914988519144F07003D55BC /* SBChoosyUrlParserTwitter.m in Sources */,
 				D96BDD5E18E227B100C31C7F /* SBCustomPickerViewController.m in Sources */,
 				D9BDA94018F34F2900796547 /* SBChoosy.m in Sources */,
 				D9BDA95718F34F2900796547 /* MTLReflection.m in Sources */,
 				D9BDA96218F34F2900796547 /* SBChoosyNetworkStore.m in Sources */,
+				D914988219144C48003D55BC /* SBChoosyUrlParserFactory.m in Sources */,
 				D9C02B8D189C162C004175A8 /* main.m in Sources */,
 				D9BDA96718F34F2900796547 /* SBChoosyAppTypeAction.m in Sources */,
 				D91498791912F0BC003D55BC /* SBChoosyGlobals.m in Sources */,

@@ -1,5 +1,6 @@
 
 #import "SBChoosyActionContext.h"
+#import "SBChoosyUrlParserFactory.h"
 
 @implementation SBChoosyActionContext
 
@@ -38,9 +39,17 @@
     return [SBChoosyActionContext createWithAppType:appTypeKey action:actionKey parameters:parameters appPickerTitle:appPickerTitle];
 }
 
-//+ (instancetype)actionContextWithUrl:(NSURLRequest *)url
-//{
-//    
-//}
++ (instancetype)actionContextWithUrl:(NSURL *)url
+{
+    SBChoosyActionContext *actionContext;
+    
+    // get parser from the factory
+    id<SBChoosyUrlParser> urlParser = [SBChoosyUrlParserFactory parserForUrl:url];
+    
+    // parse
+    actionContext = [urlParser parseUrl:url];
+    
+    return actionContext;
+}
 
 @end

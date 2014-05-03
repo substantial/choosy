@@ -71,8 +71,8 @@ If a user selects Chrome, the button now says 'Open in Chrome' and sends the use
   If the selected app doesn't support that action, Choosy will fall back to just opening that app.</p>
 <p>For example, let's say your About page has a twitter link to your company's profile:</p>
 <pre class="prettyprint"><code>
-[SBChoosy registerUIElement:self.companyTwitterLink
-                  forAction:[SBChoosyActionContext contextWithAppType:@"Twitter"
+[Choosy registerUIElement:self.companyTwitterLink
+                  forAction:[ChoosyActionContext contextWithAppType:@"Twitter"
                                                                action:@"show_profile"
                                                            parameters:@{ @"profile_screenname" : @"KarlTheFog",
                                                                          @"callback_url" : @"choosyDemoApp://"}]];
@@ -93,7 +93,7 @@ If a user selects Chrome, the button now says 'Open in Chrome' and sends the use
   <span class="octicon octicon-link"></span></a>Easiest</h4>
 
 <p>In viewDidLoad:</p>
-<pre class="prettyprint"><code>[SBChoosy registerUIElement:self.myButton forAction:[SBChoosyActionContext initWithAppType:@"Twitter"]];
+<pre class="prettyprint"><code>[Choosy registerUIElement:self.myButton forAction:[ChoosyActionContext initWithAppType:@"Twitter"]];
 </code></pre>
 
 <p>That's it! Choosy will hook up a tap and long press gesture recognizers to that button (or any other UIControl), display the app selection UI, etc.</p>
@@ -103,11 +103,11 @@ If a user selects Chrome, the button now says 'Open in Chrome' and sends the use
   <span class="octicon octicon-link"></span></a>Easier</h4>
 
 <p>In your viewDidLoad or applicationDidLoad: </p>
-<pre class="prettyprint"><code>[SBChoosy registerAppTypes: @[@"Twitter", @"Browser", @"Email", ...]]
+<pre class="prettyprint"><code>[Choosy registerAppTypes: @[@"Twitter", @"Browser", @"Email", ...]]
 </code></pre>
 
 <p>And then call Choosy from your own event handlers:</p>
-<pre class="prettyprint"><code>[SBChoosy handleAction: [SBChoosyActionContext contextWithAppType:@"Email" action:@"Compose" parameters:@{ @"to" : @"choosy@substantial.com" }]];</code></pre>
+<pre class="prettyprint"><code>[Choosy handleAction: [ChoosyActionContext contextWithAppType:@"Email" action:@"Compose" parameters:@{ @"to" : @"choosy@substantial.com" }]];</code></pre>
 
 <h3>
 <a name="customization" class="anchor" href="#customization"><span class="octicon octicon-link"></span></a>Customization</h3>

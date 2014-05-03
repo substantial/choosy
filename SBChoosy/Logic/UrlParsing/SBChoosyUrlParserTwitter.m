@@ -7,6 +7,7 @@
 //
 
 #import "SBChoosyUrlParserTwitter.h"
+#import "NSArray+ObjectiveSugar.h"
 
 @implementation SBChoosyUrlParserTwitter
 
@@ -14,10 +15,25 @@
 {
     SBChoosyActionContext *actionContext;
     
-    actionContext = [SBChoosyActionContext actionContextWithAppType:@"Twitter"
-                                                             action:@"show_profile"
-                                                         parameters:@{@"profile_screenname": [url pathComponents][1]} ];
-
+    // TODO: like, turn this into real code and stuff... but this will do for beta/testing
+    actionContext = [SBChoosyActionContext actionContextWithAppType:@"Twitter"];
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary new];
+    
+    NSArray *pathComponents = [[url pathComponents] reject:^BOOL(id object) {
+        if ([(NSString *)object isEqualToString:@"/"]) {
+            return YES;
+        }
+        
+        return NO;
+    }];
+    
+    if ([pathComponents count] == 1) {
+        actionContext.actionKey = @"show_profile";
+        [parameters setObject:pathComponents[0] forKey:@"profile_screenname"];
+    }
+    
+    actionContext.parameters = [parameters copy];
     
     return actionContext;
 }

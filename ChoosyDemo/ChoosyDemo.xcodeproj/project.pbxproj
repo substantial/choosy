@@ -16,6 +16,7 @@
 		D95DBED51912AE9600F351FC /* SBChoosyAppInfo+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = D95DBED41912AE9600F351FC /* SBChoosyAppInfo+Protected.m */; };
 		D96BDD5E18E227B100C31C7F /* SBCustomPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96BDD5D18E227B100C31C7F /* SBCustomPickerViewController.m */; };
 		D96BDD6618E3A11400C31C7F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96BDD6518E3A11400C31C7F /* Accelerate.framework */; };
+		D9A4AFC119146B8D00044D29 /* SBChoosyUrlParserEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A4AFC019146B8D00044D29 /* SBChoosyUrlParserEmail.m */; };
 		D9A80372189C5719002F642A /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80371189C5719002F642A /* MainViewController.m */; };
 		D9A80378189C5980002F642A /* SBTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A80377189C5980002F642A /* SBTestViewController.m */; };
 		D9BDA94018F34F2900796547 /* SBChoosy.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BDA8D218F34F2800796547 /* SBChoosy.m */; };
@@ -111,6 +112,8 @@
 		D96BDD5D18E227B100C31C7F /* SBCustomPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCustomPickerViewController.m; sourceTree = "<group>"; };
 		D96BDD6518E3A11400C31C7F /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		D96BDD6718E3A19B00C31C7F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D9A4AFBF19146B8D00044D29 /* SBChoosyUrlParserEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBChoosyUrlParserEmail.h; path = UrlParsing/SBChoosyUrlParserEmail.h; sourceTree = "<group>"; };
+		D9A4AFC019146B8D00044D29 /* SBChoosyUrlParserEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBChoosyUrlParserEmail.m; path = UrlParsing/SBChoosyUrlParserEmail.m; sourceTree = "<group>"; };
 		D9A80370189C5719002F642A /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		D9A80371189C5719002F642A /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		D9A80376189C5980002F642A /* SBTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTestViewController.h; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 				D914988119144C48003D55BC /* SBChoosyUrlParserFactory.m */,
 				D914988319144F07003D55BC /* SBChoosyUrlParserTwitter.h */,
 				D914988419144F07003D55BC /* SBChoosyUrlParserTwitter.m */,
+				D9A4AFBF19146B8D00044D29 /* SBChoosyUrlParserEmail.h */,
+				D9A4AFC019146B8D00044D29 /* SBChoosyUrlParserEmail.m */,
 			);
 			name = UrlParsing;
 			sourceTree = "<group>";
@@ -702,6 +707,7 @@
 				D9BDA96818F34F2900796547 /* SBChoosyAppTypeParameter.m in Sources */,
 				D9A80372189C5719002F642A /* MainViewController.m in Sources */,
 				D9BDA97118F34F2900796547 /* SBChoosyPickerAppTypeInfo.m in Sources */,
+				D9A4AFC119146B8D00044D29 /* SBChoosyUrlParserEmail.m in Sources */,
 				D9BDA94518F34F2900796547 /* NSDictionary+ObjectiveSugar.m in Sources */,
 				D9BDA95F18F34F2900796547 /* SBChoosySerialization.m in Sources */,
 				D9BDA94418F34F2900796547 /* NSDate-Utilities.m in Sources */,

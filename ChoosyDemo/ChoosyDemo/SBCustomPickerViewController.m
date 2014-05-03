@@ -3,13 +3,13 @@
 
 @interface SBCustomPickerViewController ()
 
-@property (nonatomic) SBChoosyPickerViewModel *viewModel;
+@property (nonatomic) ChoosyPickerViewModel *viewModel;
 
 @end
 
 @implementation SBCustomPickerViewController
 
-- (instancetype)initWithModel:(SBChoosyPickerViewModel *)viewModel
+- (instancetype)initWithModel:(ChoosyPickerViewModel *)viewModel
 {
     if (self = [super init]) {
         _viewModel = viewModel;

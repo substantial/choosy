@@ -11,7 +11,7 @@
 #import "SBCustomPickerViewController.h"
 @import MapKit;
 
-@interface SBTestViewController () <SBChoosyPickerDelegate, UIActionSheetDelegate>
+@interface SBTestViewController () <ChoosyPickerDelegate, UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
 @property (weak, nonatomic) IBOutlet UIButton *twitterButton;
@@ -25,9 +25,9 @@
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 
 @property (nonatomic) SBCustomPickerViewController *customAppPicker;
-@property (nonatomic) SBChoosyPickerViewModel *pickerViewModel;
+@property (nonatomic) ChoosyPickerViewModel *pickerViewModel;
 
-@property (nonatomic) SBChoosy *choosy;
+@property (nonatomic) Choosy *choosy;
 
 @end
 
@@ -46,12 +46,12 @@
 {
     [super viewDidLoad];
     
-    self.choosy = [SBChoosy new];
+    self.choosy = [Choosy new];
 //    self.choosy.delegate = self;
     self.choosy.allowsDefaultAppSelection = NO;
     
     // @"end_address" : @"25 Taylor St, San Francisco, CA 94102"
-    SBChoosyActionContext *navigateAction = [SBChoosyActionContext actionContextWithAppType:@"Maps"
+    ChoosyActionContext *navigateAction = [ChoosyActionContext actionContextWithAppType:@"Maps"
                                                                                action:@"open"
                                                                            parameters:@{@"query" : @"Pizza",
                                                                                         @"callback_url" : @"choosy://",
@@ -61,7 +61,7 @@
     [self.choosy registerUIElement:self.navigateButtonCustom forAction:navigateAction];
     
     
-    SBChoosyActionContext *twitterAction = [SBChoosyActionContext actionContextWithAppType:@"Twitter"
+    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
                                                                               action:@"show_profile"
                                                                           parameters:@{ @"profile_screenname" : @"KarlTheFog",
                                                                                         @"callback_url" : @"choosy://"}
@@ -70,7 +70,7 @@
     [self.choosy registerUIElement:self.twitterButtonCustom forAction:twitterAction];
     
     
-    SBChoosyActionContext *emailAction = [SBChoosyActionContext actionContextWithAppType:@"Email"
+    ChoosyActionContext *emailAction = [ChoosyActionContext actionContextWithAppType:@"Email"
                                                                             action:@"Compose"
                                                                         parameters:@{ @"to" : @"choosy@substantial.com",
                                                                                       @"subject" : @"HAI"
@@ -80,7 +80,7 @@
     [self.choosy registerUIElement:self.emailButtonCustom forAction:emailAction];
     
     [self.choosy registerUIElement:self.bottomView
-                      forAction:[SBChoosyActionContext actionContextWithAppType:@"Browser"
+                      forAction:[ChoosyActionContext actionContextWithAppType:@"Browser"
                                                                    action:@"browse"
                                                                parameters:@{@"url" : @"https://www.substantial.com",
                                                                             @"callback_url" : @"choosy://",
@@ -107,7 +107,7 @@
 
 - (IBAction)showDirections:(UIButton *)sender
 {
-    [self.choosy handleAction:[SBChoosyActionContext actionContextWithAppType:@"Maps"
+    [self.choosy handleAction:[ChoosyActionContext actionContextWithAppType:@"Maps"
                                                               action:@"directions"
                                                           parameters:@{@"end_address" :
                                                 @"25 Taylor St, San Francisco, CA 94102"}]];
@@ -115,7 +115,7 @@
 
 - (IBAction)showInBrowser
 {
-    [self.choosy handleAction:[SBChoosyActionContext actionContextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
+    [self.choosy handleAction:[ChoosyActionContext actionContextWithAppType:@"Browser" action:@"browse" parameters:@{@"url" : @"http://www.substantial.com"}]];
 }
 
 - (void)handleNetworkChange:(NSNotification *)notification
@@ -155,9 +155,9 @@
     }];
 }
 
-#pragma mark SBChoosyDelegate
+#pragma mark ChoosyDelegate
 
-- (void)showCustomChoosyPickerWithModel:(SBChoosyPickerViewModel *)viewModel
+- (void)showCustomChoosyPickerWithModel:(ChoosyPickerViewModel *)viewModel
 {
     self.pickerViewModel = viewModel;
     
@@ -165,7 +165,7 @@
     appSheet.title = self.pickerViewModel.pickerTitleText;
     appSheet.delegate = self;
 
-    for (SBChoosyPickerAppInfo *appInfo in self.pickerViewModel.appTypeInfo.installedApps) {
+    for (ChoosyPickerAppInfo *appInfo in self.pickerViewModel.appTypeInfo.installedApps) {
         [appSheet addButtonWithTitle:appInfo.appName];
     }
     [appSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
@@ -187,12 +187,12 @@
     NSLog(@"Add custom code here to handle default app selection");
 }
 
-- (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(SBChoosyAppInfo *)app
+- (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(ChoosyAppInfo *)app
 {
     NSLog(@"Got icon update notification in custom implementation delegate");
 }
 
-#pragma mark SBChoosyPickerDelegate
+#pragma mark ChoosyPickerDelegate
 
 - (void)didDismissPicker
 {
@@ -212,7 +212,7 @@
 {
     // see if an app was selected
     if (buttonIndex < [self.pickerViewModel.appTypeInfo.installedApps count]) {
-        [self.choosy didSelectApp:((SBChoosyPickerAppInfo *)self.pickerViewModel.appTypeInfo.installedApps[buttonIndex]).appKey];
+        [self.choosy didSelectApp:((ChoosyPickerAppInfo *)self.pickerViewModel.appTypeInfo.installedApps[buttonIndex]).appKey];
     } else {
         [self.choosy didDismissPicker];
     }

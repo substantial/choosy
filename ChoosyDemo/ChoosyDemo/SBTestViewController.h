@@ -1,8 +1,8 @@
 
 #import <UIKit/UIKit.h>
-#import "SBChoosy.h"
+#import "Choosy.h"
 
-@interface SBTestViewController : UIViewController <SBChoosyDelegate>
+@interface SBTestViewController : UIViewController <ChoosyDelegate>
 
 
 @end

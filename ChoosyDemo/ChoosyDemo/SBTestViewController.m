@@ -50,6 +50,8 @@
 //    self.choosy.delegate = self;
     self.choosy.allowsDefaultAppSelection = NO;
     
+    [Choosy registerAppTypes:@[@"Twitter"]];
+    
     // @"end_address" : @"25 Taylor St, San Francisco, CA 94102"
     ChoosyActionContext *navigateAction = [ChoosyActionContext actionContextWithAppType:@"Maps"
                                                                                action:@"open"
@@ -124,7 +126,6 @@
     
     if ([reachability isReachable]) {
         [self showOnMap];
-        [self.choosy update];
         NSLog(@"Network is now reachable, called update");
     }
 }
@@ -184,11 +185,12 @@
 
 - (void)didSelectAppAsDefault:(NSString *)appKey
 {
-    NSLog(@"Add custom code here to handle default app selection");
+    [self.choosy didSelectAppAsDefault:appKey];
 }
 
 - (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(ChoosyAppInfo *)app
 {
+    // notify my custom UI of this
     NSLog(@"Got icon update notification in custom implementation delegate");
 }
 
@@ -197,7 +199,6 @@
 - (void)didDismissPicker
 {
     [self.customAppPicker dismissViewControllerAnimated:YES completion:nil];
-    
     [self.choosy didDismissPicker];
 }
 

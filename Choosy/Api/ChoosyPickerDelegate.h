@@ -6,7 +6,7 @@
 @protocol ChoosyPickerDelegate <NSObject>
 
 @required
-- (void)didDismissPicker;
+- (void)didRequestPickerDismissal;
 - (void)didSelectApp:(NSString *)appKey;
 - (void)didSelectAppAsDefault:(NSString *)appKey;
 

@@ -28,7 +28,7 @@
 
 - (void)dismiss
 {
-    [self.delegate didDismissPicker];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 @end

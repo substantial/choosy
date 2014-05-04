@@ -66,15 +66,7 @@
  *
  *  @param appTypes Array of strings that name the appy types used in the app.
  */
-- (void)registerAppTypes:(NSArray *)appTypes;
-
-/**
- *  Call this after done registering app types and/or UI elements.
- *  This will download app type information as needed, including a list of apps for each app type.
- *  It will then check which of these apps are installed on the device,
- *  and it will start downloading app icons in the background (if not cached already).
- */
-- (void)update;
++ (void)registerAppTypes:(NSArray *)appTypes;
 
 /**
  *  Manually cause the display of app picker.

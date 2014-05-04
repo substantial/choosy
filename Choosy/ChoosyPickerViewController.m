@@ -272,7 +272,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	
 	if (!CGRectContainsPoint(self.contentArea.frame, point)) {
 		// tapped outside of sharing sheet - interpret as dismiss
-		[self.delegate didDismissPicker];
+		[self.delegate didRequestPickerDismissal];
 	}
 }
 
@@ -280,7 +280,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 {
 	if ((gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateRecognized) && gesture.direction == UISwipeGestureRecognizerDirectionDown) {
 		// interpret swipe down as dismiss
-		[self.delegate didDismissPicker];
+		[self.delegate didRequestPickerDismissal];
 	}
 }
 
@@ -376,7 +376,7 @@ static CGFloat _appsRowGapBetweenApps = 10;
 
 - (void)handleCancel
 {
-    [self.delegate didDismissPicker];
+    [self.delegate didRequestPickerDismissal];
 }
 
 #pragma mark Collection View delegate

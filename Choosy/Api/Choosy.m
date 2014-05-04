@@ -88,16 +88,9 @@
     [self.registeredUIElements addObject:elementRegistration];
 }
 
-- (void)registerAppTypes:(NSArray *)appTypes
++ (void)registerAppTypes:(NSArray *)appTypes
 {
     [[ChoosyRegister sharedInstance] registerAppTypes:appTypes];
-}
-
-- (void)update
-{
-    // TODO: get rid of update altogether - update automatically on registration.
-    // Just gotta make sure we don't kick off too many updates and they don't stomp on each other.
-    [[ChoosyRegister sharedInstance] updateRegisteredAppTypes];
 }
 
 - (void)handleAction:(ChoosyActionContext *)actionContext
@@ -393,7 +386,7 @@
 
 #pragma mark ChoosyAppPickerDelegate
 
-- (void)didDismissPicker
+- (void)didRequestPickerDismissal
 {
     // close the UI
     if ([self isAppPickerShown]) {

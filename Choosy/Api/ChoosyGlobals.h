@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#define SBCHOOSY_DEVELOPMENT_MODE 1
-#define SBCHOOSY_ALWAYS_DISPLAY_PICKER 1
-#define SBCHOOSY_CACHE_EXPIRATION_PERIOD 24 * 3600 // 24 hours, when dev mode is 0
+#define CHOOSY_DEVELOPMENT_MODE 1
+#define CHOOSY_ALWAYS_DISPLAY_PICKER 1
+#define CHOOSY_CACHE_EXPIRATION_PERIOD 24 * 3600 // 24 hours, when dev mode is 0
 
 @interface ChoosyGlobals : NSObject
 

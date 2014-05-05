@@ -36,7 +36,7 @@
     if (!self.dateUpdated) return YES;
     
     NSInteger cacheAgeInHours = [[NSDate date] timeIntervalSinceDate:self.dateUpdated];
-    BOOL timeToRefresh = SBCHOOSY_DEVELOPMENT_MODE == 1 || cacheAgeInHours > SBCHOOSY_CACHE_EXPIRATION_PERIOD;
+    BOOL timeToRefresh = CHOOSY_DEVELOPMENT_MODE == 1 || cacheAgeInHours > CHOOSY_CACHE_EXPIRATION_PERIOD;
     
     return timeToRefresh;
 }

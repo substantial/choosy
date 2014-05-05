@@ -110,7 +110,7 @@
         // get app to use for this action
         [weakSelf appForAction:actionContext then:^(ChoosyAppInfo *appInfo)
          {
-             if (appInfo && !SBCHOOSY_ALWAYS_DISPLAY_PICKER) {
+             if (appInfo && !CHOOSY_ALWAYS_DISPLAY_PICKER) {
                  // we know which app to use for the action
                  [weakSelf executeAction:actionContext forAppWithKey:appInfo.appKey];
              } else {

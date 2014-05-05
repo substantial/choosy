@@ -121,6 +121,24 @@ The first time you hook Choosy up, it may feel like black magic. You wrote a lin
 
 The concept is very simple - combine a web service that knows all about apps with client code that pulls that information and calls UIApplication's `canOpenURL` for each app to create a list of installed apps. Add some multithreading, caching, icon downloads, a default UI, ability to select a default app, and remembering the previous list of installed apps in order to know when a new app shows up, and you get Choosy.
 
+### Default Behavior
+
+Choosy comes with data about all supported built-in apps and apps related to built-in services (Mail, Safari, Maps, Twitter, etc.). This means that no connection is required for Choosy to work at least as good as URLs work today; so if a web link is tapped, Choosy will just open Safari. I.e., the worst-case behavior is same as when Choosy isn't present. When additional data is downloaded, however, and more than one app is installed for a given app type, then Choosy lets users pick an app.
+
+Interactions:
+* A _tap_ shows installed apps for a given app type (Browser, Navigation, Email, Twitter, etc.). Here users can also select their favorite app.
+* A _long press_ resets the default app selection, if any, and presents the app selection again. Note that long press will show the app drawer interface even if just one app is installed.
+* If the app designated as default/favorite is deleted, the user is presented with choices the next time they tap the link.
+* If an app is designated as default/favorite for a certain app type, and new app of same type is installed (such as a new Twitter client), the user is presented with choices again so they have the opportunity to select the newly installed app.
+
+### Caching
+
+Currently, Choosy only checks for new data if the cache is over 24 hours old _or_ `CHOOSY_DEVELOPMENT_MODE` flag is set to 1. The cache period could be configurable in the future.
+
+### Downloading
+
+In order to require as few lines of code from you as possible, Choosy is completely automatic when it comes to updating itself. Every time you register an app type or a UI element with Choosy, it kicks off an update process. But even if you have multiple Twitter links that you register at the same time, Choosy will only download Twitter app type data once. It will similarly download app icon for the same app just once, regardless of how many types the app belongs to (for example, Safari is part of both Browser and Twitter app types). If connection drops, Choosy will resume when connection is reestablished.
+
 ## Limitations
 
 Choosy is made for non-jailbroken devices. As such, it's subject to app sandboxing rules. Until we figure out a way, users' defaults are stored on a per-app basis. If they select Tweetbot as their default Twitter client in your app, they will have to select it as default again in another app. This is one of the main reasons why we wanted to have the cleanest, simplest UI and affordances possible; if users need to pick default apps multiple times (potentially), the process should be as painless and as consistent as possible.

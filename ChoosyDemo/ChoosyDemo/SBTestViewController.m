@@ -54,8 +54,10 @@
     
     // @"end_address" : @"25 Taylor St, San Francisco, CA 94102"
     ChoosyActionContext *navigateAction = [ChoosyActionContext actionContextWithAppType:@"Maps"
-                                                                               action:@"open"
-                                                                           parameters:@{@"query" : @"Pizza",
+                                                                               action:@"get_directions"
+                                                                           parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102",
+                                                                                        @"latitude_longitude" : @"37.782451,-122.410748",
+                                                                                        @"start_navigating" : @"no",
                                                                                         @"callback_url" : @"choosy://",
                                                                                         @"callback_name" : @"Choosy" }
                                                                        appPickerTitle:@"Directions"];

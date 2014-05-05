@@ -7,7 +7,7 @@ Instead of writing code specific to each app you want to support (this includes 
 
 Choosy works with both native apps and web view-based apps. It also supports selection of a favorite app for a given app type so that your users do not have to pick the same app every time.
 
-For more overview, please see Substantial's [blog post(TODO)]() introducing Choosy.
+For more overview, please see [Substantial's blog post(TODO)]() introducing Choosy.
 
 ##Installing
 
@@ -133,7 +133,7 @@ We'll see if iOS 8 mitigates our data-sharing woes! :)
 
 We have a [short video with code](http://substantial.github.io/choosy/). For raw, up-to-date information on supported apps, actions, and aparameters see [the choosy-data repository](https://github.com/substantial/choosy-data). We hope to have a site that auto-generates documentation based on the raw files up and running by 1.0.
 
-This section coming soon!
+> More examples coming soon to this section!
 
 ## Customizing the UI
 
@@ -282,10 +282,14 @@ Coming soon:
 * Localization (for text related to selection of default app)
 * Better Web View support, and way better support for creation of `ChoosyActionContext` objects out of URLs.
 * Upside-down orientation support on iPhone/iPod and switching to/from it
+* We haven't seen any memory issues, but there are singletons under the hood, so memory management of those can probably be improved. No special time has been spent on this yet
 * Auto-regression for icons; so when @3x comes, we're at least using @2x icons until better ones are available
-* We haven't seen any memory issues, but there are singletons under the hood, so memory management of those can probably be improved. No special time has been spent on this yet.
 
 Moonshots:
 
 * Safe data exchange between apps
 * UI for adding/editing app information (rather than creating JSON files))
+
+## Contribute!
+
+Code critiques, pull requests, and ideas are more than welcome! Let's make native inter-app linking as easy as it can be, at least within 3rd-party apps. You can also contact us at choosy@substantial.com.

@@ -7,14 +7,14 @@ Instead of writing code specific to each app you want to support (this includes 
 
 Choosy works with both native apps and web view-based apps. It also supports selection of a favorite app for a given app type so that your users do not have to pick the same app every time.
 
-For more overview, please see [Substantial's blog post(TODO)]() introducing Choosy.
+For more overview, please see [Substantial's blog post(TODO)]() introducing Choosy. To stay informed about new releases and any API changes, please follow [@choosyios](http://www.twitter.com/choosyios) on Twitter.
 
 ##Installing
 
 You can download this repository and copy the Choosy folder to your project, but the best way to install Choosy is via CocoaPods. If you don't use CocoaPods yet, start by following [this guide](https://github.com/AFNetworking/AFNetworking/wiki/Getting-Started-with-AFNetworking), except replace the `pod 'AFNetworking' ...` line with this:
 
 ```
-pod 'Choosy', '>= 0.5'
+pod 'Choosy', '< 2.0'
 ```
 
 ## Using
@@ -295,6 +295,7 @@ Coming soon:
 * Using iTunes API to download icons straight from Apple
 * Better support for iPad (Choosy does work on iPad, but the design is not iPad-optimized)
 * Support for more apps, more actions, and more parameters ([you can help!](https://github.com/substantial/choosy-data))
+* Tests
 * A UI to navigate all available parameters, etc. (so you don't have to browse [raw JSON files](https://github.com/substantial/choosy-data))
 * Tasteful, minimal UI animations: the whole UI could use being slightly more lively
 * Localization (for text related to selection of default app)

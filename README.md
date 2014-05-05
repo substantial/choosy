@@ -1,6 +1,8 @@
 Choosy
 ==================
 
+FOREWORD: Thank you everyone who found and starred this before our public beta reveal this Wednesday. Please note that we're in heavy work mode for the next two-three days, adding data and fine-tuning the API. We expect things to stabilize by Wed or Thursday once we make public announcement about this framework. Thanks so, so much for your support!
+
 Choosy is an app-agnostic interface to communication with other apps installed on a device. With Choosy, you can define an action and let your users pick from their installed apps that support that action with just one line of code.
 
 Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters for the type of app you're linking to ('type' means Twitter, Maps, Browser, Email, etc.). Choosy takes care of detecting installed apps of that type and which parameters each app supports, creating a proper URL for each app based on the supported parameters and app-specific parameter names, and executing that URL to open the app.

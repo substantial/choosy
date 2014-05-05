@@ -1,7 +1,11 @@
 Choosy
 ==================
 
-With Choosy, you can define an action and let your users pick from their installed apps that support that action with just one line of code. Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters for the type of app you're linking to ('types' means Twitter, Maps, Browser, Email, etc.). Choosy takes care of detecting installed apps of that type and which parameters each app supports, creating proper URL for each app, and executing that URL to open the app. Choosy works with both native apps and web view-based apps. By default, users can even select a favorite app and not have to pick it every time.
+Choosy is an app-agnostic interface to communication with other apps installed on a device. With Choosy, you can define an action and let your users pick from their installed apps that support that action with just one line of code.
+
+Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters for the type of app you're linking to ('type' means Twitter, Maps, Browser, Email, etc.). Choosy takes care of detecting installed apps of that type and which parameters each app supports, creating a proper URL for each app based on the supported parameters and app-specific parameter names, and executing that URL to open the app.
+
+Choosy works with both native apps and web view-based apps. It also supports selection of a favorite app for a given app type so that your users do not have to pick the same app every time.
 
 For more overview, please see Substantial's [blog post(TODO)]() introducing Choosy.
 
@@ -84,11 +88,56 @@ The very first time Choosy hears about an app type, it goes and downloads inform
 This way, by the time your users open a screen that has a Twitter link, for example, Choosy will have received information about Twitter app type and apps, checked which apps are installed, and downloaded icons for the installed apps.
 
 ### Which method to use
+
 You can intermix `registerUiElement:forAction:` and `handleAction:` calls as you see fit. Just keep in mind that `registerUiElement:forAction:` registers the UI element for both tap and long-press gestures. So if you're manually handling one of these gestures and calling either `handleAction:` or `resetAppSelectionAndHandleAction:`, you need to override the other gesture as well and call the other method there. It's particularly easy to forget to handle a long press, leaving users without the ability to reset their defaults!
+
+## Action Context
+
+Use `ChoosyActionContext` objects to pass all information about the actions you want to execute. What we call 'action' here can also be thought of as 'external link', since you're really opening (linking to) an an external app. We prefer the word 'action' for two reasons. One, you typically don't just link to an app, but you want to perform an action with it, such as show a specific Twitter profile. And two, we have some cool long-term features planned that go beyond just opening apps ;)
+
+For native apps, you can use any of the `actionContextWithAppType...` convenience initializers. If you pass just the app type via `actionContextWithAppType:`, Choosy will show apps of that type and just open them, passing no parameters.
+
+Let's look at the most verbose initializer:
+
+```objc
++ (instancetype)actionContextWithAppType:(NSString *)appTypeKey
+                                  action:(NSString *)actionKey
+                              parameters:(NSDictionary *)parameters
+                          appPickerTitle:(NSString *)appPickerTitle;
+```
+
+`appTypeKey` is a string like `@"Twitter"`, `@"Email"`, `@"Browser"`, `@"Maps"`, `@"Music"`, `@"RSS"`, `@"Contacts"`, `@"Weather"`, etc.
+`actionKey` is a string like `@"show_profile"`, `@"compose"`, `@"directions"`, `@"browse"`, etc.
+`parameters` is the list of parameters for that action. Being app-agnostic means that all keys are Choosy-specific, although we try to utilize keys from the most-prevalent app's URL scheme whenever possible. For example, some of our parameter names for Twitter actions are same as Tweetbot's, but that's just because we liked their names and they have the best-documented URL scheme :)
+`appPickerTitle` is the text to be displayed at the top of Choosy's UI. This is optional; use it if you want to override the default. Currently, the default text is just app type name, but we plan on making it smarter in the near future, such as showing name of action requested or even some key parameter value related to the action, such as the Twitter handle of the profile that's about to be opened.
+
+What you want to do is to pass as many parameters as you need for your best-case scenario. For example, include a callback url even if you are not sure if any apps support it. Choosy will take care of skipping parameters for apps that don't support them.
+
+
+
+## The Magic
+
+The first time you hook Choosy up, it may feel like black magic. You wrote a line of code and boom, you app supports linking to all major Twitter clients _and_ users can pick their favorite app! How does it know about all the apps? How does it instantly know when user deletes an app or installs a new app? (oh - spoiler alert!)
+
+The concept is very simple - combine a web service that knows all about apps with client code that pulls that information and calls UIApplication's `canOpenURL` for each app to create a list of installed apps. Add some multithreading, caching, icon downloads, a default UI, ability to select a default app, and remembering the previous list of installed apps in order to know when a new app shows up, and you get Choosy.
+
+## Limitations
+
+Choosy is made for non-jailbroken devices. As such, it's subject to app sandboxing rules. Until we figure out a way, users' defaults are stored on a per-app basis. If they select Tweetbot as their default Twitter client in your app, they will have to select it as default again in another app. This is one of the main reasons why we wanted to have the cleanest, simplest UI and affordances possible; if users need to pick default apps multiple times (potentially), the process should be as painless and as consistent as possible.
+
+Again due to sandboxing, Choosy must store a set of app icons within each app that implements it. We do try to be diligent iOS citizens and store all icons (and all info about other apps) in the Cache folder. So if the phone is ever running out of space, we can sleep well knowing we haven't contributed to the problem.
+
+We'll see if iOS 8 mitigates our data-sharing woes! :)
+
+## Examples
+
+We have a [short video with code](http://substantial.github.io/choosy/). For raw, up-to-date information on supported apps, actions, and aparameters see [the choosy-data repository](https://github.com/substantial/choosy-data). We hope to have a site that auto-generates documentation based on the raw files up and running by 1.0.
+
+This section coming soon!
 
 ## Customizing the UI
 
-The default UI follows Apple's aesthetic, and consistency is gold (sometimes as much as $140b worth of gold). This framework is useful when it works the same way across all apps. So if you come up with a UI with better affordances, etc. - please do submit a pull request or just contact us to exchange ideas.
+The default UI follows Apple's aesthetic                      , and consistency is gold (sometimes as much as $140b worth of gold). This framework is useful when it works the same way across all apps. So if you come up with a UI with better affordances, etc. - please do submit a pull request or just contact us to exchange ideas.
 
 But if you're dying to roll your own UI, you tots can. Just be sure to notify Choosy when an app is selected, etc. as per `ChoosyPickerDelegate`. Implementation can come in many forms, but here's a skeleton for a sample implementation:
 
@@ -209,3 +258,34 @@ Make the view controller responsible for showing the custom app picker UI implem
 }
 @end
 ```
+
+## Web Views
+
+Choosy can work for links inside web views, whether your app just hosts a web view or is a web view-based app altogether. However, `UIWebView` does not notify anyone when a link was long-pressed; as such, whenever you're dealing with web view links, you should disable the default app selection feature:
+
+```objc
+self.choosy.allowsDefaultAppSelection = NO;
+```
+
+More on this soon...
+
+## Roadmap
+
+Coming soon:
+
+* Better accessibility support
+* Using iTunes API to download icons straight from Apple
+* Better support for iPad (Choosy does work on iPad, but the design is not iPad-optimized)
+* Support for more apps, more actions, and more parameters ([you can help!](https://github.com/substantial/choosy-data))
+* A UI to navigate all available parameters, etc. (so you don't have to browse [raw JSON files](https://github.com/substantial/choosy-data))
+* Tasteful, minimal UI animations: the whole UI could use being slightly more lively
+* Localization (for text related to selection of default app)
+* Better Web View support, and way better support for creation of `ChoosyActionContext` objects out of URLs.
+* Upside-down orientation support on iPhone/iPod and switching to/from it
+* Auto-regression for icons; so when @3x comes, we're at least using @2x icons until better ones are available
+* We haven't seen any memory issues, but there are singletons under the hood, so memory management of those can probably be improved. No special time has been spent on this yet.
+
+Moonshots:
+
+* Safe data exchange between apps
+* UI for adding/editing app information (rather than creating JSON files))

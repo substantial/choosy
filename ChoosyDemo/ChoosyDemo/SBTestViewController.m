@@ -199,7 +199,6 @@
 - (void)didDismissPicker
 {
     [self.customAppPicker dismissViewControllerAnimated:YES completion:nil];
-    [self.choosy didDismissPicker];
 }
 
 - (void)didSelectApp:(NSString *)appKey
@@ -214,8 +213,6 @@
     // see if an app was selected
     if (buttonIndex < [self.pickerViewModel.appTypeInfo.installedApps count]) {
         [self.choosy didSelectApp:((ChoosyPickerAppInfo *)self.pickerViewModel.appTypeInfo.installedApps[buttonIndex]).appKey];
-    } else {
-        [self.choosy didDismissPicker];
     }
 }
 

@@ -52,7 +52,7 @@ Of course, you may want to execute your own code on tap or long-press. In that c
 - (void)viewDidLoad
 {
   ...
-  [self.choosy registerAppTypes:@[@"Twitter"]];
+  [Choosy registerAppTypes:@[@"Twitter"]];
 }
 ```
 
@@ -318,6 +318,6 @@ Under development now:
 
 ## Contribute!
 
-We would _love_ your help with the items above! You're awesome. 
+We would _love_ your help with the items above! You're awesome.
 
 Code critiques, pull requests, and ideas are more than welcome! Let's make native inter-app linking as easy as it can be, at least within 3rd-party apps. You can also contact us at choosy@substantial.com.

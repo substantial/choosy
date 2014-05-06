@@ -311,6 +311,13 @@ Moonshots:
 * Safe data exchange between apps
 * UI for adding/editing app information (rather than creating JSON files))
 
+Under development now:
+
+* Reloading of data on reconnect if Choosy is started when no connection is available or if connection drops during download (_current_)
+* Using iTunes API to download icons straight from Apple (_next_)
+
 ## Contribute!
+
+We would _love_ your help with the items above! You're awesome. 
 
 Code critiques, pull requests, and ideas are more than welcome! Let's make native inter-app linking as easy as it can be, at least within 3rd-party apps. You can also contact us at choosy@substantial.com.

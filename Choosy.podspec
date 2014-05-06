@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "Choosy"
-  s.version      = "0.5"
+  s.version      = "0.5.1"
   s.summary      = "Effortlessly enable choosing of apps for external actions like browsing, emailing, tweeting, etc."
   s.homepage     = "http://substantial.github.io/choosy"
-  s.source       = { :git => "https://github.com/substantial/choosy.git", :tag => "0.5" }
+  s.source       = { :git => "https://github.com/substantial/choosy.git", :tag => "0.5.1" }
 
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.authors      = { "Alex Novosad" => "alexn@substantial.com" }

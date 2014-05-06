@@ -44,7 +44,7 @@
     [super viewDidLoad];
     
     self.choosy = [Choosy new];
-    self.choosy.allowsDefaultAppSelection = NO;
+    self.choosy.allowsDefaultAppSelection = YES;
     
     [Choosy registerAppTypes:@[@"Twitter"]];
     

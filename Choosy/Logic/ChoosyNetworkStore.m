@@ -3,6 +3,7 @@
 #import "ChoosySerialization.h"
 #import "ChoosyAppInfo.h"
 #import "NSString+Network.h"
+#import "ChoosyLocalStore.h"
 
 static NSMutableArray *_appKeysForIconsBeingDownloaded;
 
@@ -57,7 +58,9 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
     }
     
     @synchronized(self) {
-        if (!_appKeysForIconsBeingDownloaded) _appKeysForIconsBeingDownloaded = [NSMutableArray new];
+        if (!_appKeysForIconsBeingDownloaded) {
+            _appKeysForIconsBeingDownloaded = [NSMutableArray new];
+        }
         [_appKeysForIconsBeingDownloaded addObject:appKey];
     }
     
@@ -84,7 +87,7 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
 //        NSDictionary *headers = [httpResponse allHeaderFields];
 //        NSString *responseExpirationDate = headers[@"Expires"];
         
-        UIImage *appIcon = [UIImage imageWithData:data];
+        UIImage *appIcon = [UIImage imageWithData:data scale:[UIScreen mainScreen].scale];
         
         if (successBlock) {
             successBlock(appIcon);
@@ -100,7 +103,7 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
 
 - (NSString *)urlForAppIcon:(NSString *)appKey
 {
-    NSString *appIconName = [ChoosyAppInfo appIconFileNameForAppKey:appKey];
+    NSString *appIconName = [ChoosyLocalStore appIconFileNameForAppKey:appKey];
     NSString *fileUrl = [NSString stringWithFormat:@"https://raw.githubusercontent.com/substantial/choosy-data/master/app-icons/%@", appIconName];
     return fileUrl;
 }

@@ -5,12 +5,11 @@
 #import "ChoosyNetworkStore.h"
 #import "ChoosyLocalStore.h"
 #import "NSThread+Helpers.h"
+#import "UIImage+ImageEffects.h"
 
 NSString * const ChoosyDidUpdateAppIconNotification = @"ChoosyDidUpdateAppIconNotification";
 
 @implementation ChoosyAppInfo
-
-static NSString *_appIconFileExtension = @"png";
 
 - (ChoosyAppAction *)findActionWithKey:(NSString *)actionKey
 {
@@ -25,16 +24,29 @@ static NSString *_appIconFileExtension = @"png";
 
 - (void)downloadAppIcon
 {
+    __weak ChoosyAppInfo *appInfo = self;
     [ChoosyNetworkStore downloadAppIconForAppKey:self.appKey success:^(UIImage *appIcon)
      {
-         [ChoosyLocalStore cacheAppIcon:appIcon forAppKey:self.appKey];
-         
-         // tell everyone icon got updated! woooo
-         [NSThread executeOnMainThread:^{
-             [[NSNotificationCenter defaultCenter] postNotificationName:ChoosyDidUpdateAppIconNotification object:self userInfo:@{@"appIcon" : appIcon}];
+         // mask the icon here so we don't do it every time the icon is displayed
+         [appIcon applyMaskImage:[ChoosyLocalStore appIconMask] completion:^(UIImage *maskedIcon) {
+             // the above 'maskedIcon' will show up masked if thrown into a UIImageView
+             // but if you save it to file using UIImagePNGRepresentation, you won't see the mask
+             // sooo what we want to do is we want to render to context first to merge mask onto image
+             // (think of flattening layers in Photoshop)
+             UIGraphicsBeginImageContext(maskedIcon.size);
+             [maskedIcon drawAtPoint:CGPointZero];
+             maskedIcon = UIGraphicsGetImageFromCurrentImageContext();
+             UIGraphicsEndImageContext();
+             
+             [ChoosyLocalStore cacheAppIcon:maskedIcon forAppKey:appInfo.appKey];
+             
+             // tell everyone icon got updated! woooo
+             [NSThread executeOnMainThread:^{
+                 [[NSNotificationCenter defaultCenter] postNotificationName:ChoosyDidUpdateAppIconNotification object:appInfo userInfo:@{@"appIcon" : maskedIcon}];
+             }];
          }];
      } failure:^(NSError *error) {
-         NSLog(@"Couldn't download icon for app key %@", self.appKey);
+         NSLog(@"Couldn't download icon for app key %@", appInfo.appKey);
      }];
 }
 
@@ -61,33 +73,6 @@ static NSString *_appIconFileExtension = @"png";
 
 + (NSValueTransformer *)appURLSchemeJSONTransformer {
     return [NSValueTransformer valueTransformerForName:MTLURLValueTransformerName];
-}
-
-+ (NSString *)appIconFileNameForAppKey:(NSString *)appKey
-{
-    // TODO: what if scale goes up to @3x or @4x? We need to then show previous-X icons such as @2x.
-    NSString *appIconName = [self appIconFileNameWithoutExtensionForAppKey:appKey];
-
-    appIconName = [[appIconName stringByAppendingString:@"."] stringByAppendingString:[self appIconFileExtension]];
-
-    return appIconName;
-}
-
-+ (NSString *)appIconFileNameWithoutExtensionForAppKey:(NSString *)appKey
-{
-    NSString *appIconName = appKey;
-    
-    // add suffix for retina screens, ex: safari@2x.png
-    NSInteger scale = (NSInteger)[[UIScreen mainScreen] scale];
-    
-    if (scale > 1) appIconName = [appIconName stringByAppendingFormat:@"@%ldx", (long)scale];
-    
-    return appIconName;
-}
-
-+ (NSString *)appIconFileExtension
-{
-    return _appIconFileExtension;
 }
 
 @end

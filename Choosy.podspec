@@ -20,6 +20,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "7.0"
 
   s.source_files  = "Choosy", "Choosy/**/*.{h,m}", "Choosy/*.{h,m}"
-  s.resource_bundle = { "ChoosyResources" => "Choosy/BuiltInApps/*" }
+  s.resource_bundle = { "ChoosyResources" => "Choosy/Resources/*" }
   s.requires_arc = true
 end

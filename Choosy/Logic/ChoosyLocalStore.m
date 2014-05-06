@@ -2,11 +2,14 @@
 #import "ChoosyGlobals.h"
 #import "ChoosyLocalStore.h"
 #import "ChoosySerialization.h"
+#import "UIImage+ImageEffects.h"
 
 static NSString *LAST_DETECTED_APPS_KEY = @"DetectedApps";
 static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 @implementation ChoosyLocalStore
+
+static NSString *_appIconFileExtension = @"png";
 
 #pragma mark - Public
 
@@ -61,7 +64,7 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 	[defaults synchronize];
 }
 
-#pragma mark App Type Caching
+#pragma mark App Type
 
 + (NSArray *)cachedAppTypes
 {
@@ -118,6 +121,8 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
     return [ChoosyAppType filterAppTypesArray:appTypes byKey:appTypeKey];
 }
 
+#pragma mark App Icon
+
 + (BOOL)appIconExistsForAppKey:(NSString *)appKey
 {
     // TODO: background thread
@@ -137,8 +142,8 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 + (NSString *)filePathForBundledAppIconForAppKey:(NSString *)appKey
 {
-    NSString *fileName = [ChoosyAppInfo appIconFileNameWithoutExtensionForAppKey:appKey];
-    NSString *fileExtension = [ChoosyAppInfo appIconFileExtension];
+    NSString *fileName = [self fileNameWithoutExtensionForImageNamed:appKey];
+    NSString *fileExtension = [self appIconFileExtension];
     NSString *builtInAppIconPath = [self filePathForBundledFileNamed:fileName ofType:fileExtension];
     
     return builtInAppIconPath;
@@ -150,15 +155,26 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
     
     // check if amid system app icons
     UIImage *appIcon = [UIImage imageWithContentsOfFile:[self filePathForBundledAppIconForAppKey:appKey]];
-    if (appIcon) return appIcon;
+    if (appIcon) {
+        // mask system icons so that they have rounded corners when displayed
+        return [appIcon applyMaskImage:[self appIconMask]];
+    }
     
-    // check amid cached icons
+    // check amid cached icons, these should already be masked with rounded corners
     NSString *filePath = [ChoosyLocalStore filePathForCachedAppIconForAppKey:appKey];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         appIcon = [UIImage imageWithContentsOfFile:filePath];
     }
     
     return appIcon;
+}
+
++ (UIImage *)appIconMask
+{
+    NSString *iconMaskFileName = [self fileNameWithoutExtensionForImageNamed:@"iconMask"];
+    UIImage *iconMask = [UIImage imageWithContentsOfFile:[self filePathForBundledFileNamed:iconMaskFileName ofType:@"png"]];
+    
+    return iconMask;
 }
 
 + (void)cacheAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appKey
@@ -173,6 +189,32 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
     [imageData writeToFile:path atomically:YES];
     
     NSLog(@"Cached app icon for %@ at path %@", appKey, path);
+}
+
+
++ (NSString *)appIconFileNameForAppKey:(NSString *)appKey
+{
+    // TODO: what if scale goes up to @3x or @4x? We need to then show previous-X icons such as @2x.
+    NSString *appIconName = [self fileNameWithoutExtensionForImageNamed:appKey];
+    
+    appIconName = [[appIconName stringByAppendingString:@"."] stringByAppendingString:[self appIconFileExtension]];
+    
+    return appIconName;
+}
+
++ (NSString *)fileNameWithoutExtensionForImageNamed:(NSString *)imageName
+{
+    // add suffix for retina screens, ex: safari@2x.png
+    NSInteger scale = (NSInteger)[[UIScreen mainScreen] scale];
+    
+    if (scale > 1) imageName = [imageName stringByAppendingFormat:@"@%ldx", (long)scale];
+    
+    return imageName;
+}
+
++ (NSString *)appIconFileExtension
+{
+    return _appIconFileExtension;
 }
 
 + (NSString *)filePathForBundledFileNamed:(NSString *)fileName ofType:(NSString *)fileType
@@ -222,7 +264,7 @@ static NSString *DEFAULT_APPS_KEY = @"DefaultApps";
 
 + (NSString *)filePathForCachedAppIconForAppKey:(NSString *)appKey
 {
-    return [[self pathForCacheDirectory] stringByAppendingPathComponent:[ChoosyAppInfo appIconFileNameForAppKey:appKey]];
+    return [[self pathForCacheDirectory] stringByAppendingPathComponent:[self appIconFileNameForAppKey:appKey]];
 }
 
 @end

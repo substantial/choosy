@@ -36,8 +36,11 @@
 + (void)cacheAppTypes:(NSArray *)jsonAppTypes;
 + (void)cacheAppType:(ChoosyAppType *)appType;
 
++ (void)cacheAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appKey;
+
 + (BOOL)appIconExistsForAppKey:(NSString *)appKey;
 + (UIImage *)appIconForAppKey:(NSString *)appKey;
-+ (void)cacheAppIcon:(UIImage *)appIcon forAppKey:(NSString *)appKey;
++ (UIImage *)appIconMask;
++ (NSString *)appIconFileNameForAppKey:(NSString *)appKey;
 
 @end

@@ -8,10 +8,10 @@
 
 #import "SBTestViewController.h"
 #import "Reachability.h"
-#import "SBCustomPickerViewController.h"
+#import "ChoosyPickerViewModel.h"
 @import MapKit;
 
-@interface SBTestViewController () <ChoosyPickerDelegate, UIActionSheetDelegate>
+@interface SBTestViewController () <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *emailButton;
 @property (weak, nonatomic) IBOutlet UIButton *twitterButton;
@@ -24,7 +24,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 
-@property (nonatomic) SBCustomPickerViewController *customAppPicker;
 @property (nonatomic) ChoosyPickerViewModel *pickerViewModel;
 
 @property (nonatomic) Choosy *choosy;
@@ -40,19 +39,15 @@
 
 @implementation SBTestViewController
 
-// code for this demo
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.choosy = [Choosy new];
-//    self.choosy.delegate = self;
     self.choosy.allowsDefaultAppSelection = NO;
     
     [Choosy registerAppTypes:@[@"Twitter"]];
     
-    // @"end_address" : @"25 Taylor St, San Francisco, CA 94102"
     ChoosyActionContext *navigateAction = [ChoosyActionContext actionContextWithAppType:@"Maps"
                                                                                action:@"get_directions"
                                                                            parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102",
@@ -176,36 +171,12 @@
     appSheet.cancelButtonIndex = appSheet.numberOfButtons - 1;
     
     [appSheet showInView:self.view];
-    
-//    SBCustomPickerViewController *customPicker = [[SBCustomPickerViewController alloc] initWithModel:viewModel];
-//    self.customAppPicker = customPicker;
-//    
-//    customPicker.delegate = self;
-//    
-//    [self presentViewController:customPicker animated:NO completion:nil];
-}
-
-- (void)didSelectAppAsDefault:(NSString *)appKey
-{
-    [self.choosy didSelectAppAsDefault:appKey];
 }
 
 - (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(ChoosyAppInfo *)app
 {
-    // notify my custom UI of this
+    // notify custom UI of this
     NSLog(@"Got icon update notification in custom implementation delegate");
-}
-
-#pragma mark ChoosyPickerDelegate
-
-- (void)didDismissPicker
-{
-    [self.customAppPicker dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)didSelectApp:(NSString *)appKey
-{
-    [self.choosy didSelectApp:appKey];
 }
 
 #pragma mark UIActionSheetDelegate
@@ -214,7 +185,8 @@
 {
     // see if an app was selected
     if (buttonIndex < [self.pickerViewModel.appTypeInfo.installedApps count]) {
-        [self.choosy didSelectApp:((ChoosyPickerAppInfo *)self.pickerViewModel.appTypeInfo.installedApps[buttonIndex]).appKey];
+        ChoosyPickerAppInfo *selectedApp = ((ChoosyPickerAppInfo *)self.pickerViewModel.appTypeInfo.installedApps[buttonIndex]);
+        [self.choosy didSelectApp:selectedApp.appKey];
     }
 }
 

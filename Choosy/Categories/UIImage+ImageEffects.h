@@ -106,4 +106,19 @@
 
 - (UIImage *)applyBlurWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage;
 
+/**
+ *  This executes on the current thread.
+ *
+ *  @param maskImage The image to use as the mask.
+ */
+- (UIImage *)applyMaskImage:(UIImage *)maskImage;
+
+/**
+ *  This is a background-thread version of applyMaskImage.
+ *
+ *  @param maskImage  The image to use as the mask.
+ *  @param completion Block to execute once masking is complete.
+ */
+- (void)applyMaskImage:(UIImage *)maskImage completion:(void(^)(UIImage *maskedIcon))completion;
+
 @end

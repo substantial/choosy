@@ -359,4 +359,41 @@
     return returnImage;
 }
 
+- (UIImage *)applyMaskImage:(UIImage *)maskImage
+{
+    CGImageRef maskImageRef = maskImage.CGImage;
+    
+    CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskImageRef),
+                                        CGImageGetHeight(maskImageRef),
+                                        CGImageGetBitsPerComponent(maskImageRef),
+                                        CGImageGetBitsPerPixel(maskImageRef),
+                                        CGImageGetBytesPerRow(maskImageRef),
+                                        CGImageGetDataProvider(maskImageRef), NULL, false);
+    
+    CGImageRef maskedImageRef = CGImageCreateWithMask(self.CGImage, mask);
+    
+    // this should show up masked in UIImageView or any other new graphics context
+    // but it won't be masked if you try saving it to a file!
+    // To save this to file, draw in a new gcontext first, then grab UIImage from that
+    UIImage *maskedIcon = [UIImage imageWithCGImage:maskedImageRef];
+    
+    CGImageRelease(maskedImageRef);
+    CGImageRelease(mask);
+    
+    return maskedIcon;
+}
+
+- (void)applyMaskImage:(UIImage *)maskImage completion:(void(^)(UIImage *maskedIcon))completion
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImage *maskedIcon = [self applyMaskImage:maskImage];
+        
+        dispatch_async  (dispatch_get_main_queue(), ^{
+            if (completion) {
+                completion(maskedIcon);
+            }
+        });
+    });
+}
+
 @end

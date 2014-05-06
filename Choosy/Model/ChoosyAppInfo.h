@@ -30,8 +30,4 @@ extern NSString * const ChoosyDidUpdateAppIconNotification;
 
 - (void)downloadAppIcon;
 
-+ (NSString *)appIconFileNameForAppKey:(NSString *)appKey;
-+ (NSString *)appIconFileNameWithoutExtensionForAppKey:(NSString *)appKey;
-+ (NSString *)appIconFileExtension;
-
 @end

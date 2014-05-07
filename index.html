@@ -22,13 +22,12 @@
   </head>
 
   <body>
-
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
           <!--<a id="forkme_banner" href="https://github.com/substantial/choosy">View on GitHub</a>-->
 
-          <h1 id="project_title">Choosy</h1>
+          <h1 id="project_title"><a href="https://github.com/substantial/choosy">Choosy</a></h1>
           <h3 id="project_tagline">Effortlessly enable your users to choose default apps for external actions like browsing, emailing, tweeting, etc.</h3>
 
            <!-- <section id="downloads">
@@ -45,11 +44,11 @@
 <a name="choosy" class="anchor" href="#choosy"><span class="octicon octicon-link">
 </span></a>Why</h3>
 
-<p>People will love your app even more if it helps them use their other favorite apps. We're essentially solving the iOS' lack of default app selection mechanism.</p>
+<p>At <a href="http://www.substantial.com">Substantial</a>, many of us love iOS and this comes up for us a lot: we tap a link hoping that it opens our favorite client app, only to be disappointed. We strive to build awesome apps for our clients, but how can we claim that the whole app is awesome if our users' experience of visiting an external link is not, in fact, the most awesome?</p>
 
-<p>Once Choosy is widely implemented, end users will be able to traverse the iOS ecosystem using just the apps they love, be they built-in ones or not.</p>
+<p>We can't <em>completely</em> solve iOS' current lack of default app selection mechanism, but maybe we can solve some of it. We have a dream: soon, iOS users will traverse the ecosystem using just the apps they love, be they built-in apps or not.</p>
 
-<h3>Check It Out!</h3>
+<h3>A Video Is Worth a Thousand Words</h3>
 <p>
 <iframe src="http://player.vimeo.com/video/87752578" width="625" height="370" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 </p>
@@ -96,37 +95,38 @@ If a user selects Chrome, the button now says 'Open in Chrome' and sends the use
 <pre class="prettyprint"><code>[Choosy registerUIElement:self.myButton forAction:[ChoosyActionContext initWithAppType:@"Twitter"]];
 </code></pre>
 
-<p>That's it! Choosy will hook up a tap and long press gesture recognizers to that button (or any other UIControl), display the app selection UI, etc.</p>
+<p>That's it! Choosy will hook up a tap and long press gesture recognizers to that button and display the app selection UI as needed.</p>
 
 <h4>
 <a name="easier-" class="anchor" href="#easier-">
   <span class="octicon octicon-link"></span></a>Easier</h4>
 
-<p>In your viewDidLoad or applicationDidLoad: </p>
+<p>In your controller's viewDidLoad or appDelegate's applicationDidLoad: </p>
 <pre class="prettyprint"><code>[Choosy registerAppTypes: @[@"Twitter", @"Browser", @"Email", ...]]
 </code></pre>
 
-<p>And then call Choosy from your own event handlers:</p>
-<pre class="prettyprint"><code>[Choosy handleAction: [ChoosyActionContext contextWithAppType:@"Email" action:@"Compose" parameters:@{ @"to" : @"choosy@substantial.com" }]];</code></pre>
+<p>You can still use registerUIElement method shown above, but you can also call Choosy from your own event handlers:</p>
+<pre class="prettyprint"><code>[Choosy handleAction: [ChoosyActionContext actionContextWithAppType:@"Email" action:@"compose" parameters:@{ @"to" : @"choosy@substantial.com" }]];</code></pre>
 
 <h3>
-<a name="customization" class="anchor" href="#customization"><span class="octicon octicon-link"></span></a>Customization</h3>
+<a name="customization" class="anchor" href="#customization"><span class="octicon octicon-link"></span></a>Customizable?</h3>
 
-<p>Yes.</p>
-<!--<p>More complex cases:
-1. Register a delegate with Choosy. The most important question a delegate can answer is, what is the parent view controller for Choosy's view controller? If the delegate does not respond to that question, but the delegate itself is a view controller, that view controller is used as the parent. But if the delegate is not present at all, Choosy uses top-most (i.e. currently visible) view controller in the Window hierarchy as the parent.</p>-->
+<p><a href="https://github.com/substantial/choosy/blob/master/README.md#customizing-the-ui">Yes</a> (link to Readme).</p>
 
 <h3>
-<a name="how-is-this-possible" class="anchor" href="#how-is-this-possible"><span class="octicon octicon-link"></span></a>But how...</h3>
+<a name="how-is-this-possible" class="anchor" href="#how-is-this-possible"><span class="octicon octicon-link"></span></a>But How...</h3>
 
-<p>Thanks to UIApplication's canOpenURL method and iOS forcing unique url schemes. Basically, we store a list of URL schemes for each app on the server, and categorize apps. Choosy downloads that info as needed.</p>
+<p>All of this relies on UIApplication's canOpenURL method. (Oh the things we could do if we had <em>two</em> API methods!) We store a list of URL schemes and their building blocks for each app on a server (in a <a href="https://github.com/substantial/choosy-data">GitHub repository</a> right now), categorizing apps by type. Choosy downloads that info as needed. Developers code to an app-agnostic interface where they just specify the type of app they are linking to/trying to interact with, and pass in a list of parameters. Choosy maps those parameters to the parameters supported by each app and builds app-specific URLs.</p>
 
-<p>Choosy caches network data, so the traffic footprint is small. It also instantly knows when a new app from same category is installed, or the default app is deleted, and lets user re-select the default app. Choosy is non-intrusive - if there's no connection and the default app hasn't been selected yet, it just opens the default iOS app.</p>
+<p>Choosy does cache the data it downloads, so the traffic footprint is minimal. Users can set an app as default; after all, their Twitter client preference is not likely to change from one Twitter link to the next. If a new app of the same type is installed, or the app marked as default is deleted, Choosy presents app choices to the user again the next time a link related to that app type is activated. Finally, the framework is non-intrusive - if there's no connection and the default app hasn't been selected yet, and if Choosy can't download data or no 3rd-party apps are installed yet, it just opens the default iOS app, thus acting as if it wasn't there in the first place.</p>
 
-<h3>When</h3>
+<h3>What's Next</h3>
 
 <p>
-We're at alpha (including the look and feel). Beta should be within 2 weeks, and then it's just a lot of polish - the devil is in the details, as they say. Honestly, we love this, for it truly makes iOS experience better, but we also want to make sure other developers are as excited to implement it. So please let us know what you think at choosy@substantial.com!
+We're now in beta! The core is there, albeit our list of TODOs remains long - the devil is in the details, as they say. And we like polished apps. You can play with the framework now, however, and give us feedback! Please stay tuned to major updates via <a href="http://www.twitter.com/choosyios">@choosyios</a> and feel free to send us feedback, ideas, and requests at <a href="mailto:choosy@substantial.com">choosy@substantial.com</a>. Of course, if you find a bug or want a feature, please open a <a href="https://github.com/substantial/choosy/issues">GitHub issue</a> on the repository.</p>
+
+<p>
+Honestly, we love this, for it truly makes iOS experience better, but we also want to make sure other developers are as excited to implement it. If there's anything we can do to make this easier/better, tell us! And if you submit some awesome code via a pull request - well, wow. Just wow to you, dear sir or madam.
 </p>
 
       </section>

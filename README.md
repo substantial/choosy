@@ -157,7 +157,7 @@ We have a [short video with code](http://choosy.substantial.com). For raw, up-to
 
 The default UI follows Apple's aesthetic, and consistency is gold (sometimes as much as $140b worth of gold). This framework is useful when it works the same way across all apps. So if you come up with a UI with better affordances, etc. - please do submit a pull request or just contact us to exchange ideas.
 
-But if you're dying to roll your own UI, you tots can. Just be sure to notify Choosy when an app is selected, etc. as per `ChoosyPickerDelegate`. Implementation can come in many forms, but here's a skeleton for a sample implementation:
+But if you're dying to roll your own UI, you totes can. Just be sure to notify Choosy when an app is selected, etc. as per `ChoosyPickerDelegate`. Implementation can come in many forms, but here's a skeleton for a sample implementation:
 
 ### Step 1
 

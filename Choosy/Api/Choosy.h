@@ -6,14 +6,7 @@
 
 @protocol ChoosyDelegate <NSObject>
 
-// ALPHA CODE
-
 @optional
-//- (void)didAddApp:(ChoosyAppInfo *)newApp;
-//
-//- (void)didUpdateAppInfo:(ChoosyAppInfo *)existingAppInfo
-//          withNewAppInfo:(ChoosyAppInfo *)updatedAppInfo;
-
 /**
  *  Implement this method if you wrote your own app picker view controller.
  *  Choosy will only show the default picker if this method is not implemented.
@@ -27,6 +20,12 @@
  */
 - (void)willShowDefaultChoosyPicker:(ChoosyAppPickerViewController *)pickerViewController;
 
+/**
+ *  Called when a new app icon has been downloaded
+ *
+ *  @param appIcon The new icon
+ *  @param app     Related app object
+ */
 - (void)didUpdateAppIcon:(UIImage *)appIcon forApp:(ChoosyAppInfo *)app;
 
 - (NSString *)textForAppPickerGivenContext:(ChoosyActionContext *)actionContext;

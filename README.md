@@ -9,6 +9,8 @@ Choosy works with both native apps and web view-based apps. It also allows users
 
 For more overview, please see [Substantial's blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/) introducing Choosy. To stay informed about new releases and any API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 
+![Choosy in Distiller](https://farm3.staticflickr.com/2900/14153619993_c7049500a2_z.jpg)
+
 ##Installing
 
 You can download this repository and copy the Choosy folder to your project, but the best way to install Choosy is via CocoaPods. If you don't use CocoaPods yet, start by following [this guide](https://github.com/AFNetworking/AFNetworking/wiki/Getting-Started-with-AFNetworking), except replace the `pod 'AFNetworking' ...` line with this:

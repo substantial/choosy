@@ -9,6 +9,8 @@ Choosy works with both native apps and web view-based apps. It also allows users
 
 For more overview, please see [Substantial's blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/) introducing Choosy. To stay informed about new releases and any API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 
+Screenshot of Choosy UI after tapping an e-mail link:
+
 ![Choosy in Distiller](https://farm3.staticflickr.com/2900/14153619993_c7049500a2_z.jpg)
 
 ##Installing
@@ -311,11 +313,6 @@ Moonshots:
 
 * Safe data exchange between apps
 * UI for adding/editing app information (rather than creating JSON files))
-
-Under development now:
-
-* Reloading of data on reconnect if Choosy is started when no connection is available or if connection drops during download (_current_)
-* Using iTunes API to download icons straight from Apple (_next_)
 
 ## Contribute!
 

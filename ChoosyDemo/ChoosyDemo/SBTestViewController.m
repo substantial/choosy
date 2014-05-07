@@ -107,9 +107,11 @@
 - (IBAction)showDirections:(UIButton *)sender
 {
     [self.choosy handleAction:[ChoosyActionContext actionContextWithAppType:@"Maps"
-                                                              action:@"directions"
-                                                          parameters:@{@"end_address" :
-                                                @"25 Taylor St, San Francisco, CA 94102"}]];
+                                                                     action:@"directions"
+                                                                 parameters:@{@"end_address" :
+                                                   @"25 Taylor St, San Francisco, CA 94102",
+                                                              @"callback_url" : @"choosy://",
+                                                              @"callback_name" : @"Choosy"}]];
 }
 
 - (IBAction)showInBrowser

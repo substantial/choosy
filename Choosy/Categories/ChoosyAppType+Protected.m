@@ -23,9 +23,9 @@
     NSArray *lastDetectedAppKeys = [ChoosyLocalStore lastDetectedAppKeysForAppTypeWithKey:self.key];
     
     for (ChoosyAppInfo *app in self.apps) {
-        if ([[UIApplication sharedApplication] canOpenURL:app.appURLScheme]) {
-            app.isInstalled = YES;
-            app.isNew = ![lastDetectedAppKeys containsObject:app.appKey];
+        app.isInstalled = [[UIApplication sharedApplication] canOpenURL:app.appURLScheme];
+        app.isNew = ![lastDetectedAppKeys containsObject:app.appKey];
+        if (app.isInstalled) {
             [app update];
         }
     }

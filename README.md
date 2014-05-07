@@ -1,15 +1,13 @@
 Choosy
 ==================
 
-FOREWORD: Thank you everyone who found and starred this before our public beta reveal this Wednesday. Please note that we're in heavy work mode for the next two-three days, adding data and fine-tuning the API. We expect things to stabilize by Wed or Thursday once we make public announcement about this framework. Thanks so, so much for your support!
-
 Choosy is an app-agnostic interface to communication with other apps installed on a device. With Choosy, you can define an action and let your users pick from their installed apps that support that action with just one line of code.
 
 Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters for the type of app you're linking to ('type' means Twitter, Maps, Browser, Email, etc.). Choosy takes care of detecting installed apps of that type and which parameters each app supports, creating a proper URL for each app based on the supported parameters and app-specific parameter names, and executing that URL to open the app.
 
 Choosy works with both native apps and web view-based apps. It also supports selection of a favorite app for a given app type so that your users do not have to pick the same app every time.
 
-For more overview, please see [Substantial's blog post(TODO)]() introducing Choosy. To stay informed about new releases and any API changes, please follow [@choosyios](http://www.twitter.com/choosyios) on Twitter.
+For more overview, please see [Substantial's blog post(TODO)]() introducing Choosy. To stay informed about new releases and any API changes, please follow [@choosyios](http://www.twitter.com/choosyios) on Twitter.   To see supported URL schemes or make URL scheme contributions check out the [choosy-data](https://github.com/substantial/choosy-data) repo.
 
 ##Installing
 
@@ -151,7 +149,7 @@ We'll see if iOS 8 mitigates our data-sharing woes! :)
 
 ## Examples
 
-We have a [short video with code](http://choosy.substantial.com). For raw, up-to-date information on supported apps, actions, and aparameters see [the choosy-data repository](https://github.com/substantial/choosy-data). We hope to have a site that auto-generates documentation based on the raw files up and running by 1.0.
+We have a [short video with code](http://choosy.substantial.com). For raw, up-to-date information on supported apps, actions, and aparameters see the [choosy-data](https://github.com/substantial/choosy-data) repository. We hope to have a site that auto-generates documentation based on the raw files up and running by 1.0.
 
 > More examples coming soon to this section!
 
@@ -321,3 +319,5 @@ Under development now:
 We would _love_ your help with the items above! You're awesome.
 
 Code critiques, pull requests, and ideas are more than welcome! Let's make native inter-app linking as easy as it can be, at least within 3rd-party apps. You can also contact us at choosy@substantial.com.
+
+To contribute new url schemes or updates to url schemes submit pull requests to the [choosy-data](https://github.com/substantial/choosy-data) repository.

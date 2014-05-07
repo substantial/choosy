@@ -7,7 +7,7 @@ Instead of writing code specific to each app you want to support (this includes 
 
 Choosy works with both native apps and web view-based apps. It also allows users to select a favorite app for a given app type, so that they do not have to pick the app every time they're performing the same action.
 
-For more overview, please see [Substantial's blog post(TODO)]() introducing Choosy. To stay informed about new releases and any API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
+For more overview, please see [Substantial's blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/) introducing Choosy. To stay informed about new releases and any API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 
 ##Installing
 

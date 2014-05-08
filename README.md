@@ -17,7 +17,7 @@ Choosy is an app-agnostic interface to communicate with other apps installed on 
 
 to get automatic support for popular Twitter clients (screenshots are from the included Demo app): 
 
-![Opening Twitter link](https://farm3.staticflickr.com/2938/13952473947_f78c23cd64_c.jpg) 
+![Opening Twitter link](https://farm3.staticflickr.com/2938/13952473947_f78c23cd64_c.jpg) <br/>
 ([click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif version)
 
 Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters. Choosy detects installed apps of that type and knows which parameters each app supports, passing only the supported parameters to each app.

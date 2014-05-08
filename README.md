@@ -11,7 +11,7 @@ Choosy is an app-agnostic interface to communicate with other apps installed on 
 - (void)viewDidLoad:
 {
   self.choosy = [Choosy new];
-  [self.choosy registerUIElement:self.elonMuskTwitterButton
+  [self.choosy registerUIElement:self.myTwitterButton
                        forAction:[ChoosyActionContext actionContextWithAppType:@"Twitter"
                                                                         action:@"show_profile"
                                                                     parameters:@{@"profile_screenname" : @"KarlTheFog", 

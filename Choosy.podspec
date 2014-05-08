@@ -9,7 +9,12 @@ Pod::Spec.new do |s|
   s.authors      = { "Alex Novosad" => "alexn@substantial.com" }
   s.social_media_url   = "https://twitter.com/choosyios"
   s.description  = <<-DESC
-                   An app-agnostic interface for transferring users to other apps, with elegant UI.
+                   Choosy lets you write short, app-agnostic code to execute external actions 
+                   such as showing Twitter profiles, opening web links, displaying directions, 
+                   composing an email message, etc. 
+
+                   Your users will love being able to jump from one favorite app to another, 
+                   and your app will stand out for them as the one that gives them the freedom of choice. 
                    DESC
   s.screenshots  = [ "https://farm6.staticflickr.com/5321/14140880604_905415ed34_o.png", 
   "https://farm3.staticflickr.com/2917/13953998699_0e885b9b71_o.png", 

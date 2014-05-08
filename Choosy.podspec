@@ -26,5 +26,5 @@ Pod::Spec.new do |s|
   s.resource_bundle = { "ChoosyResources" => "Choosy/Resources/*" }
   s.requires_arc = true
 
-  s.dependency = 'Mantle'
+  s.dependency 'Mantle', '< 2.0'
 end

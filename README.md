@@ -1,17 +1,30 @@
 Choosy (Beta)
 ==================
 
-Choosy is an app-agnostic interface to communicate with other apps installed on a device. With Choosy, you can specify an action such as "Show Twitter Profile" and have your users pick a Twitter client from a list of installed clients with just one line of code.
+Choosy is an app-agnostic interface to communicate with other apps installed on a device. With Choosy, you can write one line of code:  
 
-Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters for the type of app you're linking to ('type' means Twitter, Maps, Browser, Email, etc.). Choosy detects installed apps of that type and knows which parameters each app supports, passing only the supported parameters to each app.
+```objc
+- (void)viewDidLoad:
+{
+  self.choosy = [Choosy new];
+  [self.choosy registerUIElement:self.elonMuskTwitterButton
+                       forAction:[ChoosyActionContext actionContextWithAppType:@"Twitter"
+                                                                        action:@"show_profile"
+                                                                    parameters:@{@"profile_screenname" : @"KarlTheFog", 
+                                                                    			 @"callback_url" : @"yourappurl:"]];
+}
+```
 
-Choosy works with both native apps and web view-based apps. It also allows users to select a favorite app for a given app type, so that they do not have to pick the app every time they're performing the same action.
+to get automatic support for popular Twitter clients (screenshots are from the included Demo app): 
 
-For more overview, please see [Substantial's blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/) introducing Choosy. To stay informed about new releases and any API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
+![Opening Twitter link](https://farm3.staticflickr.com/2938/13952473947_f78c23cd64_c.jpg) 
+([click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif version)
 
-Screenshot of Choosy UI after tapping an e-mail link:
+Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters. Choosy detects installed apps of that type and knows which parameters each app supports, passing only the supported parameters to each app.
 
-![Choosy in Distiller](https://farm3.staticflickr.com/2900/14153619993_c7049500a2_z.jpg)
+Choosy allows users to select a favorite app, so they do not have to pick the app every time ([click here](https://farm8.staticflickr.com/7391/14115656296_ba32a6b45e_o.gif) for a gif showing the gesture).
+
+For more intro, please see [Substantial's blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/). To stay informed about new releases and API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 
 ##Installing
 
@@ -40,7 +53,7 @@ and registering a UI component, such as a UIButton that links to someone's Twitt
   [self.choosy registerUIElement:self.elonMuskTwitterButton
                        forAction:[ChoosyActionContext actionContextWithAppType:@"Twitter"
                                                                         action:@"show_profile"
-                                                                    parameters:@{ @"profile_screenname" : @"elonmusk"]];
+                                                                    parameters:@{ @"profile_screenname" : @"KarlTheFog"]];
 }
 ```
 

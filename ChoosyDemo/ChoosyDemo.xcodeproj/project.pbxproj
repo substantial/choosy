@@ -153,8 +153,8 @@
 		D9BDA8D318F34F2800796547 /* ChoosyActionContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoosyActionContext.h; sourceTree = "<group>"; };
 		D9BDA8D418F34F2800796547 /* ChoosyActionContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoosyActionContext.m; sourceTree = "<group>"; };
 		D9BDA8D518F34F2800796547 /* ChoosyPickerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoosyPickerDelegate.h; sourceTree = "<group>"; };
-		D9BDA8D618F34F2800796547 /* ChoosyRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoosyRegister.h; sourceTree = "<group>"; };
-		D9BDA8D718F34F2800796547 /* ChoosyRegister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoosyRegister.m; sourceTree = "<group>"; };
+		D9BDA8D618F34F2800796547 /* ChoosyRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChoosyRegister.h; path = ../Api/ChoosyRegister.h; sourceTree = "<group>"; };
+		D9BDA8D718F34F2800796547 /* ChoosyRegister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChoosyRegister.m; path = ../Api/ChoosyRegister.m; sourceTree = "<group>"; };
 		D9BDA8D918F34F2800796547 /* NSArray+ObjectiveSugar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ObjectiveSugar.h"; sourceTree = "<group>"; };
 		D9BDA8DA18F34F2800796547 /* NSArray+ObjectiveSugar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+ObjectiveSugar.m"; sourceTree = "<group>"; };
 		D9BDA8DB18F34F2800796547 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
@@ -358,8 +358,6 @@
 				D9BDA8D318F34F2800796547 /* ChoosyActionContext.h */,
 				D9BDA8D418F34F2800796547 /* ChoosyActionContext.m */,
 				D9BDA8D518F34F2800796547 /* ChoosyPickerDelegate.h */,
-				D9BDA8D618F34F2800796547 /* ChoosyRegister.h */,
-				D9BDA8D718F34F2800796547 /* ChoosyRegister.m */,
 				D91498771912F0BC003D55BC /* ChoosyGlobals.h */,
 				D91498781912F0BC003D55BC /* ChoosyGlobals.m */,
 			);
@@ -463,6 +461,8 @@
 		D9BDA91A18F34F2900796547 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				D9BDA8D618F34F2800796547 /* ChoosyRegister.h */,
+				D9BDA8D718F34F2800796547 /* ChoosyRegister.m */,
 				D914987B191449B5003D55BC /* UrlParsing */,
 				D9BDA91B18F34F2900796547 /* Reachability.h */,
 				D9BDA91C18F34F2900796547 /* Reachability.m */,

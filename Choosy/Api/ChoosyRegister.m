@@ -75,10 +75,11 @@ static dispatch_once_t once_token;
         }
         
         if (appType) {
+            // add app type we got so far to in-memory collection - download can fail
+            [self addAppType:appType];
+            
             if (appType.needsUpdate) {
                 [weakSelf downloadAppTypeWithKey:appType.key];
-            } else {
-                [self addAppType:appType];
             }
         } else {
             [self downloadAppTypeWithKey:appTypeKey];

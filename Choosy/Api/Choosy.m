@@ -108,16 +108,15 @@
         [appType takeStockOfApps];
         
         // get app to use for this action
-        [weakSelf appForAction:actionContext then:^(ChoosyAppInfo *appInfo)
-         {
-             if (appInfo && !CHOOSY_ALWAYS_DISPLAY_PICKER) {
-                 // we know which app to use for the action
-                 [weakSelf executeAction:actionContext forAppWithKey:appInfo.appKey];
-             } else {
-                 // we don't know, so ask user to pick an app
-                 [weakSelf showAppPickerForAction:actionContext appType:appType];
-             }
-         }];
+        ChoosyAppInfo *appInfo = [weakSelf defaultAppForAppType:appType];
+        
+        if (appInfo && !CHOOSY_ALWAYS_DISPLAY_PICKER) {
+            // we know which app to use for the action
+            [weakSelf executeAction:actionContext forAppWithKey:appInfo.appKey];
+        } else {
+            // we don't know, so ask user to pick an app
+            [weakSelf showAppPickerForAction:actionContext appType:appType];
+        }
     } ifNotFound:^{
         NSLog(@"Cannot handle action '%@', app type '%@' not found/registered.", actionContext.actionKey, actionContext.appTypeKey);
     }];
@@ -144,20 +143,14 @@
 
 #pragma mark - Private
 
-- (NSURL *)urlForAction:(ChoosyActionContext *)actionContext targetingApp:(NSString *)appKey appType:(ChoosyAppType *)appType
+- (NSURL *)urlForAction:(ChoosyActionContext *)actionContext targetingApp:(ChoosyAppInfo *)appInfo inAppType:(ChoosyAppType *)appType
 {
-    ChoosyAppInfo *app = [appType findAppInfoWithAppKey:appKey];
-    
-    if (!app) {
-        NSLog(@"The app type '%@' does not list an app with key '%@'.", actionContext.appTypeKey, appKey);
-    }
-    
     // does the app support this action?
-    ChoosyAppAction *action = [app findActionWithKey:actionContext.actionKey];
+    ChoosyAppAction *action = [appInfo findActionWithKey:actionContext.actionKey];
     
     NSURL *url = [self urlForAction:action withActionParameters:actionContext.parameters appTypeParameters:appType.parameters];
     
-    return url ? url : app.appURLScheme;
+    return url ? url : appInfo.appURLScheme;
 }
 
 - (NSURL *)urlForAction:(ChoosyAppAction *)action withActionParameters:(NSDictionary *)actionParameters appTypeParameters:(NSArray *)appTypeParameters
@@ -329,51 +322,52 @@
 
 #pragma mark Default App and App Detection
 
-- (void)appForAction:(ChoosyActionContext *)actionContext then:(void(^)(ChoosyAppInfo *appInfo))block
+- (ChoosyAppInfo *)defaultAppForAppType:(ChoosyAppType *)appType
 {
-    [[ChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(ChoosyAppType *appType)
+    // check if new apps were installed for app type since last time default app was selected
+    BOOL newAppsInstalled = [[appType.apps select:^BOOL(id object) {
+        return ((ChoosyAppInfo *)object).isNew;
+    }] count] > 0;
+    
+    ChoosyAppInfo *appToOpen = appType.defaultApp;
+    
+    // if default app is no longer installed or we detected new apps, don't have an app to return...
+    // unless there's just one app!
+    if (!appToOpen && [appType.installedApps count] == 1) {
+        return appType.installedApps[0];
+    }
+    
+    if (!appToOpen.isInstalled || newAppsInstalled)
     {
-        // check if new apps were installed for app type since last time default app was selected
-        BOOL newAppsInstalled = [[appType.apps select:^BOOL(id object) {
-            return ((ChoosyAppInfo *)object).isNew;
-        }] count] > 0;
-        
-        ChoosyAppInfo *appToOpen = appType.defaultApp;
-        
-        // if default app is no longer installed or we detected new apps, don't have an app to return...
-        // unless there's just one app!
-        if (!appToOpen && [appType.installedApps count] == 1) {
-            if (block) {
-                block(appType.installedApps[0]);
-                return;
-            }
-        }
-        
-        if (!appToOpen.isInstalled || newAppsInstalled)
-        {
-            if (block) {
-                block(nil);
-                return;
-            }
-        }
-        
-        if (block) {
-            block(appToOpen); // will be nil if no default app is found for this app type
-            return;
-        }
-    } ifNotFound:nil];
+        return nil;
+    }
+    
+    return appToOpen; // will be nil if no default app is found for this app type
 }
 
 - (void)executeAction:(ChoosyActionContext *)actionContext forAppWithKey:(NSString *)appKey
 {
     __weak Choosy *weakSelf = self;
-    [[ChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(ChoosyAppType *appType) {
-        // create the URL to be called
-        NSURL *url = [weakSelf urlForAction:actionContext targetingApp:appKey appType:appType];
-        
-        // call the URL
-        [[UIApplication sharedApplication] openURL:url];
+    [[ChoosyRegister sharedInstance] findAppTypeWithKey:actionContext.appTypeKey andIfFound:^(ChoosyAppType *appType)
+    {
+        [weakSelf executeActionContext:actionContext forAppType:appType usingAppWithKey:appKey];
     } ifNotFound:nil];
+}
+
+- (void)executeActionContext:(ChoosyActionContext *)actionContext forAppType:(ChoosyAppType *)appType usingAppWithKey:(NSString *)appKey
+{
+    ChoosyAppInfo *appInfo = [appType findAppInfoWithAppKey:appKey];
+    
+    if (!appInfo) {
+        NSLog(@"The app type '%@' does not list an app with key '%@'.", appType.key, appKey);
+        return;
+    }
+    
+    // create the URL to be called
+    NSURL *url = [self urlForAction:actionContext targetingApp:appInfo inAppType:appType];
+    
+    // call the URL
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 - (ChoosyUIElementRegistration *)findRegistrationInfoForUIElement:(id)uiElement

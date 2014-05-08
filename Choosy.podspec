@@ -25,4 +25,6 @@ Pod::Spec.new do |s|
   s.source_files  = "Choosy", "Choosy/**/*.{h,m}", "Choosy/*.{h,m}"
   s.resource_bundle = { "ChoosyResources" => "Choosy/Resources/*" }
   s.requires_arc = true
+
+  s.dependency = 'Mantle'
 end

@@ -5,7 +5,6 @@
 #import "ChoosyPickerViewModel.h"
 #import "NSThread+Helpers.h"
 #import "SBReversibleAnimation.h"
-#import "NSArray+ObjectiveSugar.h"
 //#import "ChoosyPickerView.h"
 
 @interface ChoosyAppCell : UICollectionViewCell
@@ -352,16 +351,12 @@ static CGFloat _appsRowGapBetweenApps = 10;
         [self.animationsForSettingDefaultApp addObject:fadeAppOutAnimation];
     }
     
-    [self.animationsForSettingDefaultApp each:^(id object) {
-        [((SBReversibleAnimation *)object) start];
-    }];
+    [self.animationsForSettingDefaultApp makeObjectsPerformSelector:@selector(start)];
  }
 
 - (void)stopSettingDefaultAppAnimation:(ChoosyAppCell *)cell
 {
-    [self.animationsForSettingDefaultApp each:^(id object) {
-        [((SBReversibleAnimation *)object) reverse];
-    }];
+    [self.animationsForSettingDefaultApp makeObjectsPerformSelector:@selector(reverse)];
     
     [self.animationsForSettingDefaultApp removeAllObjects];
 }
@@ -391,17 +386,19 @@ static CGFloat _appsRowGapBetweenApps = 10;
 	ChoosyAppCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
 	
 	cell.appInfo = self.viewModel.appTypeInfo.installedApps[(NSUInteger)indexPath.row];
-	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
-        return [object isKindOfClass:[UITapGestureRecognizer class]];
-    }];
+	NSArray *tapGestureRecognizersAttachedToCell = [cell.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject isKindOfClass:[UITapGestureRecognizer class]];
+    }]];
+                                                    
 	if ([tapGestureRecognizersAttachedToCell count] == 0) {
 		[cell addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(appTapped:)]];
 	}
     
     if (self.viewModel.allowDefaultAppSelection) {
-        NSArray *longPressGestureRecognizersAttachedToCell = [cell.gestureRecognizers select:^BOOL(id object) {
-            return [object isKindOfClass:[UILongPressGestureRecognizer class]];
-        }];
+        NSArray *longPressGestureRecognizersAttachedToCell = [cell.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return [evaluatedObject isKindOfClass:[UILongPressGestureRecognizer class]];
+        }]];
+        
         if ([longPressGestureRecognizersAttachedToCell count] == 0) {
             [cell addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(appLongPressed:)]];
         }

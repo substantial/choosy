@@ -8,7 +8,6 @@
 #import "ChoosyAppTypeParameter.h"
 #import "ChoosyPickerViewModel.h"
 #import "ChoosyRegister.h"
-#import "NSArray+ObjectiveSugar.h"
 #import "UIView+Helpers.h"
 #import "UIView+Screenshot.h"
 #import "NSThread+Helpers.h"
@@ -325,9 +324,7 @@
 - (ChoosyAppInfo *)defaultAppForAppType:(ChoosyAppType *)appType
 {
     // check if new apps were installed for app type since last time default app was selected
-    BOOL newAppsInstalled = [[appType.apps select:^BOOL(id object) {
-        return ((ChoosyAppInfo *)object).isNew;
-    }] count] > 0;
+    BOOL newAppsInstalled = [appType.newApps count] > 0;
     
     ChoosyAppInfo *appToOpen = appType.defaultApp;
     

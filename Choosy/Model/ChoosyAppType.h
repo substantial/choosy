@@ -28,6 +28,7 @@
  *  @return Array of ChoosyAppInfo objects representing installed apps, or nil if none are installed.
  */
 - (NSArray *)installedApps;
+- (NSArray *)newApps;
 - (ChoosyAppInfo *)defaultApp;
 
 + (ChoosyAppType *)filterAppTypesArray:(NSArray *)appTypes byKey:(NSString *)appTypeKey;

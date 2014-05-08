@@ -7,7 +7,6 @@
 //
 
 #import "ChoosyUrlParserTwitter.h"
-#import "NSArray+ObjectiveSugar.h"
 
 @implementation ChoosyUrlParserTwitter
 
@@ -20,13 +19,14 @@
     
     NSMutableDictionary *parameters = [NSMutableDictionary new];
     
-    NSArray *pathComponents = [[url pathComponents] reject:^BOOL(id object) {
-        if ([(NSString *)object isEqualToString:@"/"]) {
-            return YES;
+    NSMutableArray *pathComponents = [NSMutableArray new];
+    for (NSString *pathComponent in [url pathComponents]) {
+        if ([pathComponent isEqualToString:@"/"]) {
+            continue;
         }
         
-        return NO;
-    }];
+        [pathComponents addObject:pathComponent];
+    }
     
     if ([pathComponents count] == 1) {
         actionContext.actionKey = @"show_profile";

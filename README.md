@@ -57,7 +57,7 @@ and registering a UI component, such as a UIButton that links to someone's Twitt
   [self.choosy registerUIElement:self.elonMuskTwitterButton
                        forAction:[ChoosyActionContext actionContextWithAppType:@"Twitter"
                                                                         action:@"show_profile"
-                                                                    parameters:@{ @"profile_screenname" : @"KarlTheFog"]];
+                                                                    parameters:@{ @"profile_screenname" : @"elonmusk"]];
 }
 ```
 

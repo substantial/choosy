@@ -1,4 +1,4 @@
-Choosy
+Choosy (Beta)
 ==================
 
 Choosy is an app-agnostic interface to communicate with other apps installed on a device. With Choosy, you can specify an action such as "Show Twitter Profile" and have your users pick a Twitter client from a list of installed clients with just one line of code.

@@ -91,6 +91,8 @@ After your long-press gesture-handling code, you need to call a different method
                                                                                    parameters:@{ @"profile_screenname" : @"elonmusk"]];
 ```
 
+This will both reset the default app selection for Twitter app type, and display the app picker UI.
+
 ### The early bird gets the worm
 
 The very first time Choosy hears about an app type, it goes and downloads information about it. That's near-instantaneous on any decent connection, and data is cached after the initial download, but what if first-time users are experiencing a slow connection? It's therefore best to tell Choosy as early as possible in the app lifecycle about all the various app types you will link to, such as in the app delegate. This will not block the main thread:

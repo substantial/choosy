@@ -1,6 +1,10 @@
 Choosy (Beta)
 ==================
 
+[Substantial's introductory blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/).
+
+[Choosy official web site and video](http://choosy.substantial.com).
+
 Choosy is an app-agnostic interface to communicate with other apps installed on a device. With Choosy, you can write one line of code:  
 
 ```objc
@@ -24,7 +28,7 @@ Instead of writing code specific to each app you want to support (this includes 
 
 Choosy allows users to select a favorite app, so they do not have to pick the app every time ([click here](https://farm8.staticflickr.com/7391/14115656296_ba32a6b45e_o.gif) for a gif showing the gesture).
 
-For more intro, please see [Substantial's blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/). To stay informed about new releases and API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
+To stay informed about new releases and API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 
 ##Installing
 

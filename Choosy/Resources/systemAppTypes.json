@@ -1,157 +1,216 @@
 [{
-  "name" : "Email",
-  "key" : "email",
-  "parameters" :
-  [{
-    "name" : "Body Text",
-    "description" : "Text to insert into the body of a new email",
-    "key" : "body"
-   },
-   {
-    "name" : "Recipients - To",
-    "description" : "Recipient(s) email address(ses)",
-    "key" : "to"
-   },
-   {
-    "name" : "Recipients - CC",
-    "description" : "Email addresses to CC (copy)",
-    "key" : "cc"
-   },
-   {
-   "name" : "Subject",
-   "description" : "Email subject",
-   "key" : "subject"
-   }],
-  "actions" :
-  [{
-    "name" : "Compose",
-    "key" : "compose"
-   }],
-  "apps" :
-  [{
-    "name" : "Mail",
-    "key" : "mail",
-    "app_url_scheme" : "mailto:",
+    "name" : "Email",
+    "key" : "email",
+    "parameters" :
+    [{
+        "name" : "Body Text",
+        "description" : "Text to insert into the body of a new email",
+        "key" : "body"
+    },
+    {
+        "name" : "Recipients - To",
+        "description" : "Recipient(s) email address(ses)",
+        "key" : "to"
+    },
+    {
+        "name" : "Recipients - CC",
+        "description" : "Email addresses to CC (copy)",
+        "key" : "cc"
+    },
+    {
+        "name" : "Subject",
+        "description" : "Email subject",
+        "key" : "subject"
+    }],
     "actions" :
-   [{
-    "key" : "compose",
-    "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
-    }]
-   }]
-},
-{
+    [{
+        "name" : "Compose",
+        "key" : "compose"
+     }],
+    "apps" :
+    [{
+        "name" : "Mail",
+        "key" : "mail",
+        "app_url_scheme" : "mailto:",
+        "actions" :
+        [{
+        "key" : "compose",
+        "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
+         }]
+     }]
+ },
+ {
     "name" : "Twitter",
     "key" : "twitter",
     "parameters" :
         [{
-         "name" : "Text",
-         "description" : "Text to insert into the new tweet textbox",
-         "key" : "text"
+             "name" : "Text",
+             "description" : "Text to insert into the new tweet textbox",
+             "key" : "text"
          },
          {
-         "name" : "Profile Username",
-         "description" : "Username of the profile to be shown",
-         "key" : "profile_screenname",
+             "name" : "Url",
+             "description" : "Url to add to the new tweet textbox",
+             "key" : "url_in_tweet"
+         },
+         {
+             "name" : "Tweet ID",
+             "description" : "ID of the tweet you're referencing",
+             "key" : "reference_tweet_id"
+         },
+         {
+             "name" : "Via",
+             "description" : "A screenname to associate with a tweet (without the at symbol)",
+             "key" : "via"
+         },
+         {
+             "name" : "Hashtags",
+             "description" : "Hashtags realted to tweet action, separated by comma (omit the # symbol)",
+             "key" : "hashtags"
+         },
+         {
+             "name" : "Related Usernames",
+             "description" : "Suggest accounts related to the your content or intention by comma-separating a list of screen names. You can provide a brief description of how the account relates by following the screenname with a colon and text. Both the colon and the text should be URL-encoded.",
+             "key" : "related"
+         },
+         {
+             "name" : "Profile Username",
+             "description" : "Username of a twitter profile, ex: elonmusk",
+             "key" : "profile_screenname"
+         },
+         {
+             "name" : "User Id",
+             "description" : "User ID of a twitter profile, ex: 3308337",
+             "key" : "user_id"
+         },
+         {
+             "name" : "Callback URL",
+             "description" : "URL of the app to go back to when action is done",
+             "key" : "callback_url"
          }],
     "actions" :
         [{
-        "name" : "Show Profile",
-        "key" : "show_profile"
-        }],
+            "name" : "Show Profile",
+            "key" : "show_profile"
+         },
+         {
+            "name" : "Post Tweet",
+            "key" : "post"
+         },
+         {
+             "name" : "Retweet a tweet",
+             "key" : "retweet"
+         },
+         {
+             "name" : "Favorite a tweet",
+             "key" : "favorite"
+         }],
     "apps" :
         [{
-         "name" : "Safari",
-         "key" : "safari",
-         "app_url_scheme" : "http://www.twitter.com",
-         "actions" :
-        [{
-            "key" : "show_profile",
-            "url_format" : "http://www.twitter.com/{{profile_screenname}}"
-        }]
+            "name" : "Safari",
+            "key" : "safari",
+            "app_url_scheme" : "http://www.twitter.com",
+            "actions" :
+            [{
+                "key" : "show_profile",
+                "url_format" : "http://www.twitter.com/{{profile_screenname}}"
+             },
+             {
+                "key" : "post",
+                "url_format": "https://twitter.com/intent/tweet?text={{text}}&url={{url_in_tweet}}&via={{via}}&hashtags={{hashtags}}&related={{related}}"
+             },
+             {
+                 "key" : "retweet",
+                 "url_format": "https://twitter.com/intent/retweet?tweet_id={{reference_tweet_id}}&related={{related}}"
+             },
+             {
+                 "key" : "favorite",
+                 "url_format": "https://twitter.com/intent/favorite?tweet_id={{reference_tweet_id}}&related={{related}}"
+             }]
         },
         {
-         "name" : "Twitter",
-         "key" : "twitter",
-         "app_url_scheme" : "twitter://",
-         "actions" :
+            "name" : "Twitter",
+            "key" : "twitter",
+            "app_url_scheme" : "twitter:",
+            "actions" :
             [{
-            "key" : "tweet",
-            "url_format" : "twitter://"
+                "key" : "tweet",
+                "url_format" : "twitter://"
             }]
         }]
-},
-{
-  "name" : "Maps",
-  "key" : "maps",
-  "parameters" :
-  [{
-   "name" : "Search Query",
-   "description" : "Name of business or address to search for",
-   "key" : "query"
-   },
-   {
-   "name" : "Start Location",
-   "description" : "",
-   "key" : "start_address"
-   },
-   {
-   "name" : "Destination Location",
-   "description" : "",
-   "key" : "end_address"
-   },
-   {
-   "name" : "Map Mode",
-   "description" : "Such as hybrid, sattelite, etc.",
-   "key" : "map_mode"
-   }],
-  "actions" :
-  [{
-   "name" : "Get Directions",
-   "key" : "directions"
-   }],
-  "apps" :
-  [{
-   "name" : "Maps",
-   "key" : "maps",
-   "app_url_scheme" : "http://maps.apple.com/?q",
-   "actions" :
-   [{
-    "key" : "directions",
-    "url_format" : "http://maps.apple.com/?q=&daddr={{end_address}}&saddr={{start_address}}"
-    }]
-   }]
-},
-{
-   "name" : "Browser",
-   "key" : "browser",
-   "parameters" :
-   [{
-    "name" : "Url Without Scheme",
-    "description" : "Destination url, without the scheme (without the http or https part)",
-    "key" : "url_no_scheme"
-    }],
-   "actions" :
-   [{
-    "name" : "Browse via HTTP",
-    "key" : "browse_http"
-    },
-    {
-    "name" : "Browse via HTTPS",
-    "key" : "browse_https"
-    }],
-   "apps" :
-   [{
-    "name" : "Safari",
-    "key" : "safari",
-    "app_url_scheme" : "http://",
-    "actions" :
+ },
+ {
+    "name" : "Maps",
+    "key" : "maps",
+    "parameters" :
     [{
-     "key" : "browse_http",
-     "url_format" : "http://{{url_no_scheme}}"
+        "name" : "Search Query",
+        "description" : "Name of business or address to search for",
+        "key" : "query"
      },
      {
-     "key" : "browse_https",
-     "url_format" : "https://{{url_no_scheme}}"
+        "name" : "Start Location",
+        "description" : "",
+        "key" : "start_address"
+     },
+     {
+        "name" : "Destination Location",
+        "description" : "",
+        "key" : "end_address"
+     },
+     {
+        "name" : "Map Mode",
+        "description" : "Such as hybrid, sattelite, etc.",
+        "key" : "map_mode"
+     }],
+    "actions" :
+    [{
+        "name" : "Get Directions",
+        "key" : "directions"
+     }],
+    "apps" :
+    [{
+        "name" : "Maps",
+        "key" : "maps",
+        "app_url_scheme" : "http://maps.apple.com/?q",
+        "actions" :
+        [{
+            "key" : "directions",
+            "url_format" : "http://maps.apple.com/?q=&daddr={{end_address}}&saddr={{start_address}}"
+         }]
      }]
-    }]
+ },
+ {
+    "name" : "Browser",
+    "key" : "browser",
+    "parameters" :
+     [{
+        "name" : "Url Without Scheme",
+        "description" : "Destination url, without the scheme (without the http or https part)",
+        "key" : "url_no_scheme"
+      }],
+     "actions" :
+     [{
+        "name" : "Browse via HTTP",
+        "key" : "browse_http"
+      },
+      {
+        "name" : "Browse via HTTPS",
+        "key" : "browse_https"
+      }],
+    "apps" :
+     [{
+        "name" : "Safari",
+        "key" : "safari",
+        "app_url_scheme" : "http://",
+        "actions" :
+        [{
+            "key" : "browse_http",
+            "url_format" : "http://{{url_no_scheme}}"
+         },
+         {
+            "key" : "browse_https",
+            "url_format" : "https://{{url_no_scheme}}"
+         }]
+      }]
 }]

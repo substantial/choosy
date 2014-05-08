@@ -44,8 +44,22 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
         ChoosyAppType *appType = [ChoosyAppType filterAppTypesArray:appTypes byKey:appTypeKey];
         appType.dateUpdated = [NSDate date];
         
-        if (successBlock) {
-            successBlock(appType);
+        if (appType) {
+            if (successBlock) {
+                successBlock(appType);
+            }
+        } else {
+            NSDictionary *userInfo = @{
+                                       NSLocalizedDescriptionKey: NSLocalizedString(@"Download of app type unsuccessful.", nil),
+                                       NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"File for the app type was downloaded, but the app type was not found inside of it.", nil),
+                                       NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"Check that app type key is spelled correctly inside the file", nil)
+                                       };
+            NSError *customError = [NSError errorWithDomain:@"com.substantial.choosy" code:1 userInfo:userInfo];
+            
+            NSLog(@"Download of app type '%@' failed: file for it did download, but app type with that key not found inside.", appTypeKey);
+            if (failureBlock) {
+                failureBlock(customError);
+            }
         }
     }] resume];
 }

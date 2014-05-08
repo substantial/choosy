@@ -203,6 +203,8 @@ static dispatch_once_t once_token;
     [appTypeToAdd takeStockOfApps];
     
     __weak ChoosyRegister *weakSelf = self;
+    // TODO: improve the handling of this so that system app types don't replace downloaded types (potentially)
+    // due to multiple findAppTypeWithKey: being kickd off in registerAppTypeWithKey.
     [self findAppTypeWithKey:appTypeToAdd.key andIfFound:^(ChoosyAppType *existingAppType) {
         NSInteger index = [weakSelf.appTypes indexOfObject:existingAppType];
         weakSelf.appTypes[index] = appTypeToAdd;

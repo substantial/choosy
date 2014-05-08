@@ -63,8 +63,20 @@
     ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
                                                                               action:@"show_profile"
                                                                           parameters:@{ @"profile_screenname" : @"KarlTheFog",
-                                                                                        @"callback_url" : @"choosy://"}
+                                                                                        @"callback_url" : @"choosy://",
+                                                                                        }
                                                                       appPickerTitle:@"Karl the Fog's Timeline"];
+    
+//    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
+//                                                                                action:@"post"
+//                                                                            parameters:@{ @"profile_screenname" : @"KarlTheFog",
+//                                                                                          @"callback_url" : @"choosy://",
+//                                                                                          @"text" : @"Meow",
+//                                                                                          @"related" : @"choosyios",
+//                                                                                          @"via" : @"AlexDaUkrainian",
+//                                                                                          @"url" : @"http://choosy.substantial.com",
+//                                                                                          @"hashtags" : @"freedom,choosy,ios"
+//                                                                                          }];
     [self.choosy registerUIElement:self.twitterButton forAction:twitterAction];
     [self.choosy registerUIElement:self.twitterButtonCustom forAction:twitterAction];
     

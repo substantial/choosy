@@ -46,7 +46,7 @@ Add this to your project's Podfile:
 pod 'Choosy', '< 2.0'
 ```
 
-If you don't use CocoaPods yet, start by following [this guide](https://github.com/AFNetworking/AFNetworking/wiki/Getting-Started-with-AFNetworking) (except replace the `pod 'AFNetworking' ...` with the line above):
+If you don't use CocoaPods yet, start by following [this guide](https://github.com/AFNetworking/AFNetworking/wiki/Getting-Started-with-AFNetworking) (except replace the `pod 'AFNetworking' ...` with the line above).
 
 ### Auto-pilot method
 

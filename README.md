@@ -1,9 +1,9 @@
 Choosy (Beta) [![Build Status](https://travis-ci.org/substantial/choosy.svg)](https://travis-ci.org/substantial/choosy)
 ==================
 
-[Substantial's introductory blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/). (Please share - the goal is to make iOS better and that depends on how many devs implement this.)
+Please share/star/send love if you find this cool - the sole purpose of this labor of love is to improve on average user iOS experience, and that depends entirely on how many 3rd-party devs implement this. <3
 
-[Choosy official web site and video](http://choosy.substantial.com).
+[Introductory blog post and video](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/)
 
 Choosy is an app-agnostic interface to communicate with other apps installed on a device. Choosy also lets your users select their favorite app for the job at hand. 
 

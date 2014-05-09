@@ -1,11 +1,13 @@
 Choosy (Beta)
 ==================
 
-[Substantial's introductory blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/).
+[Substantial's introductory blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/). (Please share - the goal is to make iOS better and that depends on how many devs implement this.)
 
 [Choosy official web site and video](http://choosy.substantial.com).
 
-Choosy is an app-agnostic interface to communicate with other apps installed on a device. With Choosy, you can write one line of code:  
+Choosy is an app-agnostic interface to communicate with other apps installed on a device. Choosy also lets users select their favorite app the job at hand. 
+
+With Choosy, you can write one line of code:  
 
 ```objc
 - (void)viewDidLoad:
@@ -24,23 +26,29 @@ to get automatic support for popular Twitter clients (screenshots are from the i
 ![Opening Twitter link](https://farm3.staticflickr.com/2938/13952473947_f78c23cd64_c.jpg) <br/>
 ([click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif version)
 
-Instead of writing code specific to each app you want to support (this includes 1st-party apps), you pass generic parameters. Choosy detects installed apps of that type and knows which parameters each app supports, passing only the supported parameters to each app.
+Before, you had to write code specific to each app you want to support. With Choosy, you pass generic parameters, once, and get support for all the apps. Choosy detects installed apps and knows which parameters each app supports, passing only the supported parameters to each app.
 
-Choosy allows users to select a favorite app, so they do not have to pick the app every time ([click here](https://farm8.staticflickr.com/7391/14115656296_ba32a6b45e_o.gif) for a gif showing the gesture).
+([Click here](https://farm8.staticflickr.com/7391/14115656296_ba32a6b45e_o.gif) for a gif showing the 'select default app' gesture.
 
-To stay informed about new releases and API changes please follow [@choosyios](http://www.twitter.com/choosyios). To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
+To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 
-##Installing
+## Demo app
 
-You can download this repository and copy the Choosy folder to your project, but the best way to install Choosy is via CocoaPods. If you don't use CocoaPods yet, start by following [this guide](https://github.com/AFNetworking/AFNetworking/wiki/Getting-Started-with-AFNetworking), except replace the `pod 'AFNetworking' ...` line with this:
+To run the demo app, clone this repo and open the `.xcworkspace` file (not the project file). It should build and deploy to your device as-is. If you want to make sure it uses the latest Choosy version, run `pod install` in the top-level folder.
+
+Note on running in the simulator: it's hard to see Choosy in action in the simulator because it barely has any apps (and you can't install any). So links will often launch the one app that's installed. You can, however, long press a link to force the UI to come up.
+
+## How to Implement
+
+Add this to your project's Podfile: 
 
 ```
 pod 'Choosy', '< 2.0'
 ```
 
-## Using
+If you don't use CocoaPods yet, start by following [this guide](https://github.com/AFNetworking/AFNetworking/wiki/Getting-Started-with-AFNetworking) (except replace the `pod 'AFNetworking' ...` with the line above):
 
-###Auto-pilot
+### Auto-pilot method
 
 Using Choosy is as simple as importing the `Choosy.h` header file in your view controller, declaring a property to hold the object:
 
@@ -63,7 +71,7 @@ and registering a UI component, such as a UIButton that links to someone's Twitt
 
 By default, Choosy will attach a tap and long-press gesture recognizers to the button. A tap presents user with app selection if no favorite app is selected; otherwise, it launches the favorite app. Long-press allows users to reset the favorite app setting and pick from installed apps again.
 
-### Manual
+### Manual method
 
 Of course, you may want to execute your own code on tap or long-press. In that case, first register all app types you intend on using:
 
@@ -136,8 +144,6 @@ Let's look at the most verbose initializer:
 
 What you want to do is to pass as many parameters as you need for your best-case scenario. For example, include a callback url even if you are not sure if any apps support it. Choosy will take care of skipping parameters for apps that don't support them.
 
-
-
 ## The Magic
 
 The first time you hook Choosy up, it may feel like black magic. You wrote a line of code and boom, you app supports linking to all major Twitter clients _and_ users can pick their favorite app! How does it know about all the apps? How does it instantly know when user deletes an app or installs a new app? (oh - spoiler alert!)
@@ -154,6 +160,8 @@ Interactions:
 * If the app designated as default/favorite is deleted, the user is presented with choices the next time they tap the link.
 * If an app is designated as default/favorite for a certain app type, and new app of same type is installed (such as a new Twitter client), the user is presented with choices again so they have the opportunity to select the newly installed app.
 
+> For testing, you can set the `CHOOSY_ALWAYS_DISPLAY_PICKER` flag in the `ChoosyGlobals.h` file to 1 - this makes sure that the UI opens every time, regardless (even if the default app is set). Be sure to set it back to 0 before you ship!
+
 ### Caching
 
 Currently, Choosy only checks for new data if the cache is over 24 hours old _or_ `CHOOSY_DEVELOPMENT_MODE` flag is set to 1. The cache period could be configurable in the future.
@@ -161,6 +169,8 @@ Currently, Choosy only checks for new data if the cache is over 24 hours old _or
 ### Downloading
 
 In order to require as few lines of code from you as possible, Choosy is completely automatic when it comes to updating itself. Every time you register an app type or a UI element with Choosy, it kicks off an update process. But even if you have multiple Twitter links that you register at the same time, Choosy will only download Twitter app type data once. It will similarly download app icon for the same app just once, regardless of how many types the app belongs to (for example, Safari is part of both Browser and Twitter app types). If connection drops, Choosy will resume when connection is reestablished.
+
+> For testing, it's convenient to set the `CHOOSY_DEVELOPMENT_MODE` flag in `ChoosyGlobals.h` to 1 - this makes sure that Choosy ignores cache period and attempts to download latest URL schemes on every app launch (specifically, every time an app type is specified via `registerAppTypes:` or `registerUIElement:`).
 
 ## Limitations
 
@@ -170,7 +180,7 @@ Again due to sandboxing, Choosy must store a set of app icons within each app th
 
 We'll see if iOS 8 mitigates our data-sharing woes! :)
 
-## Examples
+## Examples & testing
 
 We have a [short video with code](http://choosy.substantial.com). For raw, up-to-date information on supported apps, actions, and aparameters see the [choosy-data](https://github.com/substantial/choosy-data) repository. We hope to have a site that auto-generates documentation based on the raw files up and running by 1.0.
 
@@ -333,10 +343,14 @@ Moonshots:
 * Safe data exchange between apps
 * UI for adding/editing app information (rather than creating JSON files))
 
+### Stay Informed
+
+To hear about new releases and API changes please follow [@choosyios](http://www.twitter.com/choosyios) on Twitter.
+
 ## Contribute!
 
-We would _love_ your help with the items above! You're awesome.
+We would _love_ your help with the Roadmap above! We know you're awesome.
 
 Code critiques, pull requests, and ideas are more than welcome! Let's make native inter-app linking as easy as it can be, at least within 3rd-party apps. You can also contact us at choosy@substantial.com.
 
-To contribute new url schemes or updates to url schemes submit pull requests to the [choosy-data](https://github.com/substantial/choosy-data) repository.
+Critical to the success of Choosy is the URL schemes database. You can contribute new url schemes or add more actions/parameters to existing url schemes by submitting pull requests to the [choosy-data](https://github.com/substantial/choosy-data) repository.

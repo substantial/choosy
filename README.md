@@ -1,4 +1,4 @@
-Choosy (Beta)
+Choosy (Beta) [![Build Status](https://travis-ci.org/substantial/choosy.svg)](https://travis-ci.org/substantial/choosy)
 ==================
 
 [Substantial's introductory blog post](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/). (Please share - the goal is to make iOS better and that depends on how many devs implement this.)

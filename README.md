@@ -24,11 +24,11 @@ With Choosy, you can write one line of code:
 to get automatic support for popular Twitter clients (screenshots are from the included Demo app): 
 
 ![Opening Twitter link](https://farm3.staticflickr.com/2938/13952473947_f78c23cd64_c.jpg) <br/>
-([click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif version)
+([click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif of Choosy in action)
 
 Before, you had to write code specific to each app you want to support. With Choosy, you pass generic parameters, once, and get support for all the apps. Choosy detects installed apps and knows which parameters each app supports, passing only the supported parameters to each app.
 
-([Click here](https://farm8.staticflickr.com/7391/14115656296_ba32a6b45e_o.gif) for a gif showing the 'select default app' gesture.
+([Click here](https://farm8.staticflickr.com/7391/14115656296_ba32a6b45e_o.gif) for a gif showing the 'select default app' gesture.)
 
 To see supported URL schemes or make URL scheme contributions check out [choosy-data](https://github.com/substantial/choosy-data).
 

@@ -5,7 +5,7 @@ Choosy (Beta)
 
 [Choosy official web site and video](http://choosy.substantial.com).
 
-Choosy is an app-agnostic interface to communicate with other apps installed on a device. Choosy also lets users select their favorite app the job at hand. 
+Choosy is an app-agnostic interface to communicate with other apps installed on a device. Choosy also lets your users select their favorite app for the job at hand. 
 
 With Choosy, you can write one line of code:  
 

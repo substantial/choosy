@@ -1,0 +1,1 @@
+../../Choosy/Choosy/Model/ChoosyAppType.h

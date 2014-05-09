@@ -1,0 +1,1 @@
+../../Choosy/Choosy/ViewModel/ChoosyPickerAppInfo.h

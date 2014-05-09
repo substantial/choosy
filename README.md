@@ -1,7 +1,7 @@
 Choosy (Beta) [![Build Status](https://travis-ci.org/substantial/choosy.svg)](https://travis-ci.org/substantial/choosy)
 ==================
 
-Please share/star/send love if you find this cool - the sole purpose of this is to improve on average user iOS experience, and that depends entirely on how many 3rd-party devs implement this. <3
+Please share/star/send love if you find this cool - the sole purpose of this is to improve on average user iOS experience, and that depends entirely on how many 3rd-party devs implement this. <3 Twitter: [@choosyios](https://twitter.com/choosyios).
 
 [Introductory blog post and video](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/)
 

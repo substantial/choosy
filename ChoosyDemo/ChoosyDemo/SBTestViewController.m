@@ -61,22 +61,21 @@
     [self.choosy registerUIElement:self.navigateButtonCustom forAction:navigateAction];
     
     
-//    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
-//                                                                              action:@"show_profile"
-//                                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
-//                                                                                        @"callback_url" : @"choosy://",
-//                                                                                        }
-//                                                                      appPickerTitle:@"Karl the Fog's Timeline"];
-    
     ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
-                                                                                action:@"post"
-                                                                            parameters:@{ @"profile_screenname" : @"KarlTheFog",
-                                                                                          @"callback_url" : @"choosy:",
-                                                                                          @"text" : @"Meow",
-                                                                                          @"related" : @"choosyios",
-                                                                                          @"via" : @"AlexDaUkrainian",
-                                                                                          @"url" : @"http://choosy.substantial.com",
-                                                                                          @"reference_tweet_id" : @"464973233025196032"}];
+                                                                              action:@"show_profile"
+                                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
+                                                                                        @"callback_url" : @"choosy://",
+                                                                                        }
+                                                                      appPickerTitle:@"Karl the Fog's Timeline"];
+    
+//    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
+//                                                                                action:@"post"
+//                                                                            parameters:@{ @"profile_screenname" : @"KarlTheFog",
+//                                                                                          @"callback_url" : @"choosy:",
+//                                                                                          @"text" : @"Woof",
+//                                                                                          @"related" : @"choosyios",
+//                                                                                          @"via" : @"AlexDaUkrainian",
+//                                                                                          @"url" : @"http://choosy.substantial.com"}];
     [self.choosy registerUIElement:self.twitterButton forAction:twitterAction];
     [self.choosy registerUIElement:self.twitterButtonCustom forAction:twitterAction];
     

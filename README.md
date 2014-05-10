@@ -34,7 +34,7 @@ To see supported URL schemes or make URL scheme contributions check out [choosy-
 
 ## Demo app
 
-To run the demo app, clone this repo and open the `.xcworkspace` file (not the project file). It should build and deploy to your device as-is. 
+To run the demo app, clone this repo and run `pod update` in the directory where Podfile is. When done, open the `.xcworkspace` file (not the project file). It should build and deploy to your device as-is. 
 
 Note on running in the simulator: it's hard to see Choosy in action in the simulator because it barely has any apps (and you can't install any). So links will often launch the one app that's installed. You can, however, long press a link to force the UI to come up.
 

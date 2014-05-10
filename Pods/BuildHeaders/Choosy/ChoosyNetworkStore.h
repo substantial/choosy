@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Logic/ChoosyNetworkStore.h
+../../../Choosy/Logic/ChoosyNetworkStore.h

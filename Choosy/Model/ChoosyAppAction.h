@@ -5,7 +5,7 @@
 
 @interface ChoosyAppAction : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic) NSString *actionKey;
-@property (nonatomic) NSString *urlFormat;
+@property (nonatomic, strong) NSString *actionKey;
+@property (nonatomic, strong) NSString *urlFormat;
 
 @end

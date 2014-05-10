@@ -7,15 +7,15 @@
 
 @interface ChoosyAppType : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSString *key;
-@property (nonatomic) NSArray *parameters;
-@property (nonatomic) NSArray *actions;
-@property (nonatomic) NSArray *apps;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *key;
+@property (nonatomic, strong) NSArray *parameters;
+@property (nonatomic, strong) NSArray *actions;
+@property (nonatomic, strong) NSArray *apps;
 
 // Date the app type was last udpated from the server. If more than X hours old,
 // the object is considered invalid and only used if data cannot be retrieved from server
-@property (nonatomic) NSDate *dateUpdated;
+@property (nonatomic, strong) NSDate *dateUpdated;
 
 /**
  *  Call this once the type is instantiated, including a list of apps, to grab latest data, etc.

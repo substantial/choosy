@@ -15,10 +15,10 @@ extern NSString * const ChoosyDidUpdateAppIconNotification;
 
 @interface ChoosyAppInfo : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic) NSString *appName;
-@property (nonatomic) NSString *appKey;
-@property (nonatomic) NSURL *appURLScheme;
-@property (nonatomic) NSArray *appActions; // of ChoosyAppAction
+@property (nonatomic, strong) NSString *appName;
+@property (nonatomic, strong) NSString *appKey;
+@property (nonatomic, strong) NSURL *appURLScheme;
+@property (nonatomic, strong) NSArray *appActions; // of ChoosyAppAction
 
 @property (nonatomic) BOOL isInstalled;
 @property (nonatomic) BOOL isNew;

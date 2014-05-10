@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Categories/UIView+Helpers.h
+../../../Choosy/Categories/UIView+Helpers.h

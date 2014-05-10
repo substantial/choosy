@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Categories/ChoosyAppInfo+Protected.h
+../../../Choosy/Categories/ChoosyAppInfo+Protected.h

@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Model/ChoosyAppTypeAction.h
+../../../Choosy/Model/ChoosyAppTypeAction.h

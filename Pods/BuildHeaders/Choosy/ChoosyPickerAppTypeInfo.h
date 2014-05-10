@@ -1,1 +1,1 @@
-../../Choosy/Choosy/ViewModel/ChoosyPickerAppTypeInfo.h
+../../../Choosy/ViewModel/ChoosyPickerAppTypeInfo.h

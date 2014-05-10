@@ -41,11 +41,4 @@
     return timeToRefresh;
 }
 
-//- (NSArray *)newlyAddedApps
-//{
-//    return [self.apps select:^BOOL(id object) {
-//        return ((ChoosyAppInfo *)object).isNew;
-//    }];
-//}
-
 @end

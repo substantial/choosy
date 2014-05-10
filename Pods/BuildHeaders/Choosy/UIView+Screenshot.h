@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Categories/UIView+Screenshot.h
+../../../Choosy/Categories/UIView+Screenshot.h

@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Categories/NSThread+Helpers.h
+../../../Choosy/Categories/NSThread+Helpers.h

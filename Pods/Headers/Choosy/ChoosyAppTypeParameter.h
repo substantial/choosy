@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Model/ChoosyAppTypeParameter.h
+../../../Choosy/Model/ChoosyAppTypeParameter.h

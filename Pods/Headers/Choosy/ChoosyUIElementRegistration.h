@@ -1,1 +1,1 @@
-../../Choosy/Choosy/Logic/ChoosyUIElementRegistration.h
+../../../Choosy/Logic/ChoosyUIElementRegistration.h

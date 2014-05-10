@@ -5,7 +5,8 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
-    return @{};
+    return @{ @"isPresenceRequired" : @"presence_required",
+              @"isValueRequired" : @"value_required" };
 }
 
 @end

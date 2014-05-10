@@ -50,33 +50,33 @@
     
     ChoosyActionContext *navigateAction = [ChoosyActionContext actionContextWithAppType:@"Maps"
                                                                                action:@"get_directions"
-                                                                           parameters:@{@"end_address" : @"25 Taylor St, San Francisco, CA 94102",
+                                                                             parameters:@{@"start_address" : @"Current Location",
+                                                                                        @"end_address" : @"25 Taylor St, San Francisco, CA 94102",
                                                                                         @"latitude_longitude" : @"37.782451,-122.410748",
-                                                                                        @"start_navigating" : @"no",
-                                                                                        @"callback_url" : @"choosy://",
+                                                                                        @"start_navigating" : @"yes",
+                                                                                        @"callback_url" : @"choosy:",
                                                                                         @"callback_name" : @"Choosy" }
                                                                        appPickerTitle:@"Directions"];
     [self.choosy registerUIElement:self.navigateButton forAction:navigateAction];
     [self.choosy registerUIElement:self.navigateButtonCustom forAction:navigateAction];
     
     
-    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
-                                                                              action:@"show_profile"
-                                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
-                                                                                        @"callback_url" : @"choosy://",
-                                                                                        }
-                                                                      appPickerTitle:@"Karl the Fog's Timeline"];
-    
 //    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
-//                                                                                action:@"post"
-//                                                                            parameters:@{ @"profile_screenname" : @"KarlTheFog",
-//                                                                                          @"callback_url" : @"choosy://",
-//                                                                                          @"text" : @"Meow",
-//                                                                                          @"related" : @"choosyios",
-//                                                                                          @"via" : @"AlexDaUkrainian",
-//                                                                                          @"url" : @"http://choosy.substantial.com",
-//                                                                                          @"hashtags" : @"freedom,choosy,ios"
-//                                                                                          }];
+//                                                                              action:@"show_profile"
+//                                                                          parameters:@{ @"profile_screenname" : @"KarlTheFog",
+//                                                                                        @"callback_url" : @"choosy://",
+//                                                                                        }
+//                                                                      appPickerTitle:@"Karl the Fog's Timeline"];
+    
+    ChoosyActionContext *twitterAction = [ChoosyActionContext actionContextWithAppType:@"Twitter"
+                                                                                action:@"post"
+                                                                            parameters:@{ @"profile_screenname" : @"KarlTheFog",
+                                                                                          @"callback_url" : @"choosy:",
+                                                                                          @"text" : @"Meow",
+                                                                                          @"related" : @"choosyios",
+                                                                                          @"via" : @"AlexDaUkrainian",
+                                                                                          @"url" : @"http://choosy.substantial.com",
+                                                                                          @"reference_tweet_id" : @"464973233025196032"}];
     [self.choosy registerUIElement:self.twitterButton forAction:twitterAction];
     [self.choosy registerUIElement:self.twitterButtonCustom forAction:twitterAction];
     
@@ -94,7 +94,7 @@
                       forAction:[ChoosyActionContext actionContextWithAppType:@"Browser"
                                                                    action:@"browse"
                                                                parameters:@{@"url" : @"https://www.substantial.com",
-                                                                            @"callback_url" : @"choosy://",
+                                                                            @"callback_url" : @"choosy:",
                                                                             @"callback_name" : @"Choosy" }]];
     
     [self setupAppearance];
@@ -122,7 +122,7 @@
                                                                      action:@"directions"
                                                                  parameters:@{@"end_address" :
                                                    @"25 Taylor St, San Francisco, CA 94102",
-                                                              @"callback_url" : @"choosy://",
+                                                              @"callback_url" : @"choosy:",
                                                               @"callback_name" : @"Choosy"}]];
 }
 

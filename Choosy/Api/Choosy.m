@@ -13,6 +13,7 @@
 #import "NSThread+Helpers.h"
 #import "ChoosyUIElementRegistration.h"
 #import "ChoosyPickerViewController.h"
+#import "ChoosyUrlCreator.h"
 
 @interface Choosy ()
 
@@ -138,37 +139,6 @@
         
         [self resetAppSelectionAndHandleAction:elementRegistration.actionContext];
     }
-}
-
-#pragma mark - Private
-
-- (NSURL *)urlForAction:(ChoosyActionContext *)actionContext targetingApp:(ChoosyAppInfo *)appInfo inAppType:(ChoosyAppType *)appType
-{
-    // does the app support this action?
-    ChoosyAppAction *action = [appInfo findActionWithKey:actionContext.actionKey];
-    
-    NSURL *url = [self urlForAction:action withActionParameters:actionContext.parameters appTypeParameters:appType.parameters];
-    
-    return url ? url : appInfo.appURLScheme;
-}
-
-- (NSURL *)urlForAction:(ChoosyAppAction *)action withActionParameters:(NSDictionary *)actionParameters appTypeParameters:(NSArray *)appTypeParameters
-{
-    NSMutableString *urlString = [action.urlFormat mutableCopy];
-    
-    for (ChoosyAppTypeParameter *appTypeParameter in appTypeParameters) {
-        NSString *parameterValue = @"";
-        NSString *parameterKey = [appTypeParameter.key lowercaseString];
-        if ([actionParameters.allKeys containsObject:parameterKey]) {
-            parameterValue = actionParameters[parameterKey];
-            parameterValue = [parameterValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        }
-        
-        NSString *parameterPlaceholder = [NSString stringWithFormat:@"{{%@}}", parameterKey];
-        [urlString replaceOccurrencesOfString:parameterPlaceholder withString:parameterValue options:NSCaseInsensitiveSearch range:NSMakeRange(0, [urlString length])];
-    }
-    
-    return [NSURL URLWithString:urlString];
 }
 
 #pragma mark - App Picker
@@ -361,7 +331,7 @@
     }
     
     // create the URL to be called
-    NSURL *url = [self urlForAction:actionContext targetingApp:appInfo inAppType:appType];
+    NSURL *url = [ChoosyUrlCreator urlForAction:actionContext targetingApp:appInfo inAppType:appType];
     
     // call the URL
     [[UIApplication sharedApplication] openURL:url];

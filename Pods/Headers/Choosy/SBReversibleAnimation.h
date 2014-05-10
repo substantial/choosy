@@ -1,1 +1,1 @@
-../../Choosy/Choosy/System/SBReversibleAnimation.h
+../../../Choosy/System/SBReversibleAnimation.h

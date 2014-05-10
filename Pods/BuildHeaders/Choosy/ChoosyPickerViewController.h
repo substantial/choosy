@@ -1,1 +1,1 @@
-../../Choosy/Choosy/ChoosyPickerViewController.h
+../../../Choosy/ChoosyPickerViewController.h

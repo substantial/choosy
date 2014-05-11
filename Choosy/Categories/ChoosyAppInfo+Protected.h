@@ -11,5 +11,6 @@
 @interface ChoosyAppInfo (Protected)
 
 - (void)update;
+- (void)mergeUpdatedData:(ChoosyAppInfo *)updatedAppInfo;
 
 @end

@@ -34,8 +34,8 @@
         "app_url_scheme" : "mailto:",
         "actions" :
         [{
-        "key" : "compose",
-        "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
+            "key" : "compose",
+            "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
          }]
      }]
  },
@@ -171,6 +171,10 @@
     [{
         "name" : "Get Directions",
         "key" : "directions"
+     },
+     {
+        "name" : "Search/query",
+        "key" : "search"
      }],
     "apps" :
     [{
@@ -181,6 +185,10 @@
         [{
             "key" : "directions",
             "url_format" : "http://maps.apple.com/?q=&daddr={{end_address}}&saddr={{start_address}}"
+         },
+         {
+            "key" : "search",
+            "url_format" : "http://maps.apple.com/?q={{query}}"
          }]
      }]
  },
@@ -188,33 +196,25 @@
     "name" : "Browser",
     "key" : "browser",
     "parameters" :
-     [{
-        "name" : "Url Without Scheme",
-        "description" : "Destination url, without the scheme (without the http or https part)",
-        "key" : "url_no_scheme"
-      }],
-     "actions" :
-     [{
-        "name" : "Browse via HTTP",
-        "key" : "browse_http"
-      },
-      {
-        "name" : "Browse via HTTPS",
-        "key" : "browse_https"
-      }],
+    [{
+        "name" : "Destination Url",
+        "description" : "Destination url, must include scheme (either http:// or https://)",
+        "key" : "url"
+     }],
+    "actions" :
+    [{
+        "name" : "Browse to a URL",
+        "key" : "browse"
+     }],
     "apps" :
      [{
         "name" : "Safari",
         "key" : "safari",
-        "app_url_scheme" : "http://",
+        "app_url_scheme" : "http:",
         "actions" :
         [{
-            "key" : "browse_http",
-            "url_format" : "http://{{url_no_scheme}}"
-         },
-         {
-            "key" : "browse_https",
-            "url_format" : "https://{{url_no_scheme}}"
+            "key" : "browse",
+            "url_format" : "{{url}}"
          }]
       }]
 }]

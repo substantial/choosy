@@ -11,10 +11,11 @@ NSString * const ChoosyDidUpdateAppIconNotification = @"ChoosyDidUpdateAppIconNo
 
 @implementation ChoosyAppInfo
 
-- (ChoosyAppAction *)findActionWithKey:(NSString *)actionKey
+- (ChoosyAppAction *)findActionWithKey:(NSString *)key
 {
+    NSString *lowercaseKey = [key lowercaseString];
     for (ChoosyAppAction *action in self.appActions) {
-        if ([[action.actionKey lowercaseString] isEqualToString:[actionKey lowercaseString]]) {
+        if ([action.actionKey isEqualToString:lowercaseKey]) {
             return action;
         }
     }
@@ -48,6 +49,11 @@ NSString * const ChoosyDidUpdateAppIconNotification = @"ChoosyDidUpdateAppIconNo
      } failure:^(NSError *error) {
          NSLog(@"Couldn't download icon for app key %@", appInfo.appKey);
      }];
+}
+
+- (void)setAppKey:(NSString *)appKey
+{
+    _appKey = [appKey lowercaseString];
 }
 
 #pragma mark MTLJSONSerializing

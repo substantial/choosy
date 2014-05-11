@@ -44,47 +44,52 @@ static dispatch_once_t once_token;
 
 #pragma mark Public
 
-- (void)registerAppTypes:(NSArray *)appTypes
+- (void)registerAppTypes:(NSArray *)appTypeKeys
 {
-    if (!appTypes) return;
-    
-    for (NSString *appType in appTypes) {
-        [self registerAppTypeWithKey:appType];
-    }
-}
-
-- (void)registerAppTypeKey:(NSString *)appTypeKey
-{
-    if (![self isAppTypeRegistered:appTypeKey]) {
-        [self.registeredAppTypeKeys addObject:appTypeKey];
+    for (NSString *appTypeKey in appTypeKeys) {
+        [self registerAppTypeWithKey:appTypeKey];
     }
 }
 
 - (void)registerAppTypeWithKey:(NSString *)appTypeKey
 {
+    appTypeKey = [appTypeKey lowercaseString];
     __weak ChoosyRegister *weakSelf = self;
     
     // check memory for app type
-    [self findAppTypeWithKey:appTypeKey andIfFound:nil ifNotFound:^{
-        // if not in memory, check file cache
-        ChoosyAppType *appType = [ChoosyLocalStore cachedAppType:appTypeKey];
+    [self findAppTypeWithKey:appTypeKey andIfFound:nil ifNotFound:
+     ^{
+        // app type not found in memory, so check cache
+        ChoosyAppType *cachedAppType = [ChoosyLocalStore cachedAppType:appTypeKey];
+        ChoosyAppType *builtInAppType = [ChoosyLocalStore builtInAppType:appTypeKey];
         
-        // if nothing in file cache, see if it's one of the built-in types
-        if (!appType) {
-            appType = [ChoosyLocalStore builtInAppType:appTypeKey];
-        }
-        
+        // prefer info from cache, if available
+        __block ChoosyAppType *appType = cachedAppType ? cachedAppType : builtInAppType;
+         
         if (appType) {
-            // add app type we got so far to in-memory collection - download can fail
-            [self addAppType:appType];
+            // found app type info - add it to our in-memory collection
+            [self loadAppType:appType];
             
             if (appType.needsUpdate) {
-                [weakSelf downloadAppTypeWithKey:appType.key];
+                [weakSelf downloadAppTypeWithKey:appType.key success:^(ChoosyAppType *downloadedAppType) {
+                    // if the app type needs an update, merge updated info with the base (not cached) info
+                    // this makes sure we don't keep data that was downloaded and cached before, but was since deleted on the server
+                    [builtInAppType mergeUpdatedData:downloadedAppType];
+                    
+                    ChoosyAppType *updatedAppType = builtInAppType ? builtInAppType : downloadedAppType;
+                    updatedAppType.dateUpdated = [NSDate date];
+                    
+                    [weakSelf loadAppType:updatedAppType];
+                    [ChoosyLocalStore cacheAppType:updatedAppType];
+                }];
             }
         } else {
-            [self downloadAppTypeWithKey:appTypeKey];
+            [weakSelf downloadAppTypeWithKey:appTypeKey success:^(ChoosyAppType *downloadedAppType) {
+                downloadedAppType.dateUpdated = [NSDate date];
+                [weakSelf loadAppType:downloadedAppType];
+                [ChoosyLocalStore cacheAppType:downloadedAppType];
+            }];
         }
-        
     }];
 }
 
@@ -125,31 +130,6 @@ static dispatch_once_t once_token;
     return [ChoosyLocalStore appIconForAppKey:appKey];;
 }
 
-- (void)updateRegisteredAppTypes
-{
-    // due to multithreading, make a copy just in case there's a modification
-    // to the array during the for..each loop below
-    NSArray *appTypeKeys = [self.registeredAppTypeKeys copy];
-    
-    if (!appTypeKeys) return;
-    
-    __weak ChoosyRegister *weakSelf = self;
-    
-    for (NSString *appTypeKey in appTypeKeys)
-    {
-        [self findAppTypeWithKey:appTypeKey andIfFound:^(ChoosyAppType *appType)
-        {
-            if (appType.needsUpdate) {
-                [weakSelf downloadAppTypeWithKey:appTypeKey];
-            }
-        } ifNotFound:^(void)
-        {
-            [self registerAppTypeWithKey:appTypeKey];
-        }];
-    }
-}
-
-
 - (ChoosyAppInfo *)defaultAppForAppType:(NSString *)appTypeKey
 {
     ChoosyAppType *appType = [ChoosyAppType filterAppTypesArray:self.appTypes byKey:appTypeKey];
@@ -171,7 +151,14 @@ static dispatch_once_t once_token;
 
 #pragma mark Prvate
 
-- (void)downloadAppTypeWithKey:(NSString *)appTypeKey
+- (void)registerAppTypeKey:(NSString *)appTypeKey
+{
+    if (![self isAppTypeRegistered:appTypeKey]) {
+        [self.registeredAppTypeKeys addObject:appTypeKey];
+    }
+}
+
+- (void)downloadAppTypeWithKey:(NSString *)appTypeKey success:(void(^)(ChoosyAppType* downloadedAppType))successBlock
 {
     BOOL isDownloadingThisType = [self isDownloadingAppType:appTypeKey];
     if (!isDownloadingThisType) {
@@ -182,8 +169,9 @@ static dispatch_once_t once_token;
         [ChoosyNetworkStore downloadAppType:appTypeKey success:^(ChoosyAppType *downloadedAppType) {
             if (downloadedAppType)
             {
-                [self addAppType:downloadedAppType];
-                [ChoosyLocalStore cacheAppType:downloadedAppType];
+                if (successBlock) {
+                    successBlock(downloadedAppType);
+                }
                 self.appTypeDownloadStatus[appTypeKey] = @(NO);
                 
                 NSLog(@"Downloaded and cached app type: %@", downloadedAppType.key);
@@ -195,21 +183,19 @@ static dispatch_once_t once_token;
     }
 }
 
-- (void)addAppType:(ChoosyAppType *)appTypeToAdd
+- (void)loadAppType:(ChoosyAppType *)appTypeToLoad
 {
-    if (!appTypeToAdd) return;
+    if (!appTypeToLoad) return;
     
     // check installed apps for this app type, and trigger app icon downloads if needed
-    [appTypeToAdd takeStockOfApps];
+    [appTypeToLoad takeStockOfApps];
     
     __weak ChoosyRegister *weakSelf = self;
-    // TODO: improve the handling of this so that system app types don't replace downloaded types (potentially)
-    // due to multiple findAppTypeWithKey: being kickd off in registerAppTypeWithKey.
-    [self findAppTypeWithKey:appTypeToAdd.key andIfFound:^(ChoosyAppType *existingAppType) {
+    [self findAppTypeWithKey:appTypeToLoad.key andIfFound:^(ChoosyAppType *existingAppType) {
         NSInteger index = [weakSelf.appTypes indexOfObject:existingAppType];
-        weakSelf.appTypes[index] = appTypeToAdd;
+        weakSelf.appTypes[index] = appTypeToLoad;
     } ifNotFound:^(void) {
-        [weakSelf.appTypes addObject:appTypeToAdd];
+        [weakSelf.appTypes addObject:appTypeToLoad];
     }];
 }
 

@@ -12,7 +12,6 @@
 
 @implementation ChoosyAppType
 
-
 - (void)update
 {
     [self takeStockOfApps];
@@ -72,16 +71,20 @@
 
 - (ChoosyAppInfo *)findAppInfoWithAppKey:(NSString *)appKey
 {
-    if (!self.apps) return nil;
-    
-    appKey = [appKey lowercaseString];
+    NSString *lowercaseKey = [appKey lowercaseString];
     for (ChoosyAppInfo *appInfo in self.apps) {
-        if ([appInfo.appKey isEqualToString:appKey]) {
+        if ([appInfo.appKey isEqualToString:lowercaseKey]) {
             return appInfo;
         }
     }
-    
     return nil;
+}
+
+#pragma Properties
+
+- (void)setKey:(NSString *)key
+{
+    _key = [key lowercaseString];
 }
 
 #pragma mark Mantle

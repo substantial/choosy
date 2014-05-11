@@ -30,7 +30,13 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
     NSString *fileUrl = [self urlForAppTypeData:appTypeKey];
     
     NSURLSession *session = [NSURLSession sharedSession];
-    [[session dataTaskWithURL:[NSURL URLWithString:fileUrl] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fileUrl]];
+    
+    // Choosy handles caching internally;
+    // so when it asks for data, we want to make sure it's real, up-to-date data from the server
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
+    
+    [[session dataTaskWithRequest:[request copy] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         // TODO: on error, if b/c no connection, subscribe to the Connection now Available notification, and pull data when that occurs :P
         if (error) {
             NSLog(@"Error downloading app type data for type '%@'. DATA: %@. RESPONSE: %@. ERROR: %@", appTypeKey, data, response, error);
@@ -42,7 +48,6 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
         
         NSArray *appTypes = [ChoosySerialization deserializeAppTypesFromNSData:data];
         ChoosyAppType *appType = [ChoosyAppType filterAppTypesArray:appTypes byKey:appTypeKey];
-        appType.dateUpdated = [NSDate date];
         
         if (appType) {
             if (successBlock) {
@@ -83,7 +88,13 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
     NSLog(@"Downloading app icon for app key: %@, at file URL: %@", appKey, fileUrl);
     
     NSURLSession *session = [NSURLSession sharedSession];
-    [[session dataTaskWithURL:[NSURL URLWithString:fileUrl] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fileUrl]];
+    
+    // Choosy handles caching internally;
+    // so when it asks for data, we want to make sure it's real, up-to-date data from the server
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
+    
+    [[session dataTaskWithRequest:[request copy] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
     {
         [_appKeysForIconsBeingDownloaded removeObject:appKey];
         if ([_appKeysForIconsBeingDownloaded count] == 0) {
@@ -111,7 +122,7 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
 
 - (NSString *)urlForAppTypeData:(NSString *)appTypeKey
 {
-    NSString *fileUrl = [NSString stringWithFormat:@"https://raw.githubusercontent.com/substantial/choosy-data/master/app-data/%@.json", appTypeKey];
+    NSString *fileUrl = [NSString stringWithFormat:@"https://raw.githubusercontent.com/gamenerds/choosy-data/master/app-data/%@.json", appTypeKey];
     return fileUrl;
 }
 

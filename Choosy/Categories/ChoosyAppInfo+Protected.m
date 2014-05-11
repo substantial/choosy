@@ -8,6 +8,7 @@
 
 #import "ChoosyLocalStore.h"
 #import "ChoosyAppInfo+Protected.h"
+#import "ChoosyAppAction.h"
 
 @implementation ChoosyAppInfo (Protected)
 
@@ -19,6 +20,22 @@
     {
         [self downloadAppIcon];
     }
+}
+
+- (void)mergeUpdatedData:(ChoosyAppInfo *)updatedAppInfo
+{
+    // merge actions
+    NSMutableArray *objectsToAdd = [NSMutableArray new];
+    for (ChoosyAppAction *updatedAction in updatedAppInfo.appActions)
+    {
+        ChoosyAppAction *existingAction = [self findActionWithKey:updatedAction.actionKey];
+        if (existingAction) {
+            existingAction = updatedAction;
+        } else {
+            [objectsToAdd addObject:updatedAction];
+        }
+    }
+    self.appActions = [self.appActions arrayByAddingObjectsFromArray:objectsToAdd];
 }
 
 @end

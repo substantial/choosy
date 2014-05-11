@@ -11,6 +11,8 @@
 #import "ChoosyAppInfo.h"
 #import "ChoosyAppInfo+Protected.h"
 #import "ChoosyLocalStore.h"
+#import "ChoosyAppTypeParameter.h"
+#import "ChoosyAppTypeAction.h"
 
 @implementation ChoosyAppType (Protected)
 
@@ -41,11 +43,68 @@
     return timeToRefresh;
 }
 
-//- (NSArray *)newlyAddedApps
-//{
-//    return [self.apps select:^BOOL(id object) {
-//        return ((ChoosyAppInfo *)object).isNew;
-//    }];
-//}
+- (void)mergeUpdatedData:(ChoosyAppType *)updatedAppType
+{
+    // merge parameters
+    NSMutableArray *objectsToAdd = [NSMutableArray new];
+    for (ChoosyAppTypeParameter *updatedParam in updatedAppType.parameters)
+    {
+        ChoosyAppTypeParameter *existingParam = [self findParameterWithKey:updatedParam.key];
+        if (existingParam) {
+            existingParam = updatedParam;
+        } else {
+            [objectsToAdd addObject:updatedParam];
+        }
+    }
+    self.parameters = [self.parameters arrayByAddingObjectsFromArray:objectsToAdd];
+    [objectsToAdd removeAllObjects];
+    
+    // merge actions
+    for (ChoosyAppTypeAction *updatedAction in updatedAppType.actions)
+    {
+        ChoosyAppTypeAction *existingAction = [self findActionWithKey:updatedAction.key];
+        if (existingAction) {
+            existingAction = updatedAction;
+        } else {
+            [objectsToAdd addObject:updatedAction];
+        }
+    }
+    self.actions = [self.actions arrayByAddingObjectsFromArray:objectsToAdd];
+    [objectsToAdd removeAllObjects];
+    
+    // merge apps
+    for (ChoosyAppInfo *updatedAppInfo in updatedAppType.apps)
+    {
+        ChoosyAppInfo *existingApp = [self findAppInfoWithAppKey:updatedAppInfo.appKey];
+        if (existingApp) {
+            [existingApp mergeUpdatedData:updatedAppInfo];
+        } else {
+            [objectsToAdd addObject:updatedAppInfo];
+        }
+    }
+    self.apps = [self.apps arrayByAddingObjectsFromArray:objectsToAdd];
+}
+
+- (ChoosyAppTypeParameter *)findParameterWithKey:(NSString *)key
+{
+    NSString *lowercaseKey = [key lowercaseString];
+    for (ChoosyAppTypeParameter *param in self.parameters) {
+        if ([param.key isEqualToString:lowercaseKey]) {
+            return param;
+        }
+    }
+    return nil;
+}
+
+- (ChoosyAppTypeAction *)findActionWithKey:(NSString *)key
+{
+    NSString *lowercaseKey = [key lowercaseString];
+    for (ChoosyAppTypeAction *action in self.actions) {
+        if ([action.key isEqualToString:lowercaseKey]) {
+            return action;
+        }
+    }
+    return nil;
+}
 
 @end

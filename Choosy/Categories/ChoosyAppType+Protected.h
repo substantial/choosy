@@ -12,5 +12,6 @@
 
 - (void)takeStockOfApps;
 - (BOOL)needsUpdate;
+- (void)mergeUpdatedData:(ChoosyAppType *)updatedAppType;
 
 @end

@@ -334,6 +334,7 @@
     NSURL *url = [ChoosyUrlCreator urlForAction:actionContext targetingApp:appInfo inAppType:appType];
     
     // call the URL
+    NSLog(@"Executing URL: %@", [url absoluteString]);
     [[UIApplication sharedApplication] openURL:url];
 }
 

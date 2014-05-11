@@ -13,7 +13,6 @@
 
 - (void)registerAppTypes:(NSArray *)appTypes;
 - (void)registerAppTypeWithKey:(NSString *)appTypeKey;
-- (void)updateRegisteredAppTypes;
 
 - (void)findAppTypeWithKey:(NSString *)appTypeKey andIfFound:(void(^)(ChoosyAppType *appType))successBlock ifNotFound:(void(^)())failureBlock;
 - (UIImage *)appIconForAppKey:(NSString *)appKey;

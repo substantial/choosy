@@ -74,7 +74,7 @@ static NSString *_appIconFileExtension = @"png";
     
     NSMutableArray *appTypes = [NSMutableArray new];
     for (NSString *jsonFilePath in jsonFilePaths) {
-        [appTypes addObjectsFromArray:[self cachedAppTypesAtPath:jsonFilePath]];
+        [appTypes addObjectsFromArray:[self appTypesFromFile:jsonFilePath]];
     }
     
     return [appTypes count] > 0 ? appTypes : nil;
@@ -83,7 +83,7 @@ static NSString *_appIconFileExtension = @"png";
 + (ChoosyAppType *)cachedAppType:(NSString *)appTypeKey;
 {
     NSString *filePath = [self filePathForAppTypeKey:appTypeKey];
-    NSArray *appTypes = [self cachedAppTypesAtPath:filePath];
+    NSArray *appTypes = [self appTypesFromFile:filePath];
     
     return [ChoosyAppType filterAppTypesArray:appTypes byKey:appTypeKey];
 }
@@ -116,7 +116,7 @@ static NSString *_appIconFileExtension = @"png";
 {
     NSString *filePath = [self filePathForBundledFileNamed:@"systemAppTypes" ofType:@"json"];
     
-    NSArray *appTypes = [ChoosyLocalStore cachedAppTypesAtPath:filePath];
+    NSArray *appTypes = [ChoosyLocalStore appTypesFromFile:filePath];
     
     return [ChoosyAppType filterAppTypesArray:appTypes byKey:appTypeKey];
 }
@@ -231,7 +231,7 @@ static NSString *_appIconFileExtension = @"png";
 #pragma mark - Private
 #pragma mark App Type Caching
 
-+ (NSArray *)cachedAppTypesAtPath:(NSString *)filePath
++ (NSArray *)appTypesFromFile:(NSString *)filePath
 {
     if (!filePath || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) return nil;
     
@@ -249,8 +249,8 @@ static NSString *_appIconFileExtension = @"png";
 
 + (NSString *)pathForCacheDirectory
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *cachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Choosy"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cachePath = [paths objectAtIndex:0];
     BOOL isDir = NO;
     NSError *error;
     if (! [[NSFileManager defaultManager] fileExistsAtPath:cachePath isDirectory:&isDir] && isDir == NO) {

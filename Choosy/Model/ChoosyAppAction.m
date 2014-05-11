@@ -3,6 +3,11 @@
 
 @implementation ChoosyAppAction
 
+- (void)setActionKey:(NSString *)actionKey
+{
+    _actionKey = [actionKey lowercaseString];
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey
 {
     return @{

@@ -1,5 +1,5 @@
 PODS:
-  - Choosy (0.5.5):
+  - Choosy (0.6.0):
     - Mantle (< 2.0)
   - Mantle (1.4.1):
     - Mantle/extobjc
@@ -13,7 +13,7 @@ EXTERNAL SOURCES:
     :path: .
 
 SPEC CHECKSUMS:
-  Choosy: be247ab1d959821b4777a6253f342506aa69b7a1
+  Choosy: c10ce7b95f117d2bb89ff4886be19c561034b017
   Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
 
 COCOAPODS: 0.32.1

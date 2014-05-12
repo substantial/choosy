@@ -329,10 +329,10 @@ Coming soon:
 * Better support for iPad (Choosy does work on iPad, but the design is not iPad-optimized)
 * Support for more apps, more actions, and more parameters ([you can help here!](https://github.com/substantial/choosy-data))
 * Tests
-* The ability to further filter down apps by virtue of support of a certain action, not just by app type membership
+* The ability to filter apps by support of a certain action, not just by app type membership
 * A UI to navigate all available parameters, etc. (so you don't have to browse [raw JSON files](https://github.com/substantial/choosy-data))
-* Tasteful, minimal UI animations: the whole UI could use being slightly more lively
-* Localization (for text related to selection of default app)
+* Tasteful, minimal UI animations in more places
+* Localization (for app names, and text related to selection of default app)
 * Better Web View support, and way better support for creation of `ChoosyActionContext` objects out of URLs.
 * Upside-down orientation support on iPhone/iPod and switching to/from it
 * We haven't seen any memory issues, but there are singletons under the hood, so memory management of those can probably be improved. No special time has been spent on this yet
@@ -341,7 +341,7 @@ Coming soon:
 Moonshots:
 
 * Safe data exchange between apps
-* UI for adding/editing app information (rather than creating JSON files))
+* UI for adding/editing app information (rather than creating JSON files)
 
 ### Stay Informed
 

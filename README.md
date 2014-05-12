@@ -5,9 +5,9 @@ Please share/star/send love if you find this cool - the sole purpose of this is 
 
 [Introductory blog post and video](http://substantial.com/blog/2014/05/07/introducing-choosy-your-app-selector-for-ios/)
 
-Choosy is an app-agnostic interface to communicate with other apps installed on a device. Choosy also lets your users select their favorite app for the job at hand. 
+Choosy is a super-easy way to let your users pick their favorite Twitter/Email/Browser/Maps/etc. app when you send them to a Twitter link/compose view/web link/map address/etc. But it is not limited to those categories; it works with any app that exposes a URL scheme.
 
-With Choosy, you can write one line of code:  
+For example, with Choosy you can write one line of code:  
 
 ```objc
 - (void)viewDidLoad:
@@ -21,10 +21,11 @@ With Choosy, you can write one line of code:
 }
 ```
 
-to get automatic support for popular Twitter clients (screenshots are from the included Demo app): 
+to get automatic support for popular Twitter clients: 
 
 ![Opening Twitter link](https://farm3.staticflickr.com/2938/13952473947_f78c23cd64_c.jpg) <br/>
-([click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif of Choosy in action)
+[Click here](https://farm3.staticflickr.com/2895/14135516781_2b85879666_o.gif) for the gif of Choosy in action.
+Screenshots are from the included Demo app.
 
 Before, you had to write code specific to each app you want to support. With Choosy, you pass generic parameters, once, and get support for all the apps. Choosy detects installed apps and knows which parameters each app supports, passing only the supported parameters to each app.
 

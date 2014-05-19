@@ -2,9 +2,9 @@ PODS:
   - Choosy (0.6.1):
     - Mantle (< 2.0)
     - Reachability (~> 3.1)
-  - Mantle (1.4.1):
+  - Mantle (1.5):
     - Mantle/extobjc
-  - Mantle/extobjc (1.4.1)
+  - Mantle/extobjc (1.5)
   - Reachability (3.1.1)
 
 DEPENDENCIES:
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Choosy: 39eb98b32a292929d905c4369e9c96d3f048c5ef
-  Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
+  Mantle: 60c03eea4d15a1c8d53821a56c7492cd6d05f553
   Reachability: be4883bb93f31e38266ae3365e5600a317aae735
 
 COCOAPODS: 0.32.1

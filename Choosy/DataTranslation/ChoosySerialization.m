@@ -19,16 +19,14 @@
 
 + (NSArray *)deserializeAppTypesFromJSON:(NSArray *)appTypesJSON
 {
-    NSMutableArray *appTypes = [NSMutableArray new];
-    for (NSDictionary *appTypeJSON in appTypesJSON) {
-        ChoosyAppType *appType = [ChoosySerialization deserializeAppTypeFromJSON:appTypeJSON];
-        
-        if (appType) {
-            [appTypes addObject:appType];
-        }
+    NSError *error;
+    NSArray *appTypes = [MTLJSONAdapter modelsOfClass:[ChoosyAppType class] fromJSONArray:appTypesJSON error:&error];
+    if (error) {
+        NSLog(@"Couldn't convert app types JSON to ChoosyAppType models: %@", error);
+        return nil;
     }
-    
-    return [appTypes count] > 0 ? [NSArray arrayWithArray:appTypes] : nil;
+
+    return appTypes;
 }
 
 + (ChoosyAppType *)deserializeAppTypeFromJSON:(NSDictionary *)appTypeJSON
@@ -60,12 +58,7 @@
 
 + (NSArray *)serializeAppTypesToJSON:(NSArray *)appTypes
 {
-    NSMutableArray *appTypesJSON = [NSMutableArray new];
-    
-    for (ChoosyAppType *appType in appTypes) {
-        NSDictionary *appTypeJSON = [MTLJSONAdapter JSONDictionaryFromModel:appType];
-        [appTypesJSON addObject:appTypeJSON];
-    }
+    NSArray *appTypesJSON = [MTLJSONAdapter JSONArrayFromModels:appTypes];
     
     return appTypesJSON;
 }

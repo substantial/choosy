@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "Choosy"
-  s.version      = "0.6.0"
+  s.version      = "0.6.1"
   s.summary      = "Effortlessly enable choosing of apps for external actions like browsing, emailing, tweeting, etc."
   s.homepage     = "http://choosy.substantial.com"
-  s.source       = { :git => "https://github.com/substantial/choosy.git", :tag => "0.6.0" }
+  s.source       = { :git => "https://github.com/substantial/choosy.git", :tag => "0.6.1" }
   s.documentation_url = 'https://github.com/substantial/choosy/blob/master/README.md'
 
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
@@ -28,4 +28,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency 'Mantle', '< 2.0'
+  s.dependency 'Reachability', '~> 3.1'
 end

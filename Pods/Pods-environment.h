@@ -10,7 +10,7 @@
 #define COCOAPODS_POD_AVAILABLE_Choosy
 #define COCOAPODS_VERSION_MAJOR_Choosy 0
 #define COCOAPODS_VERSION_MINOR_Choosy 6
-#define COCOAPODS_VERSION_PATCH_Choosy 0
+#define COCOAPODS_VERSION_PATCH_Choosy 1
 
 // Mantle
 #define COCOAPODS_POD_AVAILABLE_Mantle
@@ -23,4 +23,10 @@
 #define COCOAPODS_VERSION_MAJOR_Mantle_extobjc 1
 #define COCOAPODS_VERSION_MINOR_Mantle_extobjc 4
 #define COCOAPODS_VERSION_PATCH_Mantle_extobjc 1
+
+// Reachability
+#define COCOAPODS_POD_AVAILABLE_Reachability
+#define COCOAPODS_VERSION_MAJOR_Reachability 3
+#define COCOAPODS_VERSION_MINOR_Reachability 1
+#define COCOAPODS_VERSION_PATCH_Reachability 1
 

@@ -4,12 +4,11 @@
 #import "ChoosyAppInfo.h"
 #import "NSString+Network.h"
 #import "ChoosyLocalStore.h"
+#import "Reachability.h"
 
 static NSMutableArray *_appKeysForIconsBeingDownloaded;
 
 @implementation ChoosyNetworkStore
-
-// TODO: add a queue and checks to avoid sending duplicate requests for the same app type key
 
 #pragma Public
 
@@ -26,7 +25,7 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
 #pragma Private
 
 - (void)downloadAppType:(NSString *)appTypeKey success:(void (^)(ChoosyAppType *downloadedAppType))successBlock failure:(void(^)(NSError *error))failureBlock
-{
+{    
     NSString *fileUrl = [self urlForAppTypeData:appTypeKey];
     
     NSURLSession *session = [NSURLSession sharedSession];
@@ -93,6 +92,8 @@ static NSMutableArray *_appKeysForIconsBeingDownloaded;
     // Choosy handles caching internally;
     // so when it asks for data, we want to make sure it's real, up-to-date data from the server
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData];
+    
+    
     
     [[session dataTaskWithRequest:[request copy] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
     {

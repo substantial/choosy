@@ -12,11 +12,11 @@
 
 @implementation ChoosyAppInfo (Protected)
 
+// TODO: updateWithReachability: ?
 - (void)update
 {
-    // TODO: add cache expiration here even if app icon exists
-    
-    if (![ChoosyLocalStore appIconExistsForAppKey:self.appKey] && !self.isAppIconDownloading)
+    // TODO: add cache expiration here even if app icon exists, github issue 8
+    if (![ChoosyLocalStore appIconExistsForAppKey:self.appKey])
     {
         [self downloadAppIcon];
     }

@@ -48,6 +48,11 @@
     
     [Choosy registerAppTypes:@[@"Twitter"]];
     
+    NSArray *meow;
+    for (ChoosyAppType *appType in meow) {
+        NSLog(@"Word: %@", appType);
+    }
+    
     ChoosyActionContext *navigateAction = [ChoosyActionContext actionContextWithAppType:@"Maps"
                                                                                action:@"get_directions"
                                                                              parameters:@{@"start_address" : @"Current Location",

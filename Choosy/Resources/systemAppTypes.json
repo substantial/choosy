@@ -170,7 +170,7 @@
     "actions" :
     [{
         "name" : "Get Directions",
-        "key" : "directions"
+        "key" : "get_directions"
      },
      {
         "name" : "Search/query",
@@ -183,7 +183,7 @@
         "app_url_scheme" : "http://maps.apple.com/?q",
         "actions" :
         [{
-            "key" : "directions",
+            "key" : "get_directions",
             "url_format" : "http://maps.apple.com/?q=&daddr={{end_address}}&saddr={{start_address}}"
          },
          {

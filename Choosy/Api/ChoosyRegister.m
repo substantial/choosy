@@ -6,13 +6,18 @@
 #import "ChoosyNetworkStore.h"
 #import "ChoosyAppType+Protected.h"
 #import "NSThread+Helpers.h"
+#import "Reachability.h"
 
 @interface ChoosyRegister ()
 
 @property (nonatomic) NSMutableArray *appTypes; //downloaded, processed app types
 @property (nonatomic) NSMutableArray *registeredAppTypeKeys; // app types Choosy was told to care about
+@property (nonatomic) dispatch_queue_t registeredKeysQueue;
 @property (nonatomic) NSOperationQueue *appTypesSerialAccessQueue;
 @property (nonatomic) NSMutableDictionary *appTypeDownloadStatus;
+
+@property (nonatomic) Reachability *reachability;
+@property (nonatomic) BOOL monitoringReachability; //dontcha wish Reachability itself had the flag?
 
 @end
 
@@ -33,13 +38,27 @@ static dispatch_once_t once_token;
     if (_sharedInstance == nil) {
 		dispatch_once(&once_token, ^ {
 			_sharedInstance = [ChoosyRegister new];
-            
-            // TODO: sign up for reachability updates and update all registered
-            // app types whenever connection is re-established
 		});
     }
 	
     return _sharedInstance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _registeredKeysQueue = [self createSerialQueueForKeys];
+        //_reachability = [Reachability reachabilityForInternetConnection];
+    }
+    return self;
+}
+
+- (dispatch_queue_t)createSerialQueueForKeys
+{
+    dispatch_queue_t serialQueue = dispatch_queue_create("com.choosy.registeredAppTypeKeysQueue", NULL);
+    
+    return serialQueue;
 }
 
 #pragma mark Public
@@ -56,51 +75,11 @@ static dispatch_once_t once_token;
     appTypeKey = [appTypeKey lowercaseString];
     __weak ChoosyRegister *weakSelf = self;
     
-    // check memory for app type
-    [self findAppTypeWithKey:appTypeKey andIfFound:nil ifNotFound:
-     ^{
-        // app type not found in memory, so check cache
-        ChoosyAppType *cachedAppType = [ChoosyLocalStore cachedAppType:appTypeKey];
-        ChoosyAppType *builtInAppType = [ChoosyLocalStore builtInAppType:appTypeKey];
-        
-        // prefer info from cache, if available
-        __block ChoosyAppType *appType = cachedAppType ? cachedAppType : builtInAppType;
-         
-        if (appType) {
-            // found app type info - add it to our in-memory collection
-            [self loadAppType:appType];
-            
-            if (appType.needsUpdate) {
-                [weakSelf downloadAppTypeWithKey:appType.key success:^(ChoosyAppType *downloadedAppType) {
-                    // if the app type needs an update, merge updated info with the base (not cached) info
-                    // this makes sure we don't keep data that was downloaded and cached before, but was since deleted on the server
-                    [builtInAppType mergeUpdatedData:downloadedAppType];
-                    
-                    ChoosyAppType *updatedAppType = builtInAppType ? builtInAppType : downloadedAppType;
-                    updatedAppType.dateUpdated = [NSDate date];
-                    
-                    [weakSelf loadAppType:updatedAppType];
-                    [ChoosyLocalStore cacheAppType:updatedAppType];
-                }];
-            }
-        } else {
-            [weakSelf downloadAppTypeWithKey:appTypeKey success:^(ChoosyAppType *downloadedAppType) {
-                downloadedAppType.dateUpdated = [NSDate date];
-                [weakSelf loadAppType:downloadedAppType];
-                [ChoosyLocalStore cacheAppType:downloadedAppType];
-            }];
-        }
-    }];
-}
-
-- (BOOL)isAppTypeRegistered:(NSString *)appTypeKey
-{
-    appTypeKey = [appTypeKey lowercaseString];
-    if ([self.registeredAppTypeKeys containsObject:appTypeKey]) {
-        return YES;
-    }
-    
-    return NO;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [weakSelf registerAppTypeKey:appTypeKey completion: ^{
+            [weakSelf syncAppTypes];
+        }];
+    });
 }
 
 - (void)findAppTypeWithKey:(NSString *)appTypeKey andIfFound:(void(^)(ChoosyAppType *appType))successBlock ifNotFound:(void(^)())failureBlock
@@ -151,11 +130,94 @@ static dispatch_once_t once_token;
 
 #pragma mark Prvate
 
-- (void)registerAppTypeKey:(NSString *)appTypeKey
+- (void)registerAppTypeKey:(NSString *)appTypeKey completion:(void(^)())completionBlock
 {
-    if (![self isAppTypeRegistered:appTypeKey]) {
-        [self.registeredAppTypeKeys addObject:appTypeKey];
+    dispatch_async(self.registeredKeysQueue, ^{
+        if (![self isAppTypeKeyRegistered:appTypeKey]) {
+            [self.registeredAppTypeKeys addObject:appTypeKey];
+        }
+        
+        if (completionBlock) {
+            completionBlock();
+        }
+    });
+}
+
+- (BOOL)isAppTypeKeyRegistered:(NSString *)appTypeKey
+{
+    appTypeKey = [appTypeKey lowercaseString];
+    if ([self.registeredAppTypeKeys containsObject:appTypeKey]) {
+        return YES;
     }
+    
+    return NO;
+}
+
+- (void)syncAppTypes
+{
+    __weak ChoosyRegister *weakSelf = self;
+    dispatch_async(self.registeredKeysQueue, ^{
+        for (NSString *appTypeKey in weakSelf.registeredAppTypeKeys) {
+            [weakSelf findAppTypeWithKey:appTypeKey andIfFound:^(ChoosyAppType *appType) {
+                [weakSelf updateAppType:appType];
+            } ifNotFound:^{
+                [weakSelf initAppTypeWithKey:appTypeKey];
+            }];
+        }
+    });
+}
+
+- (void)updateAppType:(ChoosyAppType *)appType
+{
+    if (appType.needsUpdate) {
+        __weak ChoosyRegister *weakSelf = self;
+        [self downloadAppTypeWithKey:appType.key success:^(ChoosyAppType *downloadedAppType) {
+            // if the type has a corresponding built-in info, merge t
+            ChoosyAppType *builtInAppType = [ChoosyLocalStore builtInAppType:appType.key];
+            
+            ChoosyAppType *mergedAppType = [weakSelf mergeUpdatedAppType:downloadedAppType withExistingAppType:builtInAppType];
+            
+            [weakSelf addAppTypeToRegister:mergedAppType];
+            NSLog(@"Updated app type: %@", mergedAppType.key);
+        }];
+    }
+}
+
+- (void)initAppTypeWithKey:(NSString *)appTypeKey
+{
+    ChoosyAppType *cachedAppType = [ChoosyLocalStore cachedAppType:appTypeKey];
+    ChoosyAppType *builtInAppType = [ChoosyLocalStore builtInAppType:appTypeKey];
+    
+    // prefer info from cache, if available
+    __block ChoosyAppType *appType = cachedAppType ? cachedAppType : builtInAppType;
+    
+    if (appType) {
+        // found app type info - add it to our in-memory collection
+        [self loadAppType:appType];
+    
+        [self updateAppType:appType];
+    } else {
+        [self downloadAppTypeWithKey:appTypeKey success:^(ChoosyAppType *downloadedAppType) {
+            downloadedAppType.dateUpdated = [NSDate date];
+            [self addAppTypeToRegister:downloadedAppType];
+            NSLog(@"Downloaded and cached app type: %@", downloadedAppType.key);
+        }];
+    }
+}
+
+- (void)addAppTypeToRegister:(ChoosyAppType *)appType
+{
+    [self loadAppType:appType];
+    [ChoosyLocalStore cacheAppType:appType];
+}
+
+- (ChoosyAppType *)mergeUpdatedAppType:(ChoosyAppType *)updatedAppType withExistingAppType:(ChoosyAppType *)existingAppType {
+    [existingAppType mergeUpdatedData:updatedAppType];
+    
+    ChoosyAppType *mergedAppType = existingAppType ? existingAppType : updatedAppType;
+    mergedAppType.dateUpdated = [NSDate date];
+    
+    return mergedAppType;
 }
 
 - (void)downloadAppTypeWithKey:(NSString *)appTypeKey success:(void(^)(ChoosyAppType* downloadedAppType))successBlock
@@ -169,15 +231,17 @@ static dispatch_once_t once_token;
         [ChoosyNetworkStore downloadAppType:appTypeKey success:^(ChoosyAppType *downloadedAppType) {
             if (downloadedAppType)
             {
+                [self stopMonitoringReachability];
+                
                 if (successBlock) {
                     successBlock(downloadedAppType);
                 }
                 self.appTypeDownloadStatus[appTypeKey] = @(NO);
                 
-                NSLog(@"Downloaded and cached app type: %@", downloadedAppType.key);
             }
         } failure:^(NSError *error) {
             NSLog(@"Failed to download app type with key %@, error: %@", appTypeKey, error);
+            [self startMonitoringReachability];
             self.appTypeDownloadStatus[appTypeKey] = @(NO);
         }];
     }
@@ -217,6 +281,38 @@ static dispatch_once_t once_token;
 		[appKeys addObject:app.appKey];
 	}
 	return [appKeys copy];
+}
+
+- (void)startMonitoringReachability
+{
+    if (self.monitoringReachability == YES) return;
+    
+    @synchronized(self) {
+        if (!self.reachability) {
+            self.reachability = [Reachability reachabilityWithHostname:@"raw.githubusercontent.com"];
+            __weak ChoosyRegister *weakSelf = self;
+            self.reachability.reachableBlock = ^(Reachability *reach) {
+                [weakSelf syncAppTypes];
+            };
+        }
+        
+        [self.reachability startNotifier];
+        self.monitoringReachability = YES;
+    }
+}
+
+- (void)stopMonitoringReachability
+{
+    if (self.reachability) {
+        [self.reachability stopNotifier];
+        self.reachability = nil;
+        self.monitoringReachability = NO;
+    }
+}
+
+- (void)dealloc
+{
+    self.reachability = nil;
 }
 
 #pragma Lazy Properties

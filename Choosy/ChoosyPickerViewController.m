@@ -76,6 +76,12 @@ static CGFloat _appsRowGapBetweenApps = 10;
 
 - (void)createViewElements
 {
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
+        self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    }
+    
 	CGFloat appsCollectionViewHeight = _appIconHeight * 2.0f;
 	CGFloat titleHeight = 35;
     
@@ -226,6 +232,11 @@ static CGFloat _appsRowGapBetweenApps = 10;
             block();
         }
     }];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [self.delegate didRequestPickerDismissal];
 }
 
 - (void)selectAppAsDefault:(NSString *)appKey

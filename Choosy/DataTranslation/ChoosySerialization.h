@@ -13,8 +13,6 @@
  */
 + (NSArray *)deserializeAppTypesFromNSData:(NSData *)jsonFormatData;
 
-+ (ChoosyAppType *)deserializeAppTypeFromJSON:(NSDictionary *)appTypeJSON;
-
 + (NSData *)serializeAppTypesToNSData:(NSArray *)appTypes;
 
 @end

@@ -29,20 +29,9 @@
     return appTypes;
 }
 
-+ (ChoosyAppType *)deserializeAppTypeFromJSON:(NSDictionary *)appTypeJSON
-{
-    NSError *error;
-    
-    ChoosyAppType *appType = [MTLJSONAdapter modelOfClass:[ChoosyAppType class] fromJSONDictionary:appTypeJSON error:&error];
-    
-    if (error) NSLog(@"Error converting app type JSON into model. JSON: %@ \n\n Error: %@", appTypeJSON, error);
-    
-    return appType;
-}
-
 + (NSData *)serializeAppTypesToNSData:(NSArray *)appTypes
 {
-    NSArray *appTypesJSON = [ChoosySerialization serializeAppTypesToJSON:appTypes];
+    NSArray *appTypesJSON = [MTLJSONAdapter JSONArrayFromModels:appTypes];
     
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:appTypesJSON options:0 error:&error];
@@ -52,15 +41,6 @@
     }
     
     return jsonData;
-}
-
-#pragma mark Private
-
-+ (NSArray *)serializeAppTypesToJSON:(NSArray *)appTypes
-{
-    NSArray *appTypesJSON = [MTLJSONAdapter JSONArrayFromModels:appTypes];
-    
-    return appTypesJSON;
 }
 
 @end

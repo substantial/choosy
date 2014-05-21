@@ -21,11 +21,20 @@
         "name" : "Subject",
         "description" : "Email subject",
         "key" : "subject"
+    },
+    {
+        "name" : "Message ID",
+        "description" : "Also known as 'message url', a descriptor that uniquely identifies a message",
+        "key" : "message_id"
     }],
     "actions" :
     [{
         "name" : "Compose",
         "key" : "compose"
+     },
+     {
+        "name" : "View a Specific Message",
+        "key" : "view_message"
      }],
     "apps" :
     [{
@@ -36,6 +45,10 @@
         [{
             "key" : "compose",
             "url_format" : "mailto:{{to}}?cc={{cc}}&subject={{subject}}&body={{body}}"
+         },
+         {
+            "key" : "view_message",
+            "url_format" : "message://{{message_id}}"
          }]
      }]
  },

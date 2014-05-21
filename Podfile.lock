@@ -1,5 +1,5 @@
 PODS:
-  - Choosy (0.6.1):
+  - Choosy (0.6.2):
     - Mantle (< 2.0)
     - Reachability (~> 3.1)
   - Mantle (1.5):
@@ -15,8 +15,8 @@ EXTERNAL SOURCES:
     :path: .
 
 SPEC CHECKSUMS:
-  Choosy: 39eb98b32a292929d905c4369e9c96d3f048c5ef
-  Mantle: 60c03eea4d15a1c8d53821a56c7492cd6d05f553
-  Reachability: be4883bb93f31e38266ae3365e5600a317aae735
+  Choosy: e33c7302674653a61163b1fdfb77719d1062846f
+  Mantle: c67a7e45e14196ed42b2a7cbb98ff6a9920e6b92
+  Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.33.0

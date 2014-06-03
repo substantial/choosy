@@ -41,6 +41,7 @@
 - (void)subscribeToAppIconUpdateNotifications
 {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    __weak Choosy *weakSelf = self;
     [notificationCenter addObserverForName:ChoosyDidUpdateAppIconNotification
                                     object:nil
                                      queue:nil
@@ -48,10 +49,10 @@
                                     ChoosyAppInfo *app = (ChoosyAppInfo *)note.object;
                                     UIImage *appIcon = note.userInfo[@"appIcon"];
                                   
-                                    if ([self.delegate respondsToSelector:@selector(didUpdateAppIcon:forApp:)]) {
-                                        [self.delegate didUpdateAppIcon:appIcon forApp:app];
+                                    if ([weakSelf.delegate respondsToSelector:@selector(didUpdateAppIcon:forApp:)]) {
+                                        [weakSelf.delegate didUpdateAppIcon:appIcon forApp:app];
                                     } else {
-                                        [self.appPicker updateIconForAppKey:app.appKey withIcon:appIcon];
+                                        [weakSelf.appPicker updateIconForAppKey:app.appKey withIcon:appIcon];
                                     }
                               }];
 }

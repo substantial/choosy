@@ -1,4 +1,4 @@
-Choosy (Beta) [![Build Status](https://travis-ci.org/substantial/choosy.svg)](https://travis-ci.org/substantial/choosy)
+Choosy (Beta) [![Build Status](https://travis-ci.org/gamenerds/choosy.svg?branch=master)](https://travis-ci.org/gamenerds/choosy)
 ==================
 
 Please share/star/send love if you find this cool - the sole purpose of this is to improve on average user iOS experience, and that depends entirely on how many 3rd-party devs implement this. <3 Twitter: [@choosyios](https://twitter.com/choosyios).

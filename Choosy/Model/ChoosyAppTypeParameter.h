@@ -6,7 +6,7 @@
 @interface ChoosyAppTypeParameter : MTLModel <MTLJSONSerializing>
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *description;
+@property (nonatomic, strong) NSString *parameterDescription;
 @property (nonatomic, strong) NSString *key;
 @property (nonatomic) BOOL isPresenceRequired;
 @property (nonatomic) BOOL isValueRequired;

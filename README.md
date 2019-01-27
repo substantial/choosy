@@ -125,7 +125,7 @@ You can intermix `registerUiElement:forAction:` and `handleAction:` calls as you
 
 ## Action Context
 
-Use `ChoosyActionContext` objects to pass all information about the actions you want to execute. What we call 'action' here can also be thought of as 'external link', since you're really opening (linking to) an an external app. We prefer the word 'action' for two reasons. One, you typically don't just link to an app, but you want to perform an action with it, such as show a specific Twitter profile. And two, we have some cool long-term features planned that go beyond just opening apps ;)
+Use `ChoosyActionContext` objects to pass all information about the actions you want to execute. What we call 'action' here can also be thought of as 'external link', since you're really opening (linking to) an external app. We prefer the word 'action' for two reasons. One, you typically don't just link to an app, but you want to perform an action with it, such as show a specific Twitter profile. And two, we have some cool long-term features planned that go beyond just opening apps ;)
 
 For native apps, you can use any of the `actionContextWithAppType...` convenience initializers. If you pass just the app type via `actionContextWithAppType:`, Choosy will show apps of that type and just open them, passing no parameters.
 
